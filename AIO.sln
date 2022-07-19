@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIO", "AIO\AIO.csproj", "{5C357F9C-F69B-4D5D-A494-313851AE6C19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Talamin|Any CPU = Talamin|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Talamin|Any CPU.ActiveCfg = Talamin|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Talamin|Any CPU.Build.0 = Talamin|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FED2421-77E2-4CEB-91EC-06B6F18C7A08}
+	EndGlobalSection
+EndGlobal
