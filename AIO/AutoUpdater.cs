@@ -40,8 +40,8 @@ public static class AutoUpdater
             AIOWOTLKSettings.CurrentSetting.LastUpdateDate = elapsedTicks;
             AIOWOTLKSettings.CurrentSetting.Save();
 
-            string onlineDllLink = "https://github.com/Wholesome-wRobot/Wholesome-TBC-AIO-Fightclasses/raw/master/AIO/Compiled/Wholesome_TBC_AIO_Fightclasses.dll";
-            string onlineVersionLink = "https://raw.githubusercontent.com/Wholesome-wRobot/Wholesome-TBC-AIO-Fightclasses/master/AIO/Compiled/Auto_Version.txt";
+            string onlineDllLink = "https://github.com/Talamin/AIO-Public/blob/master/AIO/Compiled/AIO.dll";
+            string onlineVersionLink = "https://raw.githubusercontent.com/Talamin/AIO-Public/master/AIO/Compiled/Version.txt";
 
             var onlineVersionTxt = new WebClient { Encoding = Encoding.UTF8 }.DownloadString(onlineVersionLink);
             Version onlineVersion = new Version(onlineVersionTxt);
