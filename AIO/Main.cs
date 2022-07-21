@@ -40,7 +40,7 @@ using static AIO.Constants;
 using Math = robotManager.Helpful.Math;
 
 public class Main : ICustomClass {
-    public const string Version = "3.1.76";
+    private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;
     public float Range => CombatClass?.Range ?? 5.0f;
 
     private CancellationTokenSource TokenRelativePositionFix;
@@ -216,10 +216,10 @@ public class Main : ICustomClass {
         //     Logging.Write(watch.ElapsedMilliseconds.ToString());
         // }
         // 
-        Update.CheckUpdate();
+        AutoUpdater.CheckUpdate(version);
 
-        Log("Started " + Version + " of FightClass");
-        Log("Started " + Version + " Discovering class and finding rotation...");
+        Log("Started " + version + " of FightClass");
+        Log("Started " + version + " Discovering class and finding rotation...");
         if (Others.ParseInt(Information.Version.Replace(".", "").Substring(0, 3)) == 172) {
             Log($"AIO couldn't load (v {Information.Version})");
             return;
