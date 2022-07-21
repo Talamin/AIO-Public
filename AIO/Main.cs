@@ -1,5 +1,4 @@
-﻿using System;
-using AIO.Combat.Common;
+﻿using AIO.Combat.Common;
 using AIO.Combat.DeathKnight;
 using AIO.Combat.Druid;
 using AIO.Combat.Hunter;
@@ -18,26 +17,15 @@ using robotManager.Products;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using AIO.Helpers;
-using AIO.Helpers.Caching;
 using AIO.Lists;
-using robotManager.Helpful.Win32;
 using wManager;
-using wManager.Events;
-using wManager.Wow;
-using wManager.Wow.Bot.Tasks;
-using wManager.Wow.Class;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
-using Math = robotManager.Helpful.Math;
 using WholesomeWOTLKAIO;
 
 public class Main : ICustomClass {
