@@ -101,6 +101,14 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(false)]
+        [Category("Demonology")]
+        [DisplayName("Metamorphosis")]
+        [Description("When to use  Metamorphosis?")]
+        [DropdownList(new string[] { "OnCooldown", "OnBosses", "None" })]
+        public string Metamorphosis { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
         [Category("Fight")]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
@@ -170,6 +178,7 @@ namespace AIO.Settings
             Buffing = true;
             Soulshards = true;
             ShadowboltWand = true;
+            Metamorphosis = "OnCooldown";
         }
     }
 }
