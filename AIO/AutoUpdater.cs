@@ -40,7 +40,7 @@ public static class AutoUpdater
             AIOWOTLKSettings.CurrentSetting.LastUpdateDate = elapsedTicks;
             AIOWOTLKSettings.CurrentSetting.Save();
 
-            string onlineDllLink = "https://github.com/Talamin/AIO-Public/blob/master/AIO/Compiled/AIO.dll";
+            string onlineDllLink = "https://github.com/Talamin/AIO-Public/raw/master/AIO/Compiled/AIO.dll";
             string onlineVersionLink = "https://raw.githubusercontent.com/Talamin/AIO-Public/master/AIO/Compiled/Version.txt";
 
             var onlineVersionTxt = new WebClient { Encoding = Encoding.UTF8 }.DownloadString(onlineVersionLink);
