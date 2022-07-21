@@ -38,6 +38,7 @@ using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 using Math = robotManager.Helpful.Math;
+using WholesomeWOTLKAIO;
 
 public class Main : ICustomClass {
     private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;
@@ -216,6 +217,7 @@ public class Main : ICustomClass {
         //     Logging.Write(watch.ElapsedMilliseconds.ToString());
         // }
         // 
+        AIOWOTLKSettings.Load();
         AutoUpdater.CheckUpdate(version);
 
         Log("Started " + version + " of FightClass");
