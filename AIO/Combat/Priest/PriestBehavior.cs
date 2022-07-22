@@ -18,7 +18,8 @@ namespace AIO.Combat.Priest
                 {"Holy", new Holy() },
                 {"Shadow", new Shadow() },
                 {"Default", new Shadow() },
-            } , new AutoPartyResurrect("Resurrection"),
+            } , 
+            new AutoPartyResurrect("Resurrection"),
             new Buffs())
         {
             Addons.Add(new ConditionalCycleable(() => Specialisation == "Holy" || Specialisation == "Shadow", new SlowLuaCaching()));

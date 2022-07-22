@@ -28,7 +28,9 @@ namespace AIO.Combat.Warlock
                 {"Destruction", new Destruction() },
                 {"Demonology", new Demonology() },
                 {"Default", new Affliction() },
-            }, new Buffs(), new PetAutoTarget("Torment"))
+            }, 
+            new Buffs(), 
+            new PetAutoTarget("Torment"))
         { }
 
         protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)

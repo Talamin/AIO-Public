@@ -38,17 +38,5 @@ namespace AIO.Combat.Mage
         {
             MageFoodManager.CheckIfEnoughFoodAndDrinks();
         }
-        //protected override void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
-        //{
-        //    if(Target.HaveBuff("Polymorph") && RotationFramework.AllUnits.Count(o => o.IsAlive && o.IsTargetingMe) >= 1)
-        //    {
-        //        WoWUnit NewTarget = RotationFramework.AllUnits.Where(o => o.IsAlive && o.IsTargetingMe && !o.HaveBuff("Polymorph")).OrderBy(o => o.Position.DistanceTo(Me.Position) < 40).FirstOrDefault();
-        //        Me.Target = NewTarget.Guid;
-        //        if(Target.IsAlive)
-        //        {
-        //            Fight.StartFight(Target.Guid);
-        //        }
-        //    }
-        //}
     }
 }
