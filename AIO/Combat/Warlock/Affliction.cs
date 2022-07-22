@@ -26,7 +26,14 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.HaveBuff("Health Funnel") && Pet.HealthPercent < Settings.Current.HealthfunnelPet && Me.HealthPercent > Settings.Current.HealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Haunt"), 7.5f, (s,t) => !t.HaveMyBuff("Haunt"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Corruption"), 8.1f, (s,t) => !t.HaveMyBuff("Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.AOEOutsideInstance && Settings.Current.UseAOEOutside, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
-            new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.HaveMyBuff("Curse of Agony"), RotationCombatUtil.BotTarget),
+            //Curses
+            new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.HaveMyBuff("Curse of Agony") && Settings.Current.AfflCurse == "Agony", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Doom"), 10.1f, (s,t) => !t.HaveMyBuff("Curse of Doom") && Settings.Current.AfflCurse == "Doom", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of the Elements"), 10.2f, (s,t) => !t.HaveMyBuff("Curse of the Elements") && Settings.Current.AfflCurse == "Elements", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Tongues"), 10.3f, (s,t) => !t.HaveMyBuff("Curse of Tongues") && Settings.Current.AfflCurse == "Tongues", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Weakness"), 10.4f, (s,t) => !t.HaveMyBuff("Curse of Weakness") && Settings.Current.AfflCurse == "Weakness", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Exhaustion"), 10.4f, (s,t) => !t.HaveMyBuff("Curse of Exhaustion") && Settings.Current.AfflCurse == "Exhaustion", RotationCombatUtil.BotTarget),
+            //
             new RotationStep(new RotationSpell("Corruption"), 11f, (s,t) => !t.HaveMyBuff("Corruption"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.Drainlife, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Unstable Affliction"), 13f, (s,t) => !t.HaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTarget),

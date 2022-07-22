@@ -109,6 +109,14 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(false)]
+        [Category("Affliction")]
+        [DisplayName("Curse of")]
+        [Description("Which Curse you want?")]
+        [DropdownList(new string[] { "Agony", "Doom", "Elements", "Tongues", "Weakness", "Exhaustion" })]
+        public string AfflCurse { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
         [Category("Fight")]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
@@ -179,6 +187,7 @@ namespace AIO.Settings
             Soulshards = true;
             ShadowboltWand = true;
             Metamorphosis = "OnCooldown";
+            AfflCurse = "Agony";
         }
     }
 }
