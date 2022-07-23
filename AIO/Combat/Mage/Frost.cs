@@ -25,7 +25,7 @@ namespace AIO.Combat.Mage
             // Only polymorph a valid target
             && (t.IsCreatureType("Humanoid") || t.IsCreatureType("Beast") || t.IsCreatureType("Critter")),
                 RotationCombatUtil.FindEnemyTargetingMe),
-            new RotationStep(new RotationSpell("Frost Nova"), 2.1f, (s,t) => t.GetDistance <= 6 && t.HealthPercent > 30 && !Me.IsInGroup, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Frost Nova"), 2.2f, (s,t) => t.GetDistance <= 6 && t.HealthPercent > 30 && !Me.IsInGroup, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Ice Barrier"), 3f, (s,t) => t.HealthPercent < 95, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) => (t.HealthPercent < 15 && !t.HaveMyBuff("Ice Barrier")) || (Me.IsInGroup && Me.HealthPercent < 85), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 5f, (s,t) => t.HealthPercent < 95 && !t.HaveMyBuff("Ice Barrier"), RotationCombatUtil.FindMe),
