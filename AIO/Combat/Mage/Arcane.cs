@@ -3,6 +3,11 @@ using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
 using static AIO.Constants;
+using System.Linq;
+using wManager.Wow.Enums;
+using wManager.Wow.Helpers;
+
+
 
 namespace AIO.Combat.Mage
 {
