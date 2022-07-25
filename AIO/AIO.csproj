@@ -341,7 +341,6 @@
     <Compile Include="Managers\TankManager.cs" />
     <Compile Include="Managers\RacialManager.cs" />
     <Compile Include="Managers\TrainerManager.cs" />
-    <Compile Include="Managers\UpdateManager.cs" />
     <Compile Include="Managers\WarlockSpellstoneManager.cs" />
     <Compile Include="Settings\BasePersistentSettings.cs" />
     <Compile Include="Settings\BaseSettings.cs" />
