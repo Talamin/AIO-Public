@@ -30,7 +30,8 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Mangle (Bear)"), 8f, (s, t) => !t.HaveMyBuff("Mangle") && (Me.HaveBuff("Dire Bear Form") || Me.HaveBuff("Bear Form")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Swipe (Bear)"), 9f, (s, t) => RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 8) >=3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Maul"), 10f, (s, t) => t.GetDistance < 8 && !RotationCombatUtil.IsCurrentSpell("Maul"), RotationCombatUtil.BotTarget),                        
-            new RotationStep(new RotationSpell("Enrage"), 11f, (s, t) =>t.HealthPercent >= 35 && !Me.HaveBuff("Enrage"), RotationCombatUtil.FindMe),                        
+            new RotationStep(new RotationSpell("Enrage"), 11f, (s, t) =>t.HealthPercent >= 35 && !Me.HaveBuff("Enrage"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Feral Charge - Bear"), 13f, (s,t) => t.GetDistance > 7, RotationCombatUtil.BotTarget),
         };       
     }
 }
