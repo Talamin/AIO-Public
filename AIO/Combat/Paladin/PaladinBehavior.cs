@@ -8,7 +8,8 @@ namespace AIO.Combat.Paladin
     using Settings = PaladinLevelSettings;
     internal class PaladinBehavior : BaseCombatClass
     {
-        public override float Range => 5.0f;
+        private float CombatRange;
+        public override float Range => CombatRange;
 
         internal PaladinBehavior() : base(
             Settings.Current,
@@ -24,6 +25,20 @@ namespace AIO.Combat.Paladin
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
+        }
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            switch (Specialisation)
+            {
+                case "Holy":
+                    CombatRange = 29.0f;
+                    break;
+                default:
+                    CombatRange = 5.0f;
+                    break;
+            }
         }
     }
 }
