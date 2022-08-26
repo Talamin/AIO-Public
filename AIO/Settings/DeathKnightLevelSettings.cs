@@ -41,7 +41,7 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("Fight")]
         [DisplayName("Rune tap")]
-        [Description("Use Dark Rune tap?")]
+        [Description("Use Rune tap?")]
         public bool RuneTap { get; set; }
 
         [Setting]
