@@ -24,6 +24,7 @@ namespace AIO.Combat.DeathKnight
             // Defensive Shell on myself
             new RotationStep(new RotationSpell("Anti Magic Shell"), 3.1f, (s,t) => RotationFramework.Enemies.Count(o => o.IsCast && o.IsTargetingMe) >=1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Vampiric Blood"), 3.2f, (s,t) => Me.HealthPercent <= 30, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Rune Tap"), 3.3f, (s,t) => Me.HealthPercent <= Settings.Current.RuneTap, RotationCombatUtil.FindMe),
             // other useful  Spells
             new RotationStep(new RotationSpell("Empower Rune Weapon"), 3.5f, (s,t) => Me.RunesReadyCount() <= 2, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Chains of Ice"), 3.7f, (s,t) => t.Fleeing, RotationCombatUtil.BotTarget),
@@ -40,7 +41,6 @@ namespace AIO.Combat.DeathKnight
             new RotationStep(new RotationSpell("Blood Strike"), 13f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) == Settings.Current.BloodStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heart Strike"), 14f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) >= Settings.Current.HearthStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Blood Boil"), 15f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) > Settings.Current.BloodBoil, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Rune Tap"), 15.1f, (s,t) => Me.HealthPercent < 50 && Settings.Current.RuneTap, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Death Strike"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Death Coil"), 17f, (s,t) => Me.RunicPower >= 40, RotationCombatUtil.BotTarget)
         };
