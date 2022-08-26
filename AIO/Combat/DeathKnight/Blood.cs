@@ -40,6 +40,7 @@ namespace AIO.Combat.DeathKnight
             new RotationStep(new RotationSpell("Blood Strike"), 13f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) == Settings.Current.BloodStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heart Strike"), 14f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) >= Settings.Current.HearthStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Blood Boil"), 15f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) > Settings.Current.BloodBoil, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Rune Tap"), 15.1f, (s,t) => Me.HealthPercent < 50 && Settings.Current.RuneTap, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Death Strike"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Death Coil"), 17f, (s,t) => Me.RunicPower >= 40, RotationCombatUtil.BotTarget)
         };
