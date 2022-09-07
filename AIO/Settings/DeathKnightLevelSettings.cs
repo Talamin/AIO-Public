@@ -38,6 +38,14 @@ namespace AIO.Settings
         public bool DeathGrip { get; set; }
 
         [Setting]
+        [DefaultValue(50)]
+        [Category("Fight")]
+        [DisplayName("Rune tap")]
+        [Description("Which health % to use Rune tap?")]
+        [Percentage(true)]
+        public int RuneTap { get; set; }
+
+        [Setting]
         [DefaultValue(false)]
         [Category("Fight")]
         [DisplayName("Choose Presence")]
@@ -90,6 +98,7 @@ namespace AIO.Settings
             ChooseTalent = "DeathKnightBlood";
             DarkCommand = true;
             DeathGrip = true;
+            RuneTap = 50;
             Presence = "BloodPresence";
             BloodStrike = 1;
             HearthStrike = 2;

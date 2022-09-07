@@ -24,6 +24,7 @@ namespace AIO.Combat.DeathKnight
             // Defensive Shell on myself
             new RotationStep(new RotationSpell("Anti Magic Shell"), 3.1f, (s,t) => RotationFramework.Enemies.Count(o => o.IsCast && o.IsTargetingMe) >=1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Vampiric Blood"), 3.2f, (s,t) => Me.HealthPercent <= 30, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Rune Tap"), 3.3f, (s,t) => Me.HealthPercent <= Settings.Current.RuneTap, RotationCombatUtil.FindMe),
             // other useful  Spells
             new RotationStep(new RotationSpell("Empower Rune Weapon"), 3.5f, (s,t) => Me.RunesReadyCount() <= 2, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Chains of Ice"), 3.7f, (s,t) => t.Fleeing, RotationCombatUtil.BotTarget),
