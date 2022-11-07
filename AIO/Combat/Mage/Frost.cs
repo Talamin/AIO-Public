@@ -27,8 +27,7 @@ namespace AIO.Combat.Mage
                 RotationCombatUtil.FindEnemyTargetingMe),
             new RotationStep(new RotationSpell("Frost Nova"), 2.2f, (s,t) => t.GetDistance <= 6 && t.HealthPercent > 30 && !Me.IsInGroup, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Ice Barrier"), 3f, (s,t) => t.HealthPercent < 95, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) => (t.HealthPercent < 15 && !t.HaveMyBuff("Ice Barrier"))
-            || (Me.IsInGroup && Me.HealthPercent < 50 && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <=10) > 0), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) => (t.HealthPercent < 15 && !t.HaveMyBuff("Ice Barrier")) || (Me.IsInGroup && Me.HealthPercent < 50 && RotationFramework.Enemies.Count(o => o.IsTargetingMe) > 0), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 5f, (s,t) => t.HealthPercent < 95 && !t.HaveMyBuff("Ice Barrier"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Counterspell"), 6f, (s,t) => t.IsCast, RotationCombatUtil.FindEnemyCasting),
             new RotationStep(new RotationSpell("Cone of Cold"), 7f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10 && o.Position.DistanceTo(Me.Position) <= 10) >= Settings.Current.AOEInstance && Settings.Current.UseAOE, RotationCombatUtil.BotTarget),
@@ -40,7 +39,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => (!Me.IsInGroup && RotationFramework.Enemies.Count() >= 2) || BossList.isboss, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfWaterElemental && ((!Me.IsInGroup && RotationFramework.Enemies.Count() >= 2) || BossList.isboss), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh , RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.HaveMyBuff("Frost Nova") || Me.BuffStack("Fingers of Frost") > 0), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (Me.BuffStack("Fingers of Frost") > 0 || t.HaveMyBuff("Frost Nova")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Fire Blast"), 17f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh  && t.HealthPercent < Settings.Current.FrostFireBlast && !t.HaveBuff("Frost Nova"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Frostbolt"), 18f, (s,t) =>  Me.ManaPercentage > Settings.Current.UseWandTresh , RotationCombatUtil.BotTarget)
