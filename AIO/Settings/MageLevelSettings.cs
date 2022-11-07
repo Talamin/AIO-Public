@@ -106,9 +106,9 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
-        [DisplayName("Glyph of Water Elemental?")]
-        [Description("Keep Water Elemental summoned, if glyphed.")]
-        public bool GlyphOfWaterElemental { get; set; }
+        [DisplayName("Glyph of Eternal Water?")]
+        [Description("Will use Water Elemental as a regular pet, if glyphed.")]
+        public bool GlyphOfEternalWater { get; set; }
 
         [DropdownList(new string[] { "MageFrost", "MageFire", "MageArcane" })]
         public override string ChooseTalent { get; set; }
@@ -130,7 +130,7 @@ namespace AIO.Settings
             UseWand = true;
             UseWandTresh = 20;
             GlyphOfEvocation = false;
-            GlyphOfWaterElemental = false;
+            GlyphOfEternalWater = false;
             Backpaddle = true;
             BackpaddleRange = 20;
         }

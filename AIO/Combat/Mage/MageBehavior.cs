@@ -42,7 +42,7 @@ namespace AIO.Combat.Mage
             if (!Pet.IsAlive)
             {
                 if (WaterElemental.IsSpellUsable && WaterElemental.KnownSpell && !Me.IsMounted
-                    && Settings.Current.GlyphOfWaterElemental)
+                    && Settings.Current.GlyphOfEternalWater)
                 {
                     WaterElemental.Launch();
                     Usefuls.WaitIsCasting();

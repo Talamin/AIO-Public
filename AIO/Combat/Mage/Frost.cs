@@ -37,7 +37,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Evocation"), 10f, (s,t) =>  Settings.Current.GlyphOfEvocation && t.HealthPercent < 20 && RotationFramework.Enemies.Count() >= 2, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Mirror Image"), 11f, (s,t) => (!Me.IsInGroup && RotationFramework.Enemies.Count() >= 3) || BossList.isboss, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => (!Me.IsInGroup && RotationFramework.Enemies.Count() >= 2) || BossList.isboss, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfWaterElemental && ((!Me.IsInGroup && RotationFramework.Enemies.Count() >= 2) || BossList.isboss), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfEternalWater && ((!Me.IsInGroup && RotationFramework.Enemies.Count() >= 2) || BossList.isboss), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh , RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (Me.BuffStack("Fingers of Frost") > 0 || t.HaveMyBuff("Frost Nova")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTarget),
