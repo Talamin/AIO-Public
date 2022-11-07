@@ -96,6 +96,20 @@ namespace AIO.Settings
         [Percentage(true)]
         public int UseWandTresh { get; set; }
 
+        [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Glyph of Evocation?")]
+        [Description("Using Glyph of Evocation? Turns Evocation into a health % cooldown.")]
+        public bool GlyphOfEvocation { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Glyph of Water Elemental?")]
+        [Description("Keep Water Elemental summoned, if glyphed.")]
+        public bool GlyphOfWaterElemental { get; set; }
+
         [DropdownList(new string[] { "MageFrost", "MageFire", "MageArcane" })]
         public override string ChooseTalent { get; set; }
 
@@ -115,6 +129,8 @@ namespace AIO.Settings
             FlamestrikeWithoutCountFire = 3;
             UseWand = true;
             UseWandTresh = 20;
+            GlyphOfEvocation = false;
+            GlyphOfWaterElemental = false;
             Backpaddle = true;
             BackpaddleRange = 20;
         }
