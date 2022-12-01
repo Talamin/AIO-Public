@@ -229,6 +229,13 @@ namespace AIO.Settings
         public string ProtectionCleanse { get; set; }
 
         [Setting]
+        [DefaultValue(true)]
+        [Category("Protection")]
+        [DisplayName("Hammer of Justice")]
+        [Description("Hammer of Justice when more then 1 Target")]
+        public bool ProtectionHammerofJustice { get; set; }
+
+        [Setting]
         [DefaultValue(60)]
         [Category("Holy")]
         [DisplayName("Holy Shock")]
@@ -314,6 +321,7 @@ namespace AIO.Settings
             RetributionHealInCombat = false;
             RetributionHealGroup = false;
             RightDefense = true;
+            ProtectionHammerofJustice = true;
             ProtectionHoP = true;
             RetributionHL = 50;
             RetributionFL = 30;

@@ -27,7 +27,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Hand of Freedom"), 5.5f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Holy Light"), 6f, (s,t) => !Me.IsInGroup && Me.HealthPercent <= 50, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.GetDistance <=15) >= 3 || BossList.isboss, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.HealthPercent >= 75 && RotationCombatUtil.EnemyAttackingCountCluster(20) >= 2, RotationCombatUtil.FindEnemy),
+            new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.HealthPercent >= 75 && RotationCombatUtil.EnemyAttackingCountCluster(20) >= 2 && Settings.Current.ProtectionHammerofJustice, RotationCombatUtil.FindEnemy),
             new RotationStep(new RotationSpell("Avenger's Shield"), 9f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
             //new RotationStep(new RotationSpell("Hand of Salvation"), 7f, (s,t) =>  RotationFramework.AllUnits.Count(o => o.IsAttackable && !o.IsTargetingMe && o.IsTargetingPartyMember && !TraceLine.TraceLineGo(Me.Position, o.Position)) >=2, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Hand of Salvation"), 9.1f, (s,t) => t.InCombatFlagOnly && t.HealthPercent < 99, RotationCombatUtil.FindHeal),
