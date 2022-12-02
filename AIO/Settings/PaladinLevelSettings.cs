@@ -39,6 +39,13 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
+        [DisplayName("Auto Resurrect")]
+        [Description("use Autorevive?")]
+        public bool Resurrect { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("General")]
         [DisplayName("Heal OOC")]
         [Description("Use Healspells Out of Combat?")]
         public bool HealOOC { get; set; }
@@ -231,6 +238,13 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Protection")]
+        [DisplayName("Holy Light")]
+        [Description("Use HL to selfheal when not in group")]
+        public bool ProtectionHolyLight { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Protection")]
         [DisplayName("Hammer of Justice")]
         [Description("Hammer of Justice when more then 1 Target")]
         public bool ProtectionHammerofJustice { get; set; }
@@ -303,6 +317,7 @@ namespace AIO.Settings
             DivinePleaIC = true;
             GeneralDivinePlea = 50;
             GeneralConsecration = 2;
+            Resurrect = true;
             Buffing = true;
             HolyHS = 60;
             HolyHL = 75;
@@ -325,6 +340,7 @@ namespace AIO.Settings
             ProtectionHoP = true;
             RetributionHL = 50;
             RetributionFL = 30;
+            ProtectionHolyLight = true;
             ProtectionSoL = 95;
             ProtectionSoW = 40;
             ProtectionHoR = true;

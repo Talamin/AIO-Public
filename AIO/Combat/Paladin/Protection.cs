@@ -25,7 +25,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.ProtectionCleanse == "Me" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Divine Plea"), 5f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hand of Freedom"), 5.5f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Holy Light"), 6f, (s,t) => !Me.IsInGroup && Me.HealthPercent <= 50, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Holy Light"), 6f, (s,t) => !Me.IsInGroup && Me.HealthPercent <= 50 && Settings.Current.ProtectionHolyLight, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.GetDistance <=15) >= 3 || BossList.isboss, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.HealthPercent >= 75 && RotationCombatUtil.EnemyAttackingCountCluster(20) >= 2 && Settings.Current.ProtectionHammerofJustice, RotationCombatUtil.FindEnemy),
             new RotationStep(new RotationSpell("Avenger's Shield"), 9f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
