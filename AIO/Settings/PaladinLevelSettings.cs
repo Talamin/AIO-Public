@@ -16,7 +16,7 @@ namespace AIO.Settings
         public int GeneralDivinePlea { get; set; }
 
         [Setting]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Divine Protection")]
         [Description("Use Divine Protection")]
