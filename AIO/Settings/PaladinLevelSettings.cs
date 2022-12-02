@@ -16,6 +16,13 @@ namespace AIO.Settings
         public int GeneralDivinePlea { get; set; }
 
         [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Divine Protection")]
+        [Description("Use Divine Protection")]
+        public bool DivineProtection { get; set; }
+
+        [Setting]
         [DefaultValue(2)]
         [Category("General")]
         [DisplayName("Consecration")]
@@ -319,6 +326,7 @@ namespace AIO.Settings
             GeneralConsecration = 2;
             Resurrect = true;
             Buffing = true;
+            DivineProtection = true;
             HolyHS = 60;
             HolyHL = 75;
             HolyFL = 95;

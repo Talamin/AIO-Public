@@ -24,7 +24,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Divine Plea"), 1.1f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hand of Freedom"), 1.2f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => RotationFramework.Enemies.Count(u=> u.IsTargetingMe) >=2, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => Settings.Current.DivineProtection && RotationFramework.Enemies.Count(u=> u.IsTargetingMe) >=2, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Purify"), 2f, (s,t) => !Me.IsInGroup && (Me.HasDebuffType("Disease") || Me.HasDebuffType("Poison")), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Purify"), 3f, (s,t) => (t.HasDebuffType("Disease") || t.HasDebuffType("Poison")) &&  Settings.Current.RetributionPurify, RotationCombatUtil.FindPartyMember),
