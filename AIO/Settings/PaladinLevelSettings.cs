@@ -137,13 +137,6 @@ namespace AIO.Settings
         public bool RetributionLayOnHands { get; set; }
 
         [Setting]
-        [DefaultValue(true)]
-        [Category("General")]
-        [DisplayName("Divine Protection")]
-        [Description("Allow the Use of Divine Protection")]
-        public bool RetributionDivProtection { get; set; }
-
-        [Setting]
         [DefaultValue(false)]
         [Category("Retribution")]
         [DisplayName("Judgement Spam")]
@@ -339,7 +332,6 @@ namespace AIO.Settings
             RetributionPurify = true;
             RetributionSShield = true;
             RetributionLayOnHands = true;
-            RetributionDivProtection = true;
             RetributionJudgementofWisdomSpam = false;
             RetributionHealInCombat = false;
             RetributionHealGroup = false;
