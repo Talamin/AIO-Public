@@ -31,8 +31,8 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => t.HealthPercent <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.HealthPercent <= Settings.Current.RestorationLifebloom, RotationCombatUtil.FindTank),
             new RotationStep(new RotationSpell("Nourish"), 11f, (s, t) => t.HealthPercent <= Settings.Current.RestorationNourish, RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Regrowth"), 12f, (s, t) => t.HealthPercent <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => t.HealthPercent <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember),
+            new RotationStep(new RotationSpell("Regrowth"), 12f, (s, t) => !t.HaveMyBuff("Regrowth") &&  t.HealthPercent <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindPartyMember),
+            new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.HaveMyBuff("Rejuventation") && t.HealthPercent <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember),
         };
 
         private static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
