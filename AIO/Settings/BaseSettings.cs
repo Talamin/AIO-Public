@@ -42,8 +42,8 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
-        [DisplayName("Use synthetic combat events")]
-        [Description("Use synthetic combat events based on state transitions. Do not enable this unless you know what it does.")]
+        [DisplayName("Healbot?")]
+        [Description("Make AIO Compatible with Healbot")]
         public bool UseSyntheticCombatEvents { get; set; }
         
         [Setting]
@@ -64,7 +64,7 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Backwards")]
-        [Description("If you don´t use Automovement, disable this")]
+        [Description("Adjust Position for Automovement")]
         public bool Backwards { get; set; }
 
         [Setting]

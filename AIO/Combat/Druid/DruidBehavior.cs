@@ -28,6 +28,7 @@ namespace AIO.Combat.Druid
                 {"Balance", new Balance() },
                 {"Restoration", new Restoration() },
                 {"GroupFeralTank", new GroupFeralTank()},
+                {"GroupRestorationHeal", new GroupRestorationHeal() },
                 {"Default", new FeralCombat() },
             },
             new Buffs(),
@@ -39,6 +40,7 @@ namespace AIO.Combat.Druid
 
         public override void Initialize()
         {
+
             base.Initialize();
 
             switch (Specialisation)

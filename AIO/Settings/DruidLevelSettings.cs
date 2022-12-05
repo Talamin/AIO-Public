@@ -277,7 +277,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration" })]
         public override string ChooseTalent { get; set; }
 
-        [DropdownList(new string[] { "Auto", "FeralCombat", "Balance", "Restoration", "GroupFeralTank" })]
+        [DropdownList(new string[] { "Auto", "FeralCombat", "Balance", "Restoration", "GroupFeralTank", "GroupRestorationHeal" })]
         public override string ChooseRotation { get; set; }
 
         public DruidLevelSettings()

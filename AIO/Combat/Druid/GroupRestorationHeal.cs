@@ -11,10 +11,10 @@ using static AIO.Constants;
 namespace AIO.Combat.Druid
 {
     using Settings = DruidLevelSettings;
-    internal class Restoration : BaseRotation
+    internal class GroupRestorationHeal : BaseRotation
     {
         private static WoWUnit _tank;
-        public Restoration() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
+        public GroupRestorationHeal() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             //Pre Calculations
@@ -28,9 +28,12 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Remove Curse"), 6f, (s,t) => Settings.Current.RestorationRemoveCurse && t.HasDebuffType("Curse"), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Swiftmend"), 6.1f, (s,t) => t.HaveMyBuff("Rejuvenation") || t.HaveMyBuff("Regrowth"),RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Nature's Swiftness"), 8f, (s, t) => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.RestorationHealingTouch && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Healing Touch"), 8.9f, (s, t) => t.HealthPercent <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindTank),
             new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => t.HealthPercent <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.HealthPercent <= Settings.Current.RestorationLifebloom, RotationCombatUtil.FindTank),
+            new RotationStep(new RotationSpell("Nourish"), 10.9f, (s, t) => t.HealthPercent <= Settings.Current.RestorationNourish, RotationCombatUtil.FindTank),
             new RotationStep(new RotationSpell("Nourish"), 11f, (s, t) => t.HealthPercent <= Settings.Current.RestorationNourish, RotationCombatUtil.FindPartyMember),
+            new RotationStep(new RotationSpell("Regrowth"), 11.9f, (s, t) => !t.HaveMyBuff("Regrowth") &&  t.HealthPercent <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindTank),
             new RotationStep(new RotationSpell("Regrowth"), 12f, (s, t) => !t.HaveMyBuff("Regrowth") &&  t.HealthPercent <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Rejuvenation"), 12.1f, (s, t) => !t.HaveMyBuff("Rejuventation") && t.HealthPercent <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindTank),
             new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.HaveMyBuff("Rejuventation") && t.HealthPercent <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember),
@@ -38,8 +41,10 @@ namespace AIO.Combat.Druid
 
 
         //Find  Custom  Tank
-        private static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
-        _tank != null && predicate(_tank) ? _tank : null;
+        private static WoWUnit FindTank(Func<WoWUnit, bool> predicate)
+        {
+            return _tank != null && predicate(_tank) ? _tank : null;
+        }
 
         private static WoWUnit FindExplicitPartyMemberByName(string name) =>
         RotationFramework.PartyMembers.FirstOrDefault(partyMember =>
