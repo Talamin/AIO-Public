@@ -104,7 +104,7 @@ namespace AIO.Settings
         [DefaultValue(40)]
         [Category("Feral")]
         [DisplayName("OOC Regrowth")]
-        [Description("Set the HealthTreshhold for OOC Regrwoth Healing")]
+        [Description("Set the HealthTreshhold for OOC Regrowth Healing")]
         public int FeralRegrowth { get; set; }
 
         [Setting]
@@ -113,6 +113,20 @@ namespace AIO.Settings
         [DisplayName("OOC Rejuvenation")]
         [Description("Set the HealthTreshhold for OOC Rejuvenation Healing")]
         public int FeralRejuvenation { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Feral")]
+        [DisplayName("IC Regrowth")]
+        [Description("Set the HealthTreshhold for in Combat Regrowth Healing")]
+        public bool FeralRegrowthIC { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Feral")]
+        [DisplayName("OOC Rejuvenation")]
+        [Description("Set the HealthTreshhold for in Combat Rejuvenation Healing")]
+        public bool FeralRejuvenationIC { get; set; }
 
         [Setting]
         [DefaultValue(false)]
@@ -297,7 +311,9 @@ namespace AIO.Settings
             FeralBearCount = 2;
             Innervate = 25;
             FeralRipHealth = 30;
+            FeralRegrowthIC = true;
             FeralRegrowth = 60;
+            FeralRejuvenationIC = true;
             FeralRejuvenation = 30;
             FeralDecurse = false;
             UseAOE = true;
