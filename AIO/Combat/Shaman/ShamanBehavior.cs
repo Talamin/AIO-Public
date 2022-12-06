@@ -47,6 +47,9 @@ namespace AIO.Combat.Shaman
                 case "Enhancement":
                     CombatRange = 5.0f;
                     break;
+                case "Elemental":
+                    CombatRange = 24.0f;
+                    break;
                 case "LowLevel":
                     CombatRange = 25.0f;
                     break;
