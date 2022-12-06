@@ -36,7 +36,6 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.HaveMyBuff("Rejuventation") && t.HealthPercent <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember),
         };
 
-
         //Find  Custom  Tank
         private static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
         _tank != null && predicate(_tank) ? _tank : null;
