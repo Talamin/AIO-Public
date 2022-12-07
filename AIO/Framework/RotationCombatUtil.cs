@@ -169,6 +169,17 @@ namespace AIO.Framework {
             return null;
         }
 
+        public static WoWUnit CFindPartyMemberWithoutMe(Func<WoWUnit, bool> predicate)
+        {
+            for (var i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
+                WoWPlayer partyMember = RotationFramework.PartyMembers[i];
+                if (partyMember.CIsAlive() && partyMember != ObjectManager.Me && predicate(partyMember)) return partyMember;
+            }
+
+            return null;
+        }
+
         public static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
             FindPartyMember(u => u.Name == RotationFramework.TankName && predicate(u));
         

@@ -28,7 +28,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Hand of Reckoning"), 3f, (s,t) => !t.CIsTargetingMe(),_ => Settings.Current.ProtectionHoR, FindEnemyAttackingGroup, checkLoS:true),
             //maybe needs some better Targeting
-            new RotationStep(new RotationSpell("Righteous Defense"), 4f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(u => !u.CIsTargetingMe() && u.CIsTargetingMeOrMyPetOrPartyMember()),RotationCombatUtil.CFindPartyMember,checkLoS:true),
+            new RotationStep(new RotationSpell("Righteous Defense"), 4f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(u => !u.CIsTargetingMe() && u.CIsTargetingMeOrMyPetOrPartyMember()),RotationCombatUtil.CFindPartyMemberWithoutMe,checkLoS:true),
 
             new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => Settings.Current.ProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.CFindPartyMember,checkLoS:true),
             new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.ProtectionCleanse == "Me" && Me.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe, checkRange: false),
