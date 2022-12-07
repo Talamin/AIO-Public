@@ -18,6 +18,7 @@ namespace AIO.Combat.Paladin
                 {"LowLevel", new LowLevel() },
                 {"Holy", new Holy() },
                 {"Protection", new Protection() },
+                {"GroupProtectionTank", new GroupProtectionTank() },
                 {"Retribution", new Retribution() },
                 {"Default", new Retribution() },
             },

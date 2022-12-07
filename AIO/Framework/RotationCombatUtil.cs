@@ -178,6 +178,9 @@ namespace AIO.Framework {
         public static WoWUnit FindHeal(Func<WoWUnit, bool> predicate) =>
             FindPartyMember(u => u.Name == RotationFramework.HealName && predicate(u));
 
+        public static WoWUnit CFindHeal(Func<WoWUnit, bool> predicate) =>
+            CFindPartyMember(u => u.Name == RotationFramework.HealName && predicate(u));
+
         public static WoWUnit FindEnemy(Func<WoWUnit, bool> predicate) =>
             RotationFramework.Enemies.FirstOrDefault(predicate);
 

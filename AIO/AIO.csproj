@@ -276,6 +276,7 @@
     <Compile Include="Combat\Mage\LowLevel.cs" />
     <Compile Include="Combat\Mage\MageBehavior.cs" />
     <Compile Include="Combat\Paladin\Buffs.cs" />
+    <Compile Include="Combat\Paladin\GroupProtectionTank.cs" />
     <Compile Include="Combat\Paladin\HealOOC.cs" />
     <Compile Include="Combat\Paladin\Holy.cs" />
     <Compile Include="Combat\Paladin\LowLevel.cs" />
