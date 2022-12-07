@@ -53,13 +53,13 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationBuff("Retribution Aura"), 8.1f, (s,t) => !Me.IsMounted && Settings.Current.Aura =="Retribution Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Devotion Aura"), 9f, (s,t) => !Me.IsMounted && Settings.Current.Aura =="Devotion Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Concentration Aura"), 10f, (s,t) => !Me.IsMounted && Settings.Current.Aura =="Concentration Aura", RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Blessing of Sanctuary"), 12f, (s, t) => Spec == "Protection", RotationCombatUtil.FindMe, Exclusive.PaladinBlessing),
+            new RotationStep(new RotationBuff("Blessing of Sanctuary"), 12f, (s, t) => (Spec == "Protection" || Spec =="GroupProtectionTank"), RotationCombatUtil.FindMe, Exclusive.PaladinBlessing),
             new RotationStep(new RotationBuff("Blessing of Wisdom"), 13f, (s,t) => t.WowClass != WoWClass.Shaman, RotationCombatUtil.FindHeal, Exclusive.PaladinBlessing),
             new RotationStep(new RotationBuff("Blessing of Might"), 14f, IsBoM,
-                s => RotationFramework.PartyMembers.Count(o=> o.WowClass == WoWClass.Warrior) == 0, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
-            new RotationStep(new RotationBuff("Blessing of Kings"), 15f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
-            new RotationStep(new RotationBuff("Blessing of Wisdom"), 16f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
-            new RotationStep(new RotationBuff("Blessing of Might"), 17f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
+                s => RotationFramework.PartyMembers.Count(o=> o.WowClass == WoWClass.Warrior) == 0, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing, checkLoS: true),
+            new RotationStep(new RotationBuff("Blessing of Kings"), 15f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing, checkLoS: true),
+            new RotationStep(new RotationBuff("Blessing of Wisdom"), 16f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing, checkLoS: true),
+            new RotationStep(new RotationBuff("Blessing of Might"), 17f, RotationCombatUtil.Always, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing, checkLoS: true),
         };
     }
 }
