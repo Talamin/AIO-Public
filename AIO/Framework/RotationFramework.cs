@@ -67,32 +67,58 @@ namespace AIO.Framework
             }
         }
 
-        private void UpdatePartyMembers(string name, List<string> args)
+        public static void UpdatePartyMembers(string name, List<string> args)
         {
             if (name != "INSTANCE_BOOT_START")
             {
                 return;
             }
-            string tankName = Lua.LuaDoString<string>(@"
+            string tankName;
+            string healName;
+            bool IsTank = Lua.LuaDoString<bool>(@"
+                            local isTank,_,_ = UnitGroupRolesAssigned('player')
+                                if isTank then
+                                    return true
+                                end");
+            if (IsTank)
+            {
+                tankName = Me.Name;
+            }
+            else
+            {
+                tankName = Lua.LuaDoString<string>(@"
                             for i = 1, 4 do 
                                 local isTank,_,_ = UnitGroupRolesAssigned('party' .. i)
                                 if isTank then                                    
                                     return UnitName('party' .. i);
                                 end
-                            end").Split(new [] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
+                            end").Split(new[] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
+            }
+
             if (tankName != TankName)
             {
                 Logging.Write($"Tank name: {tankName}");
                 TankName = tankName;
             }
-
-            string healName = Lua.LuaDoString<string>(@"
+            bool IsHealer = Lua.LuaDoString<bool>(@"
+                            local _,isHeal,_ = UnitGroupRolesAssigned('player')
+                                if isHeal then
+                                    return true
+                                end");
+            if (IsHealer)
+            {
+                healName = Me.Name;
+            }
+            else
+            {
+                healName = Lua.LuaDoString<string>(@"
                             for i = 1, 4 do 
                                 local _,isHeal,_ = UnitGroupRolesAssigned('party' .. i)
                                 if isHeal then                                    
                                     return UnitName('party' .. i);
                                 end
-                            end").Split(new [] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
+                            end").Split(new[] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
+            }
             if (healName != HealName)
             {
                 Logging.Write($"Heal name: {healName}");

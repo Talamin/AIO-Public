@@ -24,6 +24,7 @@ namespace AIO.Combat.Mage
             {
                 {"LowLevel", new LowLevel() },
                 {"Frost", new Frost() },
+                {"GroupFrost", new GroupFrost() },
                 {"Arcane", new Arcane() },
                 {"Fire", new Fire() },
                 {"Default", new Frost() },
