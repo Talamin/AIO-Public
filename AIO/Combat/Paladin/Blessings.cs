@@ -29,11 +29,13 @@ namespace AIO.Combat.Paladin
         private static readonly string Wisdom = "Blessing of Wisdom";
         private static readonly string Kings = "Blessing of Kings";
         private static readonly string Might = "Blessing of Might";
-        private static readonly string ManaSpring = "Mana Spring Totem";
+        private static readonly string ManaSpring = "Mana Spring";
+        private static readonly string ManaTideTotem = "Mana Tide Totem";
 
         private readonly bool KnowSanctuary = SpellManager.KnowSpell(Sanctuary);
         private readonly bool KnowKings = SpellManager.KnowSpell(Kings);
         private readonly bool HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
+        private readonly bool HaveShaman = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Shaman) != 0;
 
         internal Blessings(BaseCombatClass combatClass) : base(runInCombat: true, runOutsideCombat: true) => CombatClass = combatClass;
 
