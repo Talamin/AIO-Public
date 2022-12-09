@@ -406,6 +406,7 @@
         </PostBuildEventDependsOn>
     <PostBuildEvent>xcopy /Y/F "$(TargetDir)\AIO.dll" "$(ProjectDir)\Compiled"
 echo Writing assembly version in Version.txt: @(VersionNumber)
-echo @(VersionNumber) &gt; $(ProjectDir)\Compiled\Version.txt</PostBuildEvent>
+echo @(VersionNumber) &gt; $(ProjectDir)\Compiled\Version.txt
+xcopy /Y/F "$(TargetDir)\AIO.dll" "E:\Games\BOT3.3.5\WRobot\WRobot\FightClass"</PostBuildEvent>
   </PropertyGroup>
 </Project>

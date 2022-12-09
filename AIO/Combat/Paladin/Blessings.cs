@@ -21,7 +21,7 @@ namespace AIO.Combat.Paladin
         private readonly BaseCombatClass CombatClass;
 
         private Stopwatch watch = Stopwatch.StartNew();
-        private readonly int MAX_CACHE_AGE = 1000;
+        private readonly int MAX_CACHE_AGE = 5000;
         private readonly Dictionary<string, string> PlayerBuff = new Dictionary<string, string>();
 
 
@@ -65,22 +65,38 @@ namespace AIO.Combat.Paladin
         {
             if (CacheIsValid(MAX_CACHE_AGE)) return false;
             Cache.Reset();
-            if (Me.IsInGroup &&(String.IsNullOrEmpty(RotationFramework.TankName) || String.IsNullOrEmpty(RotationFramework.HealName)))
+            if (Me.IsInGroup)
             {
-                Logging.Write("Updating Tank and Healer names");
-                RotationFramework.UpdatePartyMembers("INSTANCE_BOOT_START", null);
-                Logging.Write($"Tank : {RotationFramework.TankName}, Healer : {RotationFramework.HealName}");
+                if ((String.IsNullOrEmpty(RotationFramework.TankName) || String.IsNullOrEmpty(RotationFramework.HealName)))
+                {
+                    Logging.Write("Updating Tank and Healer names");
+                    RotationFramework.UpdatePartyMembers("INSTANCE_BOOT_START", null);
+                    Logging.Write($"Tank : {RotationFramework.TankName}, Healer : {RotationFramework.HealName}");
+                }
+                foreach (WoWPlayer player in RotationFramework.PartyMembers)
+                {
+                    //if (!PlayerBuff.ContainsKey(player.Name) || String.IsNullOrEmpty(PlayerBuff[player.Name]))
+                    PlayerBuff[player.Name] = GetBuff(player);
+                }
             }
-            foreach (WoWPlayer player in RotationFramework.PartyMembers)
+            else
             {
-                //if (!PlayerBuff.ContainsKey(player.Name) || String.IsNullOrEmpty(PlayerBuff[player.Name]))
-                PlayerBuff[player.Name] = GetBuff(player);
+                PlayerBuff[Me.Name] = GetBuff(Me);
             }
             return false;
         }
 
         private string GetBuff(WoWUnit player)
         {
+            if (player == Me)
+            {
+                if (CombatClass.Specialisation == "Protection" || CombatClass.Specialisation == "GroupProtectionTank")
+                    return GetTankBuff(player);
+                if (CombatClass.Specialisation == "Holy" || CombatClass.Specialisation == "Group Holy")
+                    return GetHealerBuff(player);
+                if (CombatClass.Specialisation == "Retribution")
+                    return GetMeleeBuff(player);
+            }
             if (RotationFramework.TankName == player.Name)
                 return GetTankBuff(player);
             if (RotationFramework.HealName == player.Name)
