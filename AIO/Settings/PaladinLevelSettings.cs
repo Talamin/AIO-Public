@@ -305,7 +305,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "PaladinProtection" })]
         public override string ChooseTalent { get; set; }
 
-        [DropdownList(new string[] { "Auto", "Retribution", "Holy", "Protection","GroupProtectionTank" })]
+        [DropdownList(new string[] { "Auto", "Retribution", "Holy","GroupHolyHeal", "Protection","GroupProtectionTank" })]
         public override string ChooseRotation { get; set; }
 
         public PaladinLevelSettings()

@@ -14,6 +14,8 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationSpell("Hunter's Mark"), 6f, (s,t) => t.GetDistance >= 5 && !t.HaveMyBuff("Hunter's Mark") && t.IsAlive && t.GetDistance >= 5 && t.HealthPercent > 50, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Kill Command"), 6.1f, (s,t) => !Me.HaveBuff("Kill Command"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Serpent Sting"), 7f, (s,t) => t.GetDistance >= 5 && !t.HaveMyBuff("Serpent Sting") , RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Arcane Shot"), 7.1f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
+          //  new RotationStep(new RotationSpell("Multi Shot"), 7.1f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Black Arrow"), 8f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Explosive Shot"), 9f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Aimed Shot"), 10f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),

@@ -17,6 +17,7 @@ namespace AIO.Combat.Paladin
             {
                 {"LowLevel", new LowLevel() },
                 {"Holy", new Holy() },
+                {"Group Holy", new GroupHolyHeal() },
                 {"Protection", new Protection() },
                 {"GroupProtectionTank", new GroupProtectionTank() },
                 {"Retribution", new Retribution() },
@@ -25,7 +26,9 @@ namespace AIO.Combat.Paladin
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
+            //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
         }
         public override void Initialize()
         {
@@ -34,6 +37,7 @@ namespace AIO.Combat.Paladin
             switch (Specialisation)
             {
                 case "Holy":
+                case "GroupHolyHeal":
                     CombatRange = 29.0f;
                     break;
                 default:

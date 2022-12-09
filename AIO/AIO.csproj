@@ -244,6 +244,7 @@
     <Compile Include="Combat\Common\BaseCombatClass.cs" />
     <Compile Include="Combat\Common\BaseRotation.cs" />
     <Compile Include="Combat\Common\ConditionalCycleable.cs" />
+    <Compile Include="Combat\Common\HealerRotation.cs" />
     <Compile Include="Combat\Common\ICycleable.cs" />
     <Compile Include="Combat\Addons\PetAutoTarget.cs" />
     <Compile Include="Combat\Common\DeferredCycleable.cs" />
@@ -273,13 +274,17 @@
     <Compile Include="Combat\Mage\Buffs.cs" />
     <Compile Include="Combat\Mage\Fire.cs" />
     <Compile Include="Combat\Mage\Frost.cs" />
+    <Compile Include="Combat\Mage\GroupFrost.cs" />
     <Compile Include="Combat\Mage\LowLevel.cs" />
     <Compile Include="Combat\Mage\MageBehavior.cs" />
+    <Compile Include="Combat\Paladin\Blessings.cs" />
     <Compile Include="Combat\Paladin\Buffs.cs" />
+    <Compile Include="Combat\Paladin\GroupHolyHeal.cs" />
     <Compile Include="Combat\Paladin\GroupProtectionTank.cs" />
     <Compile Include="Combat\Paladin\HealOOC.cs" />
     <Compile Include="Combat\Paladin\Holy.cs" />
     <Compile Include="Combat\Paladin\LowLevel.cs" />
+    <Compile Include="Combat\Paladin\NewBuffs.cs" />
     <Compile Include="Combat\Paladin\PaladinBehavior.cs" />
     <Compile Include="Combat\Paladin\Protection.cs" />
     <Compile Include="Combat\Paladin\Retribution.cs" />
@@ -401,6 +406,7 @@
         </PostBuildEventDependsOn>
     <PostBuildEvent>xcopy /Y/F "$(TargetDir)\AIO.dll" "$(ProjectDir)\Compiled"
 echo Writing assembly version in Version.txt: @(VersionNumber)
-echo @(VersionNumber) &gt; $(ProjectDir)\Compiled\Version.txt</PostBuildEvent>
+echo @(VersionNumber) &gt; $(ProjectDir)\Compiled\Version.txt
+xcopy /Y/F "$(TargetDir)\AIO.dll" "E:\Games\BOT3.3.5\WRobot\WRobot\FightClass"</PostBuildEvent>
   </PropertyGroup>
 </Project>
