@@ -32,6 +32,7 @@ namespace AIO.Combat.Paladin
         private static readonly string ManaSpring = "Mana Spring Totem";
 
         private readonly bool KnowSanctuary = SpellManager.KnowSpell(Sanctuary);
+        private readonly bool KnowKings = SpellManager.KnowSpell(Kings);
         private readonly bool HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
 
         internal Blessings(BaseCombatClass combatClass) : base(runInCombat: true, runOutsideCombat: true) => CombatClass = combatClass;
@@ -139,7 +140,7 @@ namespace AIO.Combat.Paladin
 
         private string GetMeleeBuff(WoWUnit player)
         {
-            if (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings))
+            if (KnowKings && (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings)))
                 return Kings;
             if (!HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might)))
                 return Might;
