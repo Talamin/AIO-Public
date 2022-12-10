@@ -30,7 +30,7 @@ namespace AIO.Combat.Paladin
         private static readonly string Kings = "Blessing of Kings";
         private static readonly string Might = "Blessing of Might";
         private static readonly string ManaSpring = "Mana Spring Totem";
-        private static readonly string ManaSpring2 = "Mana Totem";
+        private static readonly string ManaSpring2 = "Mana Spring";
 
 
         private readonly bool KnowSanctuary = SpellManager.KnowSpell(Sanctuary);
@@ -148,8 +148,7 @@ namespace AIO.Combat.Paladin
                 return Might;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary)))
                 return Sanctuary;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && (!player.CHaveBuff(ManaSpring) || !player.CHaveBuff(ManaSpring2)))
-                return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
             else
                 return "";
         }
@@ -157,7 +156,7 @@ namespace AIO.Combat.Paladin
         private string GetCasterBuff(WoWUnit player)
         {
             if (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings)) return Kings;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && (!player.CHaveBuff(ManaSpring) || !player.CHaveBuff(ManaSpring2))) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary))) return Sanctuary;
             if (!HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
             else
@@ -166,7 +165,7 @@ namespace AIO.Combat.Paladin
 
         private string GetHealerBuff(WoWUnit player)
         {
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && (!player.CHaveBuff(ManaSpring) || !player.CHaveBuff(ManaSpring2))) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
             if (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings)) return Kings;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary))) return Sanctuary;
             if (!HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
@@ -179,7 +178,7 @@ namespace AIO.Combat.Paladin
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || !player.CHaveBuff(ManaSpring) || !player.CHaveBuff(ManaSpring2))) return Sanctuary;
             if (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings)) return Kings;
             if (!HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring)) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
             else
                 return "";
         }
