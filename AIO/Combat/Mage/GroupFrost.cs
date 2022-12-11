@@ -22,8 +22,8 @@ namespace AIO.Combat.Mage
         private Stopwatch watch = Stopwatch.StartNew();
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
-            new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.CManaPercentage() < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.CIsCast() && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.CManaPercentage() < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.CIsCast() && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Mana Shield"), 1.1f, (s,t) => Me.CHealthPercent() <= 60 && Me.CManaPercentage() >= 30 && !Me.HaveBuff("Mana Shield"), RotationCombatUtil.FindMe),
             //// Only cast Polymorph if Sheep is enabled in settings
             //new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 
@@ -38,21 +38,21 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationBuff("Ice Barrier"), 3f, (s,t) => t.CHealthPercent() < 99, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) =>  Me.CHealthPercent() < 30 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 5f, (s,t) => t.CHealthPercent() < 80 && !t.HaveMyBuff("Ice Barrier"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Counterspell"), 6f, (s,t) => t.CIsCast(), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Cone of Cold"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.AOEInstance) && Settings.Current.UseAOE, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 , Settings.Current.AOEInstance) && Settings.Current.UseAOE, FindBlizzardCluster),
-            new RotationStep(new RotationSpell("Frostfire Bolt"), 8f, (s,t) => Me.CHaveMyBuff("Fireball!"), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Counterspell"), 6f, (s,t) => t.CIsCast(), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Cone of Cold"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.AOEInstance) && Settings.Current.UseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 , Settings.Current.AOEInstance) && Settings.Current.UseAOE, FindBlizzardCluster, checkLoS: true),
+            new RotationStep(new RotationSpell("Frostfire Bolt"), 8f, (s,t) => Me.CHaveMyBuff("Fireball!"), RotationCombatUtil.BotTargetFast, checkLoS: true),
 
             new RotationStep(new RotationSpell("Cold Snap"), 9f, (s,t) => !Me.CHaveBuff("Ice Barrier") && Me.CHealthPercent() < 95, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Evocation"), 10f, (s,t) =>  Settings.Current.GlyphOfEvocation && t.CHealthPercent() < 20 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 2), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Mirror Image"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfEternalWater && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh && (Me.CBuffStack("Fingers of Frost") > 0 || t.CHaveMyBuff("Frost Nova")), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Fire Blast"), 17f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && t.CHealthPercent() < Settings.Current.FrostFireBlast , RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Frostbolt"), 18f, (s,t) =>  Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast)
+            new RotationStep(new RotationSpell("Mirror Image"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfEternalWater && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh && (Me.CBuffStack("Fingers of Frost") > 0 || t.CHaveMyBuff("Frost Nova")), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Fire Blast"), 17f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && t.CHealthPercent() < Settings.Current.FrostFireBlast , RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Frostbolt"), 18f, (s,t) =>  Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast, checkLoS: true)
         };
 
         private bool DoPreCalculations()
