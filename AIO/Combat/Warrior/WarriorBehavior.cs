@@ -26,6 +26,7 @@ namespace AIO.Combat.Warrior
                 {"Arms", new Arms() },
                 {"Protection", new Protection() },
                 {"Fury", new Fury() },
+                {"GroupFury", new Fury() },
                 {"Default", new Protection() },
             })
         {

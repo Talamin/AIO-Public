@@ -317,6 +317,7 @@
     <Compile Include="Combat\Warrior\Arms.cs" />
     <Compile Include="Combat\Warrior\Buffs.cs" />
     <Compile Include="Combat\Warrior\Fury.cs" />
+    <Compile Include="Combat\Warrior\GroupFury.cs" />
     <Compile Include="Combat\Warrior\LowLevel.cs" />
     <Compile Include="Combat\Warrior\Protection.cs" />
     <Compile Include="Combat\Warrior\WarriorBehavior.cs" />

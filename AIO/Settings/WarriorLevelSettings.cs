@@ -10,7 +10,7 @@ namespace AIO.Settings
     {
         [Setting]
         [DefaultValue(true)]
-        [Category("Fight")]
+        [Category("General")]
         [DisplayName("Hamstring")]
         [Description("Use Hamstring in your Rotation?")]
         public bool Hamstring { get; set; }
@@ -18,9 +18,9 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Fury")]
-        [DisplayName("Charge")]
-        [Description("Should we use Charge?")]
-        public bool FuryCharge { get; set; }
+        [DisplayName("Intercept")]
+        [Description("Should we use Intercept?")]
+        public bool FuryIntercept { get; set; }
 
         [Setting]
         [DefaultValue(true)]
@@ -95,7 +95,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "WarriorProtection", "WarriorArms", "WarriorFury" })]
         public override string ChooseTalent { get; set; }
 
-        [DropdownList(new string[] { "Auto", "Protection", "Arms", "Fury" })]
+        [DropdownList(new string[] { "Auto", "Protection", "Arms", "Fury","GroupFury" })]
         public override string ChooseRotation { get; set; }
 
         public WarriorLevelSettings()
@@ -103,7 +103,7 @@ namespace AIO.Settings
             ChooseTalent = "WarriorFury";
             PullRanged = true;
             Hamstring = true;
-            FuryCharge = true;
+            FuryIntercept = true;
             ProtectionIntercept = true;
             ProtectionShieldBlock = 2;
             ProtectionShieldWall = 3;
