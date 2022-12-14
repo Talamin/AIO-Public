@@ -26,7 +26,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Wild Growth"), 2.1f, (s,t) => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.RestorationWildGrowth && o.GetDistance <= 40) >= Settings.Current.RestorationWildGrowthCount, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Abolish Poison"), 5f, (s,t) => Settings.Current.RestorationRemovePoison && !t.HaveMyBuff("Abolish Poison") && t.HasDebuffType("Poison"), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Remove Curse"), 6f, (s,t) => Settings.Current.RestorationRemoveCurse && t.HasDebuffType("Curse"), RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Swiftmend"), 6.1f, (s,t) => t.HaveMyBuff("Rejuvenation") || t.HaveMyBuff("Regrowth"),RotationCombatUtil.FindPartyMember),
+            new RotationStep(new RotationSpell("Swiftmend"), 6.1f, (s,t) => t.HealthPercent < 60 && (t.HaveMyBuff("Rejuvenation") || t.HaveMyBuff("Regrowth")),RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Nature's Swiftness"), 8f, (s, t) => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.RestorationHealingTouch && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => t.HealthPercent <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.HealthPercent <= Settings.Current.RestorationLifebloom, RotationCombatUtil.FindTank),
