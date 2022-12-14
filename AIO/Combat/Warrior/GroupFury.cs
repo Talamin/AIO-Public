@@ -16,7 +16,7 @@ namespace AIO.Combat.Warrior
     using Settings = WarriorLevelSettings;
     internal class GroupFury : BaseRotation
     {
-        private static readonly string Intercept = "Blessing of Sanctuary";
+        private static readonly string Intercept = "Intercept";
         private readonly bool KnowIntercept = SpellManager.KnowSpell(Intercept);
 
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
@@ -34,7 +34,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Execute"), 9f, (s1,t) => t.CHealthPercent() < 20, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Victory Rush"), 10f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Rend"), 11f, (s,t) => !t.CHaveMyBuff("Rend") && !t.IsCreatureType("Elemental"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Intercept"), 12f, (s,t) => !KnowIntercept && Settings.Current.FuryIntercept && Me.CRage() > 10 && t.CGetDistance() > 7 && t.CGetDistance() <= 24, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Intercept"), 12f, (s,t) => KnowIntercept && Settings.Current.FuryIntercept && Me.CRage() > 10 && t.CGetDistance() > 7 && t.CGetDistance() <= 24, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Charge"), 13f, (s,t) => !KnowIntercept && Settings.Current.FuryIntercept && t.CGetDistance() > 7, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Thunder Clap"), 14f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Whirlwind"), 15f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
