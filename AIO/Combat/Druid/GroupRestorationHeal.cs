@@ -19,7 +19,7 @@ namespace AIO.Combat.Druid
         private static WoWUnit _tank;
         private List<WoWPlayer> _hurtPartyMembers = new List<WoWPlayer>(0);
         private Stopwatch watch = Stopwatch.StartNew();
-        public GroupRestorationHeal() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
+        public GroupRestorationHeal() : base(runInCombat: true, runOutsideCombat: true, useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             //Pre Calculations
