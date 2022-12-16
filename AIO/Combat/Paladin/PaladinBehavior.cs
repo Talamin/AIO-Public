@@ -17,7 +17,7 @@ namespace AIO.Combat.Paladin
             {
                 {"LowLevel", new LowLevel() },
                 {"Holy", new Holy() },
-                {"Group Holy", new GroupHolyHeal() },
+                {"GroupHolyHeal", new GroupHolyHeal() },
                 {"Protection", new Protection() },
                 {"GroupProtectionTank", new GroupProtectionTank() },
                 {"Retribution", new Retribution() },
