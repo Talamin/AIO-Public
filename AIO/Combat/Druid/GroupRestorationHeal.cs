@@ -25,7 +25,7 @@ namespace AIO.Combat.Druid
             //Pre Calculations
             new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f, (action, me) => DoPreCalculations(),
                 RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => t.Reaction <= wManager.Wow.Enums.Reaction.Neutral &&  !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Tree of Life"), 1.1f, (s, t) => !Me.CHaveBuff("Tree of Life"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Innervate"), 2f, (s, t) => Me.CManaPercentage() <= 15, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Wild Growth"), 2.1f, RotationCombatUtil.Always, FindWildgrowthCluster, checkLoS:true),
@@ -43,6 +43,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Rejuvenation"), 12.1f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindTank, checkLoS:true),
             new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember, checkLoS:true),
         };
+
 
         private bool DoPreCalculations()
         {
@@ -109,7 +110,6 @@ namespace AIO.Combat.Druid
             }
             return largestCenter;
         }
-
         //Find  Custom  Tank
         private static WoWUnit FindTank(Func<WoWUnit, bool> predicate)
         {
