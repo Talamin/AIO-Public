@@ -95,7 +95,7 @@ namespace AIO.Combat.Paladin
             {
                 if (CombatClass.Specialisation == "Protection" || CombatClass.Specialisation == "GroupProtectionTank")
                     return GetTankBuff(player);
-                if (CombatClass.Specialisation == "Holy" || CombatClass.Specialisation == "Group Holy")
+                if (CombatClass.Specialisation == "Holy" || CombatClass.Specialisation == "GroupHolyHeal")
                     return GetHealerBuff(player);
                 if (CombatClass.Specialisation == "Retribution")
                     return GetMeleeBuff(player);
