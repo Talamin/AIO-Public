@@ -37,7 +37,7 @@ namespace AIO.Combat.Paladin
 
             new RotationStep(new RotationBuff("Righteous Fury"), 4f, (s, t) => ProtSpecs(), RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationBuff("Crusader Aura"), 7.3f, (s,t) => !Me.IsOnTaxi && Me.IsMounted && Settings.Current.Crusader, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Crusader Aura"), 7.3f, (s,t) => Me.IsMounted && Settings.Current.Crusader, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Retribution Aura"), 8f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Retribution Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Devotion Aura"), 9f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Devotion Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Concentration Aura"), 10f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Concentration Aura", RotationCombatUtil.FindMe),

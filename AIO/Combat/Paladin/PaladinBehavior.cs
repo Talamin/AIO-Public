@@ -1,7 +1,11 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Settings;
+using robotManager.Helpful;
 using System.Collections.Generic;
+using System.ComponentModel;
+using wManager.Wow.Helpers;
+using wManager.Wow.ObjectManager;
 
 namespace AIO.Combat.Paladin
 {
@@ -10,6 +14,7 @@ namespace AIO.Combat.Paladin
     {
         private float CombatRange;
         public override float Range => CombatRange;
+        private static readonly string crusader = "Crusader Aura";
 
         internal PaladinBehavior() : base(
             Settings.Current,
@@ -43,6 +48,16 @@ namespace AIO.Combat.Paladin
                 default:
                     CombatRange = 5.0f;
                     break;
+            }
+        }
+
+        protected override void OnObjectManagerPulse()
+        {
+            if (!Settings.Current.Crusader)
+                return;
+            if(SpellManager.KnowSpell(crusader) && ObjectManager.Me.IsMounted && !ObjectManager.Me.HaveBuff(crusader))
+            {
+                SpellManager.CastSpellByNameLUA(crusader);
             }
         }
     }
