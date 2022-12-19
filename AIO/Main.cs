@@ -147,6 +147,7 @@ public class Main : ICustomClass {
             case "EQUIP_BIND_CONFIRM":
             case "LOOT_BIND_CONFIRM":
             case "USE_BIND_CONFIRM":
+            case "BIND_ENCHANT":
                 Usefuls.SelectGossipOption(1);
                 return;
             default:
