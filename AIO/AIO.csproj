@@ -39,7 +39,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Talamin|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Talamin\</OutputPath>
+    <OutputPath>..\..\..\..\Games\BOT3.3.5\WRobot\WRobot\FightClass\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>

@@ -84,6 +84,7 @@ namespace AIO.Combat.Rogue
                         ItemsManager.UseItem(MHPoison);
                         Thread.Sleep(100 + Usefuls.Latency);
                         Lua.RunMacroText("/use 16");
+                        Usefuls.SelectGossipOption(1);
                         Usefuls.WaitIsCasting();
                     }
                 }
@@ -100,6 +101,8 @@ namespace AIO.Combat.Rogue
                         ItemsManager.UseItem(MHPoison);
                         Thread.Sleep(100 + Usefuls.Latency);
                         Lua.RunMacroText("/use 16");
+                        Thread.Sleep(100 + Usefuls.Latency);
+                        Lua.LuaDoString("StaticPopup1Button1:Click()");
                         Usefuls.WaitIsCasting();
                     }
                 }
@@ -117,6 +120,8 @@ namespace AIO.Combat.Rogue
                     ItemsManager.UseItem(OHPoison);
                     Thread.Sleep(100 + Usefuls.Latency);
                     Lua.RunMacroText("/use 17");
+                    Thread.Sleep(100 + Usefuls.Latency);
+                    Lua.LuaDoString("StaticPopup1Button1:Click()");
                     Usefuls.WaitIsCasting();
                 }
             }
