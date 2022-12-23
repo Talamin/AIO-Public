@@ -37,6 +37,13 @@ namespace AIO.Settings
         public int FeralBearCount { get; set; }
 
         [Setting]
+        [DefaultValue(true)]
+        [Category("Feral")]
+        [DisplayName("FeralCharge")]
+        [Description("Use Feral Charge?")]
+        public bool FeralCharge { get; set; }
+
+        [Setting]
         [DefaultValue(25)]
         [Category("General")]
         [DisplayName("Innervate")]
@@ -306,6 +313,7 @@ namespace AIO.Settings
             FBC = 5;
             FFF = true;
             Dash = true;
+            FeralCharge = true;
             FeralFB = true;
             FeralRip = true;
             FeralBearCount = 2;
