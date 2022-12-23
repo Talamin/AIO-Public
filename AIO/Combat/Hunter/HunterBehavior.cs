@@ -28,10 +28,10 @@ namespace AIO.Combat.Hunter
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"BeastMastery", new BeastMastery() },
-                {"Marksmanship", new Marksmanship() },
-                {"Survival", new Survival() },
-                {"Default", new BeastMastery() },
+                {"SoloBeastMastery", new SoloBeastMastery() },
+                {"SoloMarksmanship", new SoloMarksmanship() },
+                {"SoloSurvival", new SoloSurvival() },
+                {"Default", new SoloBeastMastery() },
             },
             new Buffs(),
             new PetAutoTarget("Growl"),

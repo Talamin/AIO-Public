@@ -7,7 +7,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Hunter
 {
     using Settings = HunterLevelSettings;
-    internal class Survival : BaseRotation
+    internal class SoloSurvival : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
@@ -21,8 +21,8 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationSpell("Aimed Shot"), 10f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Steady Shot"), 11f, (s,t) => t.GetDistance >= 5 , RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Raptor Strike"), 12f, (s,t) => t.GetDistance < 5, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Disengage"), 13f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.Dis, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Feign Death"), 14f, (s,t) => t.GetDistance < 5 && Me.HealthPercent < 50 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.FD, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Disengage"), 13f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipDis, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Feign Death"), 14f, (s,t) => t.GetDistance < 5 && Me.HealthPercent < 50 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipFD, RotationCombatUtil.BotTarget),
         };
     }
 }

@@ -265,11 +265,11 @@
     <Compile Include="Combat\Druid\Restoration.cs" />
     <Compile Include="Combat\Hunter\Buffs.cs" />
     <Compile Include="Combat\Hunter\HunterBehavior.cs" />
-    <Compile Include="Combat\Hunter\BeastMastery.cs" />
+    <Compile Include="Combat\Hunter\SoloBeastMastery.cs" />
     <Compile Include="Combat\Hunter\LowLevel.cs" />
-    <Compile Include="Combat\Hunter\Marksmanship.cs" />
+    <Compile Include="Combat\Hunter\SoloMarksmanship.cs" />
     <Compile Include="Combat\Hunter\PetHelper.cs" />
-    <Compile Include="Combat\Hunter\Survival.cs" />
+    <Compile Include="Combat\Hunter\SoloSurvival.cs" />
     <Compile Include="Combat\Mage\Arcane.cs" />
     <Compile Include="Combat\Mage\Buffs.cs" />
     <Compile Include="Combat\Mage\Fire.cs" />
