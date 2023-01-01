@@ -27,6 +27,7 @@ namespace AIO.Combat.Mage
                 {"GroupFrost", new GroupFrost() },
                 {"Arcane", new Arcane() },
                 {"Fire", new Fire() },
+                {"GroupFire", new GroupFire() },
                 {"Default", new Frost() },
             },
             new Buffs(),

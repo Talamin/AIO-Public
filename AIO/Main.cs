@@ -27,6 +27,7 @@ using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 using WholesomeWOTLKAIO;
+using MarsSettingsGUI;
 
 public class Main : ICustomClass {
     private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;

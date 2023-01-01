@@ -274,6 +274,7 @@
     <Compile Include="Combat\Mage\Buffs.cs" />
     <Compile Include="Combat\Mage\Fire.cs" />
     <Compile Include="Combat\Mage\Frost.cs" />
+    <Compile Include="Combat\Mage\GroupFire.cs" />
     <Compile Include="Combat\Mage\GroupFrost.cs" />
     <Compile Include="Combat\Mage\LowLevel.cs" />
     <Compile Include="Combat\Mage\MageBehavior.cs" />

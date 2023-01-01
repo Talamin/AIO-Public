@@ -113,7 +113,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "MageFrost", "MageFire", "MageArcane" })]
         public override string ChooseTalent { get; set; }
 
-        [DropdownList(new string[] { "Auto", "Frost","GroupFrost", "Fire", "Arcane" })]
+        [DropdownList(new string[] { "Auto", "Frost","GroupFrost", "Fire", "GroupFire", "Arcane" })]
         public override string ChooseRotation { get; set; }
 
         public MageLevelSettings()
