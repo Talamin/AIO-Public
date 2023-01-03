@@ -10,7 +10,7 @@ namespace AIO.Combat.Rogue
     internal class LowLevel : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new RotationSpell("Eviscerate"), 2f, (s, t) =>Me.ComboPoint >= Settings.Current.Eviscarate, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Eviscerate"), 2f, (s, t) =>Me.ComboPoint >= 1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Evasion"), 3f, (s, t) =>Me.HealthPercent < 30, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sinister Strike"), 4f, (s, t) =>true, RotationCombatUtil.BotTarget),
         };
