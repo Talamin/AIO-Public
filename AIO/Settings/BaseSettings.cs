@@ -18,25 +18,25 @@ namespace AIO.Settings
         [Description("Use framelock for better logic performance, but lower FPS")]
         public bool FrameLock { get; set; }
 
-        [Setting]
-        [DefaultValue(50)]
-        [Category("General")]
-        [DisplayName("Scan Range")]
-        [Description("Unit scan range for caching")]
+        //[Setting]
+        //[DefaultValue(50)]
+        //[Category("General")]
+        //[DisplayName("Scan Range")]
+        //[Description("Unit scan range for caching")]
         public int ScanRange { get; set; }
 
-        [Setting]
-        [DefaultValue(5)]
-        [Category("General")]
-        [DisplayName("Players LoS Credits")]
-        [Description("Maximum number of players to compute LoS for, as part of the caching")]
+        //[Setting]
+        //[DefaultValue(5)]
+        //[Category("General")]
+        //[DisplayName("Players LoS Credits")]
+        //[Description("Maximum number of players to compute LoS for, as part of the caching")]
         public int LoSCreditsPlayers { get; set; }
 
-        [Setting]
-        [DefaultValue(10)]
-        [Category("General")]
-        [DisplayName("NPCs LoS Credits")]
-        [Description("Maximum number of NPCs to compute LoS for, as part of the caching")]
+        //[Setting]
+        //[DefaultValue(10)]
+        //[Category("General")]
+        //[DisplayName("NPCs LoS Credits")]
+        //[Description("Maximum number of NPCs to compute LoS for, as part of the caching")]
         public int LoSCreditsNPCs { get; set; }
 
         [Setting]
@@ -45,14 +45,14 @@ namespace AIO.Settings
         [DisplayName("Healbot?")]
         [Description("Make AIO Compatible with Healbot")]
         public bool UseSyntheticCombatEvents { get; set; }
-        
-        [Setting]
-        [DefaultValue(false)]
-        [Category("General")]
-        [DisplayName("Straight Pipe")]
-        [Description("You will most likely not want to enable this. Only makes sense when playing manually.")]
+
+        //[Setting]
+        //[DefaultValue(false)]
+        //[Category("General")]
+        //[DisplayName("Straight Pipe")]
+        //[Description("You will most likely not want to enable this. Only makes sense when playing manually.")]
         public bool CompletelySynthetic { get; set; }
-        
+
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
@@ -64,7 +64,7 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Backwards")]
-        [Description("Adjust Position for Automovement")]
+        [Description("Adjust Position for Automovement (Warriors,DK)")]
         public bool Backwards { get; set; }
 
         [Setting]
@@ -96,7 +96,7 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue("Auto")]
-        [Category("Talents")]
+        [Category("Rotation")]
         [DisplayName("Rotation")]
         [Description("Choose which spell rotation you want to execute")]
         public abstract string ChooseRotation { get; set; }

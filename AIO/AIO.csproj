@@ -270,10 +270,11 @@
     <Compile Include="Combat\Hunter\SoloMarksmanship.cs" />
     <Compile Include="Combat\Hunter\PetHelper.cs" />
     <Compile Include="Combat\Hunter\SoloSurvival.cs" />
-    <Compile Include="Combat\Mage\Arcane.cs" />
+    <Compile Include="Combat\Mage\SoloArcane.cs" />
     <Compile Include="Combat\Mage\Buffs.cs" />
-    <Compile Include="Combat\Mage\Fire.cs" />
-    <Compile Include="Combat\Mage\Frost.cs" />
+    <Compile Include="Combat\Mage\SoloFire.cs" />
+    <Compile Include="Combat\Mage\SoloFrost.cs" />
+    <Compile Include="Combat\Mage\GroupFire.cs" />
     <Compile Include="Combat\Mage\GroupFrost.cs" />
     <Compile Include="Combat\Mage\LowLevel.cs" />
     <Compile Include="Combat\Mage\MageBehavior.cs" />

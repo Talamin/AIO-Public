@@ -12,13 +12,13 @@ using wManager.Wow.Helpers;
 namespace AIO.Combat.Mage
 {
     using Settings = MageLevelSettings;
-    internal class Arcane : BaseRotation
+    internal class SoloArcane : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             // Only cast Polymorph if Sheep is enabled in settings
-            new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 
+            new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.SoloArcaneSheep 
             // Only cast Polymorph if more than one enemy is targeting the Mage
             && !t.IsMyTarget && RotationFramework.Enemies.Count(o => o.IsTargetingMe) > 1 
             // Make sure no enemies in 30 yard casting range are polymorphed right now

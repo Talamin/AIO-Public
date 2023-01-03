@@ -8,6 +8,17 @@ namespace AIO.Settings
     [Serializable]
     public class HunterLevelSettings : BasePersistentSettings<HunterLevelSettings>
     {
+
+        //Lists
+
+        [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
+        public override string ChooseTalent { get; set; }
+
+        [TriggerDropdown("HunterTriggerDropdown", new string[] { "Auto", "SoloBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
+        public override string ChooseRotation { get; set; }
+
+        //General
+
         [DefaultValue(29)]
         [Category("General")]
         [DisplayName("Range")]
@@ -247,14 +258,6 @@ namespace AIO.Settings
         [Description("Number of Targets to use AOE")]
         public int SoloSurvivalAOECount { get; set; }
 
-
-        //Lists
-
-        [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("HunterTriggerDropdown",new string[] { "Auto", "SoloBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
-        public override string ChooseRotation { get; set; }
 
         public HunterLevelSettings()
         {
