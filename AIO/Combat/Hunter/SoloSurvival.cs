@@ -2,6 +2,7 @@
 using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
+using System.Linq;
 using static AIO.Constants;
 
 namespace AIO.Combat.Hunter
@@ -15,13 +16,13 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationSpell("Kill Command"), 6.1f, (s,t) => !Me.HaveBuff("Kill Command"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Serpent Sting"), 7f, (s,t) => t.GetDistance >= 5 && !t.HaveMyBuff("Serpent Sting") , RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Arcane Shot"), 7.1f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
-          //  new RotationStep(new RotationSpell("Multi Shot"), 7.1f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Multi-Shot"), 7.2f, (s,t) => t.GetDistance >= 5 && Settings.Current.SoloSurvivalUseMultiShot && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) >= Settings.Current.SoloSurvivalMultiShotCount, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Black Arrow"), 8f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Explosive Shot"), 9f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Aimed Shot"), 10f, (s,t) => t.GetDistance >= 5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Steady Shot"), 11f, (s,t) => t.GetDistance >= 5 , RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Raptor Strike"), 12f, (s,t) => t.GetDistance < 5, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Disengage"), 13f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipDis, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Disengage"), 13f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipDisengage, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Feign Death"), 14f, (s,t) => t.GetDistance < 5 && Me.HealthPercent < 50 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipFD, RotationCombatUtil.BotTarget),
         };
     }

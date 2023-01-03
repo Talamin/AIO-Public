@@ -29,11 +29,11 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationSpell("Serpent Sting"), 12f, (s,t) => t.GetDistance >= 5 && !t.HaveMyBuff("Serpent Sting"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Chimera Shot"), 13f, (s,t) => t.GetDistance >= 5 && t.HaveMyBuff("Serpent Sting","Viper Sting"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Arcane Shot"), 14f, (s,t) => t.GetDistance >= 5 && Settings.Current.SoloMarksmanshipArcaneShot, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Multi-Shot"), 15f, (s,t) => t.GetDistance >= 5 && Settings.Current.SoloMarksmanshipMultiS && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) >= Settings.Current.SoloMarksmanshipMultiSCount, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Multi-Shot"), 15f, (s,t) => t.GetDistance >= 5 && Settings.Current.SoloMarksmanshipMultiShot && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) >= Settings.Current.SoloMarksmanshipMultiShotCount, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Aimed Shot"), 15.1f, (s,t) => t.GetDistance >= 5 && Settings.Current.SoloMarksmanshipAimedShot, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Steady Shot"), 16f, (s,t) => t.GetDistance >= 5 && t.HaveMyBuff("Serpent Sting","Viper Sting"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Raptor Strike"), 17f, (s,t) => t.GetDistance < 5, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Disengage"), 18f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipDis, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Disengage"), 18f, (s,t) => t.GetDistance < 5 && t.IsTargetingMe && Pet.IsAlive && Settings.Current.SoloMarksmanshipDisengage, RotationCombatUtil.BotTarget),
         };
     }
 }

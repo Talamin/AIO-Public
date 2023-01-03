@@ -59,7 +59,7 @@ namespace AIO.Combat.Shaman
         {
             switch (Spec)
             {
-                case "Enhancement":
+                case "SoloEnhancement":
                     if (!HasMainHandEnchant)
                     {
                         if (WindfuryWeapon.KnownSpell)
@@ -83,7 +83,7 @@ namespace AIO.Combat.Shaman
                         }
                     }
                     break;
-                case "Restoration":
+                case "SoloRestoration":
                     if (!HasMainHandEnchant)
                     {
                         if (EarthlivingWeapon.KnownSpell)

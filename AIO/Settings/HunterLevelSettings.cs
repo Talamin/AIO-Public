@@ -10,20 +10,19 @@ namespace AIO.Settings
     {
 
         //Lists
-
+        #region Selectors
         [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
         public override string ChooseTalent { get; set; }
 
         [TriggerDropdown("HunterTriggerDropdown", new string[] { "Auto", "SoloBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
         public override string ChooseRotation { get; set; }
-
-        //General
-
+        #endregion
+        #region General Settings for all specs
         [DefaultValue(29)]
         [Category("General")]
         [DisplayName("Range")]
         [Description("Set your Range for your FC")]
-        public int RangeSet { get; set; }
+        public int CombatRange { get; set; }
 
         [DefaultValue(false)]
         [Category("General")]
@@ -62,30 +61,31 @@ namespace AIO.Settings
         [Description("Set Treshhold for Petattack?")]
         [Percentage(true)]
         public int PetHealth { get; set; }
-
+        #endregion
+        #region Aspect settings for all specs
         [Setting]
         [DefaultValue(false)]
-        [Category("Aspec")]
-        [DisplayName("Use Aspec of Pack")]
+        [Category("Aspect")]
+        [DisplayName("Use Aspect of Pack")]
         [Description("Set this if you want to use Speedboost")]
         public bool UseAspecofthePack { get; set; }
 
         [DefaultValue(20)]
-        [Category("Aspec")]
+        [Category("Aspect")]
         [DisplayName("Aspect of the Viper")]
-        [Description("Set the your  Mana  Treshold when to use AotV")]
+        [Description("Set the Mana treshold when to use AotV")]
         [Percentage(true)]
-        public int AspecofViper { get; set; }
+        public int AspectOfTheViperTheshold { get; set; }
 
         [DefaultValue(60)]
-        [Category("Aspec")]
+        [Category("Aspect")]
         [DisplayName("Aspect of the Hawk/DragonHawk")]
-        [Description("Set the your  Mana  Treshold when to use Hawk/Dragonhawk")]
+        [Description("Set the your mana threshold when to use Hawk/Dragonhawk")]
         [Percentage(true)]
-        public int AspecofHawks { get; set; }
+        public int AspectOfTheHawkThreshold { get; set; }
+        #endregion
 
-        //RotationSpecific BeastMastery
-
+        #region Beast Mastery       
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
@@ -97,21 +97,21 @@ namespace AIO.Settings
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
         [DisplayName("Disengage")]
-        [Description("Use  Disengage?")]
-        public bool SoloBeastMasteryDis { get; set; }
+        [Description("Use Disengage?")]
+        public bool SoloBeastMasteryDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
-        [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
-        public bool SoloBeastMasteryMultiS { get; set; }
+        [DisplayName("Enable Multishot")]
+        [Description("Use Multishot at all?")]
+        public bool SoloBeastMasteryMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
-        [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
+        [DisplayName("Multishot Targets")]
+        [Description("Multishot minimum target Count?")]
         public int SoloBeastMasteryMultiSCount { get; set; }
 
         [DefaultValue(true)]
@@ -133,17 +133,10 @@ namespace AIO.Settings
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
         [DisplayName("AOE Enemy Count")]
         [Description("Number of Targets to use AOE")]
-        public int SoloBeastMasteryAOECount { get; set; }
+        public int SoloBeastMasteryAOECount { get; set; }       
+        #endregion
 
-        [DefaultValue(false)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
-        [DisplayName("Use Aspec of Pack")]
-        [Description("Set this if you want to use in Instance")]
-        public bool SoloBeastMasteryUseAspecofthePack { get; set; }
-
-        //Rotationspecific Marksmanship
-
+        #region Marksmanship
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
@@ -155,22 +148,22 @@ namespace AIO.Settings
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
         [DisplayName("Disengage")]
-        [Description("Use  Disengage?")]
-        public bool SoloMarksmanshipDis { get; set; }
+        [Description("Use Disengage?")]
+        public bool SoloMarksmanshipDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
         [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
-        public bool SoloMarksmanshipMultiS { get; set; }
+        [Description("Use Multishot?")]
+        public bool SoloMarksmanshipMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
         [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
-        public int SoloMarksmanshipMultiSCount { get; set; }
+        [Description("Use Multishot?")]
+        public int SoloMarksmanshipMultiShotCount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
@@ -206,9 +199,9 @@ namespace AIO.Settings
         [DisplayName("Arcane Shot")]
         [Description("Use Arcane Shot in Rota?")]
         public bool SoloMarksmanshipArcaneShot { get; set; }
+        #endregion
 
-        //Rotationspecific Survival
-
+        #region Survival
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
@@ -220,88 +213,60 @@ namespace AIO.Settings
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
         [DisplayName("Disengage")]
-        [Description("Use  Disengage?")]
-        public bool SoloSurvivalDis { get; set; }
+        [Description("Use Disengage?")]
+        public bool SoloSurvivalDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
         [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
-        public bool SoloSurvivalMultiS { get; set; }
+        [Description("Use Multishot?")]
+        public bool SoloSurvivalUseMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
         [DisplayName("Multishot")]
-        [Description("Use  Multishot?")]
-        public int SoloSurvivalMultiSCount { get; set; }
-
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
-        [DisplayName("Misdirection")]
-        [Description("Use Misdirection Solo on Pet/Group on Tank?")]
-        public bool SoloSurvivalMisdirection { get; set; }
-
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
-        [DisplayName("Use AOE")]
-        [Description("Set this if you want to use AOE")]
-        public bool SoloSurvivalUseAOE { get; set; }
-
-        [DefaultValue(3)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
-        [DisplayName("AOE Enemy Count")]
-        [Description("Number of Targets to use AOE")]
-        public int SoloSurvivalAOECount { get; set; }
-
+        [Description("Use Multishot?")]
+        public int SoloSurvivalMultiShotCount { get; set; }
+        #endregion
 
         public HunterLevelSettings()
         {
-            //General Settings
             ChooseTalent = "HunterBeastMastery";
-            RangeSet = 29;
+            CombatRange = 29;
             UseMacro = false;
             PetHealth = 80;
             Backpaddle = true;
             BackpaddleRange = 5;
             Checkpet = true;
             Petfeed = true;
-
             UseAspecofthePack = false;
-            AspecofViper = 20;
-            AspecofHawks = 60;
+            AspectOfTheViperTheshold = 20;
+            AspectOfTheHawkThreshold = 60;
 
-            SoloBeastMasteryMultiS = false;
+            SoloBeastMasteryMultiShot = false;
             SoloBeastMasteryMultiSCount = 3;
             SoloBeastMasteryMisdirection = true;
-            SoloBeastMasteryDis = false;
+            SoloBeastMasteryDisengage = false;
             SoloBeastMasteryFD = true;
             SoloBeastMasteryUseAOE = true;
             SoloBeastMasteryAOECount = 3;
 
-            SoloMarksmanshipMultiS = false;
-            SoloMarksmanshipMultiSCount = 3;
+            SoloMarksmanshipMultiShot = false;
+            SoloMarksmanshipMultiShotCount = 3;
             SoloMarksmanshipMisdirection = true;
-            SoloMarksmanshipDis = false;
+            SoloMarksmanshipDisengage = false;
             SoloMarksmanshipFD = true;
             SoloMarksmanshipUseAOE = true;
             SoloMarksmanshipAOECount = 3;
             SoloMarksmanshipAimedShot = true;
             SoloMarksmanshipArcaneShot = true;
 
-            SoloSurvivalMultiS = false;
-            SoloSurvivalMultiSCount = 3;
-            SoloSurvivalMisdirection = true;
-            SoloSurvivalDis = false;
+            SoloSurvivalUseMultiShot = false;
+            SoloSurvivalMultiShotCount = 3;
+            SoloSurvivalDisengage = false;
             SoloSurvivalFD = true;
-            SoloSurvivalUseAOE = true;
-            SoloSurvivalAOECount = 3;
-
-
         }
     }
 }
