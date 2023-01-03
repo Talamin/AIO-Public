@@ -20,11 +20,11 @@ namespace AIO.Combat.DeathKnight
             Settings.Current,
             new Dictionary<string, BaseRotation>
             {
-                {"Blood", new Blood() },
-                {"Unholy", new Unholy() },
-                {"Frost", new Frost() },
+                {"SoloBlood", new SoloBlood() },
+                {"SoloUnholy", new SoloUnholy() },
+                {"SoloFrost", new SoloFrost() },
                 {"UnholyPVP", new UnholyPVP() },
-                {"Default", new Blood() },
+                {"Default", new SoloBlood() },
             }, new Buffs())
         { }
         private readonly Spell RaiseDead = new Spell("Raise Dead");

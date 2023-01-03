@@ -248,11 +248,11 @@
     <Compile Include="Combat\Common\ICycleable.cs" />
     <Compile Include="Combat\Addons\PetAutoTarget.cs" />
     <Compile Include="Combat\Common\DeferredCycleable.cs" />
-    <Compile Include="Combat\DeathKnight\Blood.cs" />
+    <Compile Include="Combat\DeathKnight\SoloBlood.cs" />
     <Compile Include="Combat\DeathKnight\Buffs.cs" />
     <Compile Include="Combat\DeathKnight\DeathKnightBehavior.cs" />
-    <Compile Include="Combat\DeathKnight\Frost.cs" />
-    <Compile Include="Combat\DeathKnight\Unholy.cs" />
+    <Compile Include="Combat\DeathKnight\SoloFrost.cs" />
+    <Compile Include="Combat\DeathKnight\SoloUnholy.cs" />
     <Compile Include="Combat\DeathKnight\UnholyPVP.cs" />
     <Compile Include="Combat\Druid\Balance.cs" />
     <Compile Include="Combat\Druid\Buffs.cs" />
