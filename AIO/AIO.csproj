@@ -294,8 +294,9 @@
     <Compile Include="Combat\Priest\LowLevel.cs" />
     <Compile Include="Combat\Priest\PriestBehavior.cs" />
     <Compile Include="Combat\Priest\Shadow.cs" />
-    <Compile Include="Combat\Rogue\Assassination.cs" />
-    <Compile Include="Combat\Rogue\Combat.cs" />
+    <Compile Include="Combat\Rogue\GroupCombat.cs" />
+    <Compile Include="Combat\Rogue\SoloAssassination.cs" />
+    <Compile Include="Combat\Rogue\SoloCombat.cs" />
     <Compile Include="Combat\Rogue\LowLevel.cs" />
     <Compile Include="Combat\Rogue\PoisonHelper.cs" />
     <Compile Include="Combat\Rogue\RogueBehavior.cs" />
