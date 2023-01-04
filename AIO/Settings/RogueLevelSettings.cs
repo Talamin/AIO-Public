@@ -36,6 +36,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
         [DisplayName("Stealth")]
         [Description("Use Stealth?")]
         public bool SoloCombatStealth { get; set; }

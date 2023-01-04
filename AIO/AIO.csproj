@@ -309,10 +309,11 @@
     <Compile Include="Combat\Shaman\Restoration.cs" />
     <Compile Include="Combat\Shaman\ShamanBehavior.cs" />
     <Compile Include="Combat\Shaman\Totems.cs" />
-    <Compile Include="Combat\Warlock\Affliction.cs" />
+    <Compile Include="Combat\Warlock\GroupAffliction.cs" />
+    <Compile Include="Combat\Warlock\SoloAffliction.cs" />
     <Compile Include="Combat\Warlock\Buffs.cs" />
-    <Compile Include="Combat\Warlock\Demonology.cs" />
-    <Compile Include="Combat\Warlock\Destruction.cs" />
+    <Compile Include="Combat\Warlock\SoloDemonology.cs" />
+    <Compile Include="Combat\Warlock\SoloDestruction.cs" />
     <Compile Include="Combat\Warlock\LowLevel.cs" />
     <Compile Include="Combat\Warlock\SpellstoneHelper.cs" />
     <Compile Include="Combat\Warlock\WarlockBehavior.cs" />

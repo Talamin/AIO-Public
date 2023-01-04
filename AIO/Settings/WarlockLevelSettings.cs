@@ -8,6 +8,16 @@ namespace AIO.Settings
     [Serializable]
     public class WarlockLevelSettings : BasePersistentSettings<WarlockLevelSettings>
     {
+
+        //Lists
+
+        [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology" })]
+        public override string ChooseTalent { get; set; }
+
+        [TriggerDropdown("WarlockTriggerDropdown",new string[] { "Auto", "SoloDestruction", "SoloAffliction", "SoloDemonology" })]
+        public override string ChooseRotation { get; set; }
+
+        //Pet
         [Setting]
         [DefaultValue(true)]
         [Category("Pet")]
@@ -23,44 +33,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "Felguard", "Voidwalker", "Imp", "Felhunter" })]
         public string Pet { get; set; }
 
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Buffing")]
-        [Description("True/False for Buffing?")]
-        public bool Buffing { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Soulshards")]
-        [Description("Automanage your Soulshards?")]
-        public bool Soulshards { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Healthstone")]
-        [Description("Use Healthstone / Cast Healthstone?")]
-        public bool Healthstone { get; set; }
-
-        [Setting]
-        [DefaultValue(20)]
-        [Category("Fight")]
-        [DisplayName("Lifetap")]
-        [Description("Tells on which Mana % to use Lifetap")]
-        [Percentage(true)]
-        public int Lifetap { get; set; }
-
-        [Setting]
-        [DefaultValue(40)]
-        [Category("Fight")]
-        [DisplayName("Drain Life")]
-        [Description("Tells on which Health % to use Drain Life")]
-        [Percentage(true)]
-        public int Drainlife { get; set; }
-
+        //General
         [Setting]
         [DefaultValue(20)]
         [Category("Fight")]
@@ -78,116 +51,295 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Shadowbolt")]
-        [Description("should Shadowbolt ignore Wand Treshhold?")]
-        public bool ShadowboltWand { get; set; }
+        [Category("General")]
+        [DisplayName("Buffing")]
+        [Description("True/False for Buffing?")]
+        public bool Buffing { get; set; }
 
         [Setting]
-        [DefaultValue(30)]
+        [DefaultValue(true)]
+        [Category("General")]
+        [DisplayName("Soulshards")]
+        [Description("Automanage your Soulshards?")]
+        public bool Soulshards { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
         [Category("Fight")]
+        [DisplayName("Healthstone")]
+        [Description("Use Healthstone / Cast Healthstone?")]
+        public bool Healthstone { get; set; }
+
+        //Rotation SoloAffliction
+        [DefaultValue(20)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [DisplayName("Lifetap")]
+        [Description("Tells on which Mana % to use Lifetap")]
+        [Percentage(true)]
+        public int SoloAfflictionLifetap { get; set; }
+
+        [DefaultValue(40)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [DisplayName("Drain Life")]
+        [Description("Tells on which Health % to use Drain Life")]
+        [Percentage(true)]
+        public int SoloAfflictionDrainlife { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [DisplayName("Shadowbolt")]
+        [Description("should Shadowbolt ignore Wand Treshhold?")]
+        public bool SoloAfflictionShadowboltWand { get; set; }
+
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Health Funnel Pet")]
         [Description("Tells on which PetHealth % to use Health Funnel")]
         [Percentage(true)]
-        public int HealthfunnelPet { get; set; }
+        public int SoloAfflictionHealthfunnelPet { get; set; }
 
-        [Setting]
         [DefaultValue(50)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Health Funnel Player")]
         [Description("Tells until which PlayerHealth % to use Health Funnel")]
         [Percentage(true)]
-        public int HealthfunnelMe { get; set; }
+        public int SoloAfflictionHealthfunnelMe { get; set; }
 
-        [Setting]
         [DefaultValue(false)]
-        [Category("Demonology")]
-        [DisplayName("Metamorphosis")]
-        [Description("When to use  Metamorphosis?")]
-        [DropdownList(new string[] { "OnCooldown", "OnBosses", "None" })]
-        public string Metamorphosis { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Affliction")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Curse of")]
         [Description("Which Curse you want?")]
         [DropdownList(new string[] { "Agony", "Doom", "Elements", "Tongues", "Weakness", "Exhaustion" })]
-        public string AfflCurse { get; set; }
+        public string SoloAfflictionAfflCurse { get; set; }
 
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Fight")]
-        [DisplayName("Use AOE in Instance")]
-        [Description("Set this if you want to use AOE in Instance")]
-        public bool UseAOE { get; set; }
-
-        [Setting]
         [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Use AOE Outside Instance")]
-        [Description("Set this if you want to use AOE in Outside Instance")]
-        public bool UseAOEOutside { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Use Seed of Corruption")]
         [Description("Make use of SoC while in Group?")]
-        public bool UseSeedGroup { get; set; }
+        public bool SoloAfflictionUseSeedGroup { get; set; }
 
-        [Setting]
         [DefaultValue(true)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Use Corruption on Multidot")]
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
-        public bool UseCorruptionGroup { get; set; }
+        public bool SoloAfflictionUseCorruptionGroup { get; set; }
 
-        [Setting]
         [DefaultValue(3)]
-        [Category("Fight")]
-        [DisplayName("AOE in Instance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [DisplayName("Use AOE Count")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
-        public int AOEInstance { get; set; }
+        public int SoloAfflictionAOECount { get; set; }
 
-        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE in Instance")]
+        public bool SoloAfflictionUseAOE { get; set; }
+
+        //Rotation SoloDemonology
+
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Metamorphosis")]
+        [Description("When to use  Metamorphosis?")]
+        [DropdownList(new string[] { "OnCooldown", "OnBosses", "None" })]
+        public string SoloDemonologyMetamorphosis { get; set; }
+
+        //Rotation SoloDestruction
+
+        [DefaultValue(20)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Lifetap")]
+        [Description("Tells on which Mana % to use Lifetap")]
+        [Percentage(true)]
+        public int SoloDemonologyLifetap { get; set; }
+
+        [DefaultValue(40)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Drain Life")]
+        [Description("Tells on which Health % to use Drain Life")]
+        [Percentage(true)]
+        public int SoloDemonologyDrainlife { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Shadowbolt")]
+        [Description("should Shadowbolt ignore Wand Treshhold?")]
+        public bool SoloDemonologyShadowboltWand { get; set; }
+
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Health Funnel Pet")]
+        [Description("Tells on which PetHealth % to use Health Funnel")]
+        [Percentage(true)]
+        public int SoloDemonologyHealthfunnelPet { get; set; }
+
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Health Funnel Player")]
+        [Description("Tells until which PlayerHealth % to use Health Funnel")]
+        [Percentage(true)]
+        public int SoloDemonologyHealthfunnelMe { get; set; }
+
         [DefaultValue(3)]
-        [Category("Fight")]
-        [DisplayName("AOE Outside Instance")]
-        [Description("Number of Targets to use AOE in Outside Instance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Use AOE Count")]
+        [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
-        public int AOEOutsideInstance { get; set; }
+        public int SoloDemonologyAOECount { get; set; }
 
-        [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology" })]
-        public override string ChooseTalent { get; set; }
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE in Instance")]
+        public bool SoloDemonologyUseAOE { get; set; }
 
-        [DropdownList(new string[] { "Auto", "Destruction", "Affliction", "Demonology" })]
-        public override string ChooseRotation { get; set; }
+        //Rotation SoloDestruction
+
+        //Rotation GroupAffliction
+        [DefaultValue(20)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Lifetap")]
+        [Description("Tells on which Mana % to use Lifetap")]
+        [Percentage(true)]
+        public int GroupAfflictionLifetap { get; set; }
+
+        [DefaultValue(40)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Drain Life")]
+        [Description("Tells on which Health % to use Drain Life")]
+        [Percentage(true)]
+        public int GroupAfflictionDrainlife { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Shadowbolt")]
+        [Description("should Shadowbolt ignore Wand Treshhold?")]
+        public bool GroupAfflictionShadowboltWand { get; set; }
+
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Health Funnel Pet")]
+        [Description("Tells on which PetHealth % to use Health Funnel")]
+        [Percentage(true)]
+        public int GroupAfflictionHealthfunnelPet { get; set; }
+
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Health Funnel Player")]
+        [Description("Tells until which PlayerHealth % to use Health Funnel")]
+        [Percentage(true)]
+        public int GroupAfflictionHealthfunnelMe { get; set; }
+
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Curse of")]
+        [Description("Which Curse you want?")]
+        [DropdownList(new string[] { "Agony", "Doom", "Elements", "Tongues", "Weakness", "Exhaustion" })]
+        public string GroupAfflictionAfflCurse { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Use Seed of Corruption")]
+        [Description("Make use of SoC while in Group?")]
+        public bool GroupAfflictionUseSeedGroup { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Use Corruption on Multidot")]
+        [Description("Make use of Corruption while in Group on multiple Enemies?")]
+        public bool GroupAfflictionUseCorruptionGroup { get; set; }
+
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Use AOE Count")]
+        [Description("Number of Targets around the Tank to use AOE in Instance")]
+        [Percentage(false)]
+        public int GroupAfflictionAOECount { get; set; }
+
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE in Instance")]
+        public bool GroupAfflictionUseAOE { get; set; }
+
 
         public WarlockLevelSettings()
         {
             ChooseTalent = "WarlockAffliction";
-            Healthstone = true;
+            //Pet
             Pet = "Voidwalker";
             PetInfight = true;
-            UseSeedGroup = true;
-            UseCorruptionGroup = true;
-            Lifetap = 20;
-            Drainlife = 40;
-            HealthfunnelPet = 30;
-            HealthfunnelMe = 50;
-            UseAOE = false;
-            UseAOEOutside = true;
-            AOEInstance = 3;
-            AOEOutsideInstance = 3;
+            //General
+            Healthstone = true;
             UseWandTresh = 20;
             UseWand = true;
             Buffing = true;
             Soulshards = true;
-            ShadowboltWand = true;
-            Metamorphosis = "OnCooldown";
-            AfflCurse = "Agony";
+
+            //Rotation SoloAffliction
+            SoloAfflictionUseSeedGroup = true;
+            SoloAfflictionUseCorruptionGroup = true;
+            SoloAfflictionLifetap = 20;
+            SoloAfflictionDrainlife = 40;
+            SoloAfflictionHealthfunnelPet = 30;
+            SoloAfflictionHealthfunnelMe = 50;
+            SoloAfflictionUseAOE = false;
+            SoloAfflictionAOECount = 3;
+            SoloAfflictionShadowboltWand = true;
+            SoloAfflictionAfflCurse = "Agony";
+
+            //Rotation SoloDemonology
+            SoloDemonologyLifetap = 20;
+            SoloDemonologyDrainlife = 40;
+            SoloDemonologyHealthfunnelPet = 30;
+            SoloDemonologyHealthfunnelMe = 50;
+            SoloDemonologyUseAOE = false;
+            SoloDemonologyAOECount = 3;
+            SoloDemonologyShadowboltWand = true;
+            SoloDemonologyMetamorphosis = "OnCooldown";
+
+            //Rotation GroupAffliction
+            GroupAfflictionUseSeedGroup = true;
+            GroupAfflictionUseCorruptionGroup = true;
+            GroupAfflictionLifetap = 20;
+            GroupAfflictionDrainlife = 40;
+            GroupAfflictionHealthfunnelPet = 30;
+            GroupAfflictionHealthfunnelMe = 50;
+            GroupAfflictionUseAOE = false;
+            GroupAfflictionAOECount = 3;
+            GroupAfflictionShadowboltWand = true;
+            GroupAfflictionAfflCurse = "Agony";
+
         }
     }
 }
