@@ -30,7 +30,7 @@ namespace AIO.Combat.Common
 
         public virtual void Initialize()
         {
-            Specialisation = Me.Level < 10 ? "LowLevel" : ((Settings.ChooseRotation == "Auto") ? Extension.GetSpec() : Settings.ChooseRotation);
+            Specialisation = Me.Level < 10 ? "LowLevel" : Settings.ChooseRotation;
             FightRotation = Specialisations.TryGetValue(Specialisation, out BaseRotation spec) ? spec : null;
 
             if (FightRotation == null)

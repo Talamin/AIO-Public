@@ -301,12 +301,12 @@
     <Compile Include="Combat\Rogue\PoisonHelper.cs" />
     <Compile Include="Combat\Rogue\RogueBehavior.cs" />
     <Compile Include="Combat\Shaman\Buffs.cs" />
-    <Compile Include="Combat\Shaman\Elemental.cs" />
+    <Compile Include="Combat\Shaman\SoloElemental.cs" />
     <Compile Include="Combat\Shaman\HealOOC.cs" />
     <Compile Include="Combat\Shaman\WeaponHelper.cs" />
-    <Compile Include="Combat\Shaman\Enhancement.cs" />
+    <Compile Include="Combat\Shaman\SoloEnhancement.cs" />
     <Compile Include="Combat\Shaman\LowLevel.cs" />
-    <Compile Include="Combat\Shaman\Restoration.cs" />
+    <Compile Include="Combat\Shaman\SoloRestoration.cs" />
     <Compile Include="Combat\Shaman\ShamanBehavior.cs" />
     <Compile Include="Combat\Shaman\Totems.cs" />
     <Compile Include="Combat\Warlock\GroupAffliction.cs" />

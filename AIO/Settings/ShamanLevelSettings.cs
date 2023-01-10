@@ -8,106 +8,122 @@ namespace AIO.Settings
     [Serializable]
     public class ShamanLevelSettings : BasePersistentSettings<ShamanLevelSettings>
     {
+        #region Selectors
+        [DropdownList(new string[] { "ShamanEnhancement", "ShamanRestoration", "ShamanElemental" })]
+        public override string ChooseTalent { get; set; }
+
+        [TriggerDropdown("ShamanTriggerDropdown", new string[] { "Auto", "SoloEnhancement", "SoloRestoration", "SoloElemental" })]
+        public override string ChooseRotation { get; set; }
+        #endregion
+
+        #region General Settings for all specs
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Heal OOC")]
-        [Description("Use Healspells Out of Combat?")]
+        [Description("Use Healing spells when out of combat?")]
         public bool HealOOC { get; set; }
 
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
         [DisplayName("Cure Toxin")]
-        [Description("Use Cure Toxin on which  Targets? ")]
+        [Description("Valid targets for Cure Toxin")]
         [DropdownList(new string[] { "Group", "Me", "None" })]
         public string CureToxin { get; set; }
+        
+        [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Ghost Wolf")]
+        [Description("Use Ghost Wolf form?")]
+        public bool UseGhostWolf { get; set; }
+        #endregion
 
+        #region Rotation settings
+        #region Elemental
         [Setting]
         [DefaultValue(3)]
-        [Category("Elemental")]
-        [DisplayName("Chainlightning Count")]
-        [Description("Enemy Count to use  Treshhold?")]
-        public int ElementalChainlightningTresshold { get; set; }
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]                
+        [DisplayName("Chain Lightning Count")]
+        [Description("Required number of enemies to use Chain Lightning")]
+        public int SoloElementalChainlightningTresshold { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Elemental")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]        
         [DisplayName("Cure Toxin")]
         [Description("Use on Groupmembers??")]
-        public bool ElementalCureToxin { get; set; }
+        public bool SoloElementalCureToxin { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Elemental")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]
         [DisplayName("Flame Shock")]
         [Description("Use Flame Shock in Rotation??")]
-        public bool ElementalFlameShock { get; set; }
+        public bool SoloElementalFlameShock { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Elemental")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]
         [DisplayName("Earth Shock")]
         [Description("Use Earth Shock in Rotation?")]
-        public bool ElementalEarthShock { get; set; }
-
+        public bool SoloElementalEarthShock { get; set; }
+        #endregion
+        #region Enhancement
         [Setting]
         [DefaultValue(5)]
-        [Category("Enhancement")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]        
         [DisplayName("Fire  Nova")]
         [Description("Use Fire Nova?")]
-        public int EnhFireNova { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Enhancement")]
-        [DisplayName("Ghostwolf")]
-        [Description("Use Ghostwolfform?")]
-        public bool Ghostwolf { get; set; }
+        public int SoloEnhancementUseFireNova { get; set; }        
 
         [Setting]
         [DefaultValue(10)]
-        [Category("Enhancement")]
-        [DisplayName("Selfheal")]
-        [Description("Set the Enemytreshold in % when to heal?")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [DisplayName("Self heal min enemy HP")]
+        [Description("The min Enemy HP at which to stop healing")]
         [Percentage(true)]
-        public int EnhancementEnemylife { get; set; }
+        public int SoloEnhancementEnemyHPSkipHealing { get; set; }
 
         [Setting]
         [DefaultValue(50)]
-        [Category("Enhancement")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
         [DisplayName("HealthTreshhold")]
-        [Description("Set the Treshhold of your health for selfheal?")]
+        [Description("Set the HP treshhold for self healing?")]
         [Percentage(true)]
-        public int EnhancementHealthForHeals { get; set; }
+        public int SoloEnhancementHealthForHeals { get; set; }
 
         [Setting]
         [DefaultValue(0)]
-        [Category("Enhancement")]
-        [DisplayName("ManaTreshhold")]
-        [Description("Setthe Treshhold for offensive spells to save mana for heals?")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [DisplayName("Reserve Healing Mana")]
+        [Description("Set the Treshhold for offensive spells to save mana for heals?")]
         [Percentage(true)]
-        public int EnhancementManaSavedForHeals { get; set; }
-
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Enhancement")]
-        [DisplayName("Lightning Bolt")]
-        [Description("Use LNB for Pull?")]
-        public bool LNB { get; set; }
+        public int SoloEnhancementManaSavedForHeals { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Enhancement")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
         [DisplayName("Feral Spirit")]
         [Description("Use Feral Spirit on which  Targets? ")]
         [DropdownList(new string[] { "+2 and Elite", "+3 and Elite", "only Elite", "None" })]
-        public string EnhancementFeralSpirit { get; set; }
-
+        public string SoloEnhancementFeralSpirit { get; set; }
+        #endregion
+        #region Restoration
         [Setting]
         [DefaultValue(99)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]        
         [DisplayName("Earthshield")]
         [Description("Set the Tank Treshhold for Earthshield?")]
         [Percentage(true)]
@@ -115,7 +131,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(75)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
         [DisplayName("Riptide")]
         [Description("Set the Treshhold for Riptide usage?")]
         [Percentage(true)]
@@ -123,7 +140,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(85)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
         [DisplayName("Chain Heal / Health")]
         [Description("Set the Player Treshhold for Chain Heal?")]
         [Percentage(true)]
@@ -131,7 +149,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(2)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
         [DisplayName("Chain Heal / Player")]
         [Description("Set the PlayerCount Treshhold for Chain Heal (more then x  Player) ?")]
         [Percentage(false)]
@@ -139,7 +158,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(70)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
         [DisplayName("Healing Wave")]
         [Description("Set the Player Treshhold for Healing Wave?")]
         [Percentage(true)]
@@ -147,12 +167,16 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(85)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
         [DisplayName("Lesser Healing Wave")]
         [Description("Set the Player Treshhold for Lesser Healing Wave?")]
         [Percentage(true)]
         public int RestorationLesserHealingWaveGroup { get; set; }
+        #endregion        
+        #endregion
 
+        #region Totem Settings for all specs
         [Setting]
         [DefaultValue(true)]
         [Category("Totem")]
@@ -201,31 +225,23 @@ namespace AIO.Settings
         [DisplayName("Earthbind Totem")]
         [Description("Use Earthbind Totem?")]
         public bool UseEarthbindTotem { get; set; }
-
-
-
-        [DropdownList(new string[] { "ShamanEnhancement", "ShamanRestoration", "ShamanElemental" })]
-        public override string ChooseTalent { get; set; }
-
-        [DropdownList(new string[] { "Auto", "Enhancement", "Restoration", "Elemental" })]
-        public override string ChooseRotation { get; set; }
+        #endregion
 
         public ShamanLevelSettings()
         {
             ChooseTalent = "ShamanEnhancement";
             HealOOC = true;
-            Ghostwolf = true;
-            EnhancementEnemylife = 10;
-            LNB = false;
-            EnhFireNova = 5;
+            UseGhostWolf = true;
+            SoloEnhancementEnemyHPSkipHealing = 10;
+            SoloEnhancementUseFireNova = 5;
             CureToxin = "None";
-            ElementalCureToxin = false;
-            ElementalChainlightningTresshold = 3;
-            ElementalEarthShock = true;
-            ElementalFlameShock = true;
-            EnhancementManaSavedForHeals = 0;
-            EnhancementHealthForHeals = 50;
-            EnhancementFeralSpirit = "+2 and Elite";
+            SoloElementalCureToxin = false;
+            SoloElementalChainlightningTresshold = 3;
+            SoloElementalEarthShock = true;
+            SoloElementalFlameShock = true;
+            SoloEnhancementManaSavedForHeals = 0;
+            SoloEnhancementHealthForHeals = 50;
+            SoloEnhancementFeralSpirit = "+2 and Elite";
             RestorationEarthshieldTank = 99;
             RestorationChainHealGroup = 85;
             RestorationChainHealCountGroup = 2;
@@ -238,7 +254,6 @@ namespace AIO.Settings
             UseCleansingTotem = true;
             UseGroundingTotem = true;
             UseEarthbindTotem = false;
-
             UseCotE = true;
         }
     }

@@ -19,7 +19,7 @@ namespace AIO.Combat.Hunter
     using Settings = HunterLevelSettings;
     internal class HunterBehavior : BaseCombatClass
     {
-        public override float Range => Settings.Current.RangeSet;
+        public override float Range => Settings.Current.CombatRange;
 
         private readonly Timer PetFeedTimer = new Timer();
 

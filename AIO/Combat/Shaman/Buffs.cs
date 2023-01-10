@@ -41,7 +41,7 @@ namespace AIO.Combat.Shaman
                 RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 20) >= 2, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Magma Totem"), 40f, (s,t) =>
-                Spec == "Enhancement" &&
+                Spec == "SoloEnhancement" &&
                 Target.GetDistance <= 15 &&
                 !Totems.HasAny("Magma Totem") &&
                 Me.ManaPercentage > 40, RotationCombatUtil.FindMe),

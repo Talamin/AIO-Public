@@ -229,7 +229,7 @@ namespace AIO.Combat.Paladin
          *      
          * Druid - Cat form or caster/Moonkin form
          *
-         * Shaman - Ele (staff or shield, flametongue weapon) or Enhancement (offhand weapon, rockbiter / windfury weapon)
+         * Shaman - Ele (staff or shield, flametongue weapon) or SoloEnhancement (offhand weapon, rockbiter / windfury weapon)
          *   
          */
 
