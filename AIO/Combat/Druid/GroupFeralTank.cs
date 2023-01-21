@@ -25,7 +25,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Bash"), 3f, (s, t) => t.IsCasting(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demoralizing Roar"), 4f, (s, t) => !t.HaveMyBuff("Demoralizing Roar"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Growl"), 6f, (s, t) => RotationFramework.Enemies.Count(o => o.IsAttackable && !o.IsTargetingMe && o.IsTargetingPartyMember) >= 1 , RotationCombatUtil.FindEnemyAttackingGroup),
-            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 7f, (s, t) => !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FFF, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 7f, (s, t) => !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FeralFaerieFire, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Mangle (Bear)"), 8f, (s, t) => !t.HaveMyBuff("Mangle") && (Me.HaveBuff("Dire Bear Form") || Me.HaveBuff("Bear Form")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Swipe (Bear)"), 9f, (s, t) => RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 8) >=3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Maul"), 10f, (s, t) => t.GetDistance < 8 && !RotationCombatUtil.IsCurrentSpell("Maul"), RotationCombatUtil.BotTarget),                        

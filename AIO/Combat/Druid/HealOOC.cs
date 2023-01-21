@@ -15,9 +15,9 @@ namespace AIO.Combat.Druid
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Rejuvenation"), 1f, (s,t) => Spec =="FeralCombat" && Me.HealthPercent <= Settings.Current.FeralRejuvenation && Me.ManaPercentage > 15 && !Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Regrowth"), 2f, (s,t) => Spec =="FeralCombat" && Me.HealthPercent <= Settings.Current.FeralRegrowth && Me.ManaPercentage > 15 && !Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Rejuvenation"), 3f, (s,t) => Spec =="Balance" && Me.HealthPercent <= Settings.Current.BalanceRejuvenation && Me.ManaPercentage > 15 && !Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Regrowth"), 4f, (s,t) => Spec =="Balance" && Me.HealthPercent <= Settings.Current.BalanceRegrowth && Me.ManaPercentage > 15 && !Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindPartyMember),
+            new RotationStep(new RotationSpell("Regrowth"), 2f, (s,t) => Spec =="FeralCombat" && Me.HealthPercent <= Settings.Current.FeralRegrowth && Me.ManaPercentage > 15 && !Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Rejuvenation"), 3f, (s,t) => Spec =="Balance" && Me.HealthPercent <= Settings.Current.SoloBalanceRejuvenation && Me.ManaPercentage > 15 && !Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Regrowth"), 4f, (s,t) => Spec =="Balance" && Me.HealthPercent <= Settings.Current.SoloBalanceRegrowth && Me.ManaPercentage > 15 && !Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
         };
     }
 }

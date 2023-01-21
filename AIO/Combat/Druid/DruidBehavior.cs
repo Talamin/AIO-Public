@@ -24,16 +24,16 @@ namespace AIO.Combat.Druid
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"FeralCombat", new FeralCombat() },
-                {"Balance", new Balance() },
-                {"Restoration", new Restoration() },
+                {"SoloFeral", new SoloFeral() },
+                {"SoloBalance", new SoloBalance() },
+                {"SoloRestoration", new SoloRestoration() },
                 {"GroupFeralTank", new GroupFeralTank()},
                 {"GroupRestorationHeal", new GroupRestorationHeal() },
-                {"Default", new FeralCombat() },
+                {"Default", new SoloFeral() },
             },
             new Buffs(),
             new AutoPartyResurrect("Revive"),
-            new AutoPartyResurrect("Rebirth", true, Settings.Current.RestorationRebirthAuto))
+            new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(this)));
         }
@@ -45,7 +45,7 @@ namespace AIO.Combat.Druid
 
             switch (Specialisation)
             {
-                case "FeralCombat":
+                case "SoloFeral":
                     CombatRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
                     break;
                 case "GroupFeralTank":

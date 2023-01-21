@@ -9,7 +9,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Druid
 {
     using Settings = DruidLevelSettings;
-    internal class FeralCombat : BaseRotation
+    internal class SoloFeral : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             // Rotation 11-20
@@ -18,12 +18,12 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Innervate"), 1.2f, (s, t) =>Me.IsInGroup && t.ManaPercentage <= Settings.Current.Innervate, RotationCombatUtil.FindHeal),
             new RotationStep(new RotationSpell("Remove Curse"), 1.3f, (s,t) => t.HaveBuff("Veil of Shadow") && Settings.Current.FeralDecurse, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Barkskin"), 1.4f, (s, t) => Me.HealthPercent <= 35, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Regrowth"), 1.5f, (s, t) => ((Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.RegrowthValue)) && Me.ManaPercentage > 15 && Me.HealthPercent <= 35) ||
-            ((Me.Mana > ((DruidBehavior.TransformValue / 100 * 80) + DruidBehavior.RegrowthValue)) && Me.ManaPercentage > 15 && Me.HealthPercent <= 35 && TalentsManager.HaveTalent(2,25) && Me.HaveBuff("Enrage")) && Settings.Current.FeralRegrowthIC, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Rejuvenation"), 1.6f, (s, t) =>((Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.RejuvenationValue)) && Me.ManaPercentage > 15 &&  Me.HaveBuff("Regrowth")) ||
-            ((Me.Mana > ((DruidBehavior.TransformValue / 100 * 80) + DruidBehavior.RejuvenationValue)) && Me.ManaPercentage > 15 &&  Me.HaveBuff("Regrowth") && TalentsManager.HaveTalent(2,25) && Me.HaveBuff("Enrage"))&& Settings.Current.FeralRejuvenationIC, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Healing Touch"), 1.7f, (s, t) =>((Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.HealingTouchValue)) &&  !Me.IsInGroup && Me.ManaPercentage > 15 &&  Me.HealthPercent <=35 && Me.HaveBuff("Regrowth")) ||
-            ((Me.Mana > ((DruidBehavior.TransformValue / 100 * 80) + DruidBehavior.HealingTouchValue)) &&  !Me.IsInGroup && Me.ManaPercentage > 15 &&  Me.HealthPercent <=35 && Me.HaveBuff("Regrowth") && TalentsManager.HaveTalent(2,25) && Me.HaveBuff("Enrage")), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Regrowth"), 1.50f, (s, t) => Settings.Current.FeralRegrowthIC && Me.ManaPercentage > 15 && Me.HealthPercent <= Settings.Current.FeralICHealThreshold && TalentsManager.HaveTalent(2,25) && (Me.Mana > ((DruidBehavior.TransformValue * 0.6) + DruidBehavior.RegrowthValue)) && !Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Regrowth"), 1.51f, (s, t) => Settings.Current.FeralRegrowthIC && Me.ManaPercentage > 15 && Me.HealthPercent <= Settings.Current.FeralICHealThreshold && Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.RegrowthValue) && !Me.HaveBuff("Regrowth") , RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Rejuvenation"), 1.60f, (s, t) => Settings.Current.FeralRejuvenationIC && Me.ManaPercentage > 15 && Me.HealthPercent <= Settings.Current.FeralICHealThreshold && TalentsManager.HaveTalent(2,25) && Me.Mana > ((DruidBehavior.TransformValue * 0.6) + DruidBehavior.RejuvenationValue) && Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Rejuvenation"), 1.61f, (s, t) => Settings.Current.FeralRejuvenationIC && Me.ManaPercentage > 15 && Me.HealthPercent <= Settings.Current.FeralICHealThreshold && Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.RejuvenationValue) && Me.HaveBuff("Regrowth") && !Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Healing Touch"), 1.70f, (s, t) => Settings.Current.FeralHealingTouchIC && !Me.IsInGroup && Me.ManaPercentage > 15 &&  Me.HealthPercent <= Settings.Current.FeralICHealThreshold && Me.Mana > ((DruidBehavior.TransformValue * 0.6) + DruidBehavior.HealingTouchValue) && TalentsManager.HaveTalent(2,25) && Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Healing Touch"), 1.71f, (s, t) => Settings.Current.FeralHealingTouchIC && !Me.IsInGroup && Me.ManaPercentage > 15 &&  Me.HealthPercent <= Settings.Current.FeralICHealThreshold && Me.Mana > (DruidBehavior.TransformValue + DruidBehavior.HealingTouchValue) && Me.HaveBuff("Regrowth") && Me.HaveBuff("Rejuvenation"), RotationCombatUtil.FindMe),                        
             new RotationStep(new RotationSpell("Berserk"), 1.8f, (s,t) => (Me.HaveBuff("Bear Form") || Me.HaveBuff("Dire Bear Form") || Me.HaveBuff("Cat Form")) && (t.IsElite || RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <= 20) >=2), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Bear Form"), 2f, (s, t) => Me.Level > 9 && Me.Level < 20, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Bash"), 2.1f, (s, t) => t.IsCasting() && Me.Level > 9 && Me.Level < 20, RotationCombatUtil.BotTarget),
@@ -37,7 +37,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Regrowth"), 10f, (s, t) => Me.HaveBuff("Predator's Swiftness") && Me.HealthPercent < 70 && Me.ManaPercentage > 40, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Dire Bear Form"), 11f, (s, t) =>!Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <= 20) >= Settings.Current.FeralBearCount, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Bear Form"), 12f, (s, t) =>!Me.IsInGroup && !SpellManager.KnowSpell("Dire Bear Form") && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <= 20) >= Settings.Current.FeralBearCount, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 12.3f, (s, t) => (Me.HaveBuff("Bear Form") || Me.HaveBuff("Dire Bear Form")) && !Me.HaveBuff("Prowl") && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FFF, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 12.3f, (s, t) => (Me.HaveBuff("Bear Form") || Me.HaveBuff("Dire Bear Form")) && !Me.HaveBuff("Prowl") && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FeralFaerieFire, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Bash"), 12.1f, (s, t) => t.IsCasting(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Enrage"), 12.2f, (s, t) =>t.HealthPercent >= 35 && !Me.HaveBuff("Enrage"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Frenzied Regeneration"), 13f, (s, t) => Me.HealthPercent < 60 && Me.Rage > 25, RotationCombatUtil.FindMe),
@@ -49,20 +49,20 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Cat Form"), 19.1f, (s, t) =>!Me.IsInGroup && (Me.HaveBuff("Bear Form") || Me.HaveBuff("Dire Bear Form")) && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <=12) <= (Settings.Current.FeralBearCount - 2), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Cat Form"), 19.2f, (s, t) => Me.IsInGroup, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Prowl"), 20f, (s, t) => t.HealthPercent > 99 && !Me.HaveBuff("Prowl") && !t.IsTargetingMe && Settings.Current.Prowl, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Prowl"), 20f, (s, t) => t.HealthPercent > 99 && !Me.HaveBuff("Prowl") && !t.IsTargetingMe && Settings.Current.FeralProwl, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Feral Charge - Cat"), 21f, (s, t) => t.GetDistance >= 15 && t.GetDistance <= 25 && Me.HaveBuff("Prowl") && !t.IsTargetingMe && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Pounce"), 22f, (s, t) => Me.HaveBuff("Prowl") && t.GetDistance <=5 && !t.IsTargetingMe, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 22.1f, (s, t) => Settings.Current.ForceFaerie && !t.HaveMyBuff("Faerie Fire (Feral)"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 22.1f, (s, t) => Settings.Current.FeralForceFaerie && !t.HaveMyBuff("Faerie Fire (Feral)"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Ravage"), 23f, (s, t) => Me.HaveBuff("Prowl") && Me.IsBehind(t.Position, 1.8f) && t.GetDistance <=6, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 23.1f, (s, t) => !Me.HaveBuff("Prowl") && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FFF, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Dash"), 24f, (s, t) => Me.HaveBuff("Prowl") && !Me.HaveBuff("Dash") && Settings.Current.Dash && Me.HaveBuff("Cat Form"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 23.1f, (s, t) => !Me.HaveBuff("Prowl") && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.FeralFaerieFire, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Dash"), 24f, (s, t) => Me.HaveBuff("Prowl") && !Me.HaveBuff("Dash") && Settings.Current.FeralDash && Me.HaveBuff("Cat Form"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tiger's Fury"), 25f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && !TalentsManager.HaveTalent(2,25), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationBuff("Tiger's Fury"), 26f, (s, t) =>Me.ComboPoint <=4 && t.HealthPercent>=40 && Settings.Current.TF && Me.HaveBuff("Cat Form") && !TalentsManager.HaveTalent(2,25), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Tiger's Fury"), 26f, (s, t) =>Me.ComboPoint <=4 && t.HealthPercent>=40 && Settings.Current.FeralTigersFury && Me.HaveBuff("Cat Form") && !TalentsManager.HaveTalent(2,25), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tiger's Fury"), 26.1f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && TalentsManager.HaveTalent(2,25)&& Me.HaveBuff("Cat Form") && Me.Rage <= 40, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Rake"), 27f, (s, t) =>!Me.HaveBuff("Prowl") && Me.ComboPoint <=4 && !t.HaveBuff("Rake") && (t.HealthPercent >= 35 || t.HealthPercent >= 20 && BossList.isboss) && !t.IsCreatureType("Elemental"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Rip"), 28f, (s,t) => Me.ComboPoint >= Settings.Current.FBC && !t.HaveMyBuff("Rip") && t.HealthPercent >= Settings.Current.FeralRipHealth && !t.IsCreatureType("Elemental"),  RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Ferocious Bite"), 29f, (s, t) => Me.ComboPoint >= Settings.Current.FBC, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Mangle (Cat)"), 30f, (s, t) => !Me.HaveBuff("Prowl") && Me.ComboPoint <=4 && Settings.Current.TF && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Rip"), 28f, (s,t) => Me.ComboPoint >= Settings.Current.FeralFinisherComboPoints && !t.HaveMyBuff("Rip") && t.HealthPercent >= Settings.Current.FeralRipHealth && !t.IsCreatureType("Elemental"),  RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Ferocious Bite"), 29f, (s, t) => Me.ComboPoint >= Settings.Current.FeralFinisherComboPoints, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Mangle (Cat)"), 30f, (s, t) => !Me.HaveBuff("Prowl") && Me.ComboPoint <=4 && Settings.Current.FeralTigersFury && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Claw"), 31f,(s,t)  => !Me.HaveBuff("Prowl"), RotationCombatUtil.BotTarget)
         };
     }

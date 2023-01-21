@@ -29,19 +29,19 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Tree of Life"), 1.1f, (s, t) => !Me.CHaveBuff("Tree of Life"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Innervate"), 2f, (s, t) => Me.CManaPercentage() <= 15, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Wild Growth"), 2.1f, RotationCombatUtil.Always, FindWildgrowthCluster, checkLoS:true),
-            new RotationStep(new RotationSpell("Abolish Poison"), 5f, (s,t) => Settings.Current.RestorationRemovePoison && !t.CHaveMyBuff("Abolish Poison") && t.HasDebuffType("Poison"), RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationSpell("Remove Curse"), 6f, (s,t) => Settings.Current.RestorationRemoveCurse && t.HasDebuffType("Curse"), RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationSpell("Swiftmend"), 6.1f, (s,t) => t.CHaveMyBuff("Rejuvenation") || t.CHaveMyBuff("Regrowth"),RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationSpell("Nature's Swiftness"), 8f, (s, t) => _hurtPartyMembers.Any(Member => Member.CHealthPercent() < Settings.Current.RestorationHealingTouch), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Healing Touch"), 8.9f, (s, t) => t.CHealthPercent() <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindTank, checkLoS:true),
-            new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => t.CHealthPercent() <= Settings.Current.RestorationHealingTouch, RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.CHealthPercent() <= Settings.Current.RestorationLifebloom, RotationCombatUtil.FindTank, checkLoS:true),
-            new RotationStep(new RotationSpell("Nourish"), 10.9f, (s, t) => t.CHealthPercent() <= Settings.Current.RestorationNourish, RotationCombatUtil.FindTank, checkLoS:true),
-            new RotationStep(new RotationSpell("Nourish"), 11f, (s, t) => t.CHealthPercent() <= Settings.Current.RestorationNourish, RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationSpell("Regrowth"), 11.9f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindTank, checkLoS:true),
-            new RotationStep(new RotationSpell("Regrowth"), 12f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.RestorationRegrowth, RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationBuff("Rejuvenation"), 12.1f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindTank, checkLoS:true),
-            new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.RestorationRejuvenation, RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationSpell("Abolish Poison"), 5f, (s,t) => Settings.Current.GroupRestorationRemovePoison && !t.CHaveMyBuff("Abolish Poison") && t.HasDebuffType("Poison"), RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationSpell("Remove Curse"), 6f, (s,t) => Settings.Current.GroupRestorationRemoveCurse && t.HasDebuffType("Curse"), RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationSpell("Swiftmend"), 6.1f, (s,t) => t.CHealthPercent() <= Settings.Current.GroupRestorationSwiftmend && (t.CHaveMyBuff("Rejuvenation") || t.CHaveMyBuff("Regrowth")),RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationSpell("Nature's Swiftness"), 8f, (s, t) => _hurtPartyMembers.Any(Member => Member.CHealthPercent() < Settings.Current.GroupRestorationHealingTouch), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Healing Touch"), 8.9f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindTank, checkLoS:true),
+            new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationLifebloom, RotationCombatUtil.FindTank, checkLoS:true),
+            new RotationStep(new RotationSpell("Nourish"), 10.9f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationNourish, RotationCombatUtil.FindTank, checkLoS:true),
+            new RotationStep(new RotationSpell("Nourish"), 11f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationNourish, RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationSpell("Regrowth"), 11.9f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.GroupRestorationRegrowth, RotationCombatUtil.FindTank, checkLoS:true),
+            new RotationStep(new RotationSpell("Regrowth"), 12f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.GroupRestorationRegrowth, RotationCombatUtil.FindPartyMember, checkLoS:true),
+            new RotationStep(new RotationBuff("Rejuvenation"), 12.1f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.GroupRestorationRejuvenation, RotationCombatUtil.FindTank, checkLoS:true),
+            new RotationStep(new RotationBuff("Rejuvenation"), 13f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.GroupRestorationRejuvenation, RotationCombatUtil.FindPartyMember, checkLoS:true),
         };
 
 
@@ -53,7 +53,7 @@ namespace AIO.Combat.Druid
             }
             Cache.Reset();
             ClearLists();
-            _tank = FindExplicitPartyMemberByName(Settings.Current.RestoCustomTank) ??
+            _tank = FindExplicitPartyMemberByName(Settings.Current.GroupRestoCustomTank) ??
                     RotationCombatUtil.FindTank(unit => true);
             BuildLists();
             return false;
@@ -91,7 +91,7 @@ namespace AIO.Combat.Druid
         private WoWPlayer FindWildgrowthCluster(Func<WoWUnit, bool> predicate)
         {
             WoWPlayer largestCenter = null;
-            int largestCount = Settings.Current.RestorationWildGrowth;
+            int largestCount = Settings.Current.GroupRestorationWildGrowthCount - 1;
             for (var i = 0; i < _hurtPartyMembers.Count(); i++)
             {
                 WoWPlayer originUnit = _hurtPartyMembers[i];
@@ -100,7 +100,7 @@ namespace AIO.Combat.Druid
                     continue;
                 }
                 Vector3 originPos = originUnit.CGetPosition();
-                int localCount = _hurtPartyMembers.Count(unit => unit.CIsAlive() && unit.CGetPosition().DistanceTo(originPos) <= 15);
+                int localCount = _hurtPartyMembers.Count(unit => unit.CIsAlive() && unit.CHealthPercent() <= Settings.Current.GroupRestorationWildGrowth && unit.CGetPosition().DistanceTo(originPos) <= 15 );
 
                 if (localCount > largestCount)
                 {
