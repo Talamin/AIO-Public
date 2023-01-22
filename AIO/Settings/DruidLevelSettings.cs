@@ -8,6 +8,15 @@ namespace AIO.Settings
     [Serializable]
     public class DruidLevelSettings : BasePersistentSettings<DruidLevelSettings>
     {
+
+        #region Selectors
+        [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration" })]
+        public override string ChooseTalent { get; set; }
+
+        [TriggerDropdown("DruidTriggerDropdown", new string[] { "Auto", "SoloFeral", "SoloBalance", "SoloRestoration", "GroupFeralTank", "GroupRestorationHeal" })]
+        public override string ChooseRotation { get; set; }
+        #endregion
+
         #region General settings       
         [Setting]
         [DefaultValue(true)]
@@ -36,141 +45,178 @@ namespace AIO.Settings
         [DisplayName("Rebirth")]
         [Description("Use Rebirth on dead targets in combat?")]
         public bool RebirthAuto { get; set; }
-        #endregion
-
-        #region Feral Settings
-        [Setting]
-        [DefaultValue(2)]
-        [Category("Feral")]
-        [DisplayName("Bear")]
-        [Description("Set the Amount of Enemies in Close Range to switch to Bear?")]
-        public int FeralBearCount { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("Feral Charge")]
-        [Description("Use Feral Charge?")]
-        public bool FeralCharge { get; set; }       
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("Prowl")]
-        [Description("Use Prowl?")]
-        public bool FeralProwl { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Feral")]
-        [DisplayName("Force Faerie")]
-        [Description("Use Faerie for pull?")]
-        public bool FeralForceFaerie { get; set; }
-
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("Tigers Fury")]
-        [Description("Use Tigers Fury on Cooldown?")]
-        public bool FeralTigersFury { get; set; }
-
-        [Setting]
-        [DefaultValue(30)]
-        [Category("Feral")]
-        [DisplayName("Rip Health")]
-        [Description("Set the health threshold to stop using Rip")]
-        public int FeralRipHealth { get; set; }
-
-        [Setting]
-        [DefaultValue(5)]
-        [Category("Feral")]
-        [DisplayName("Finisher Combo Points")]
-        [Description("Minimum Combo Points to use FB/Rip?")]
-        public int FeralFinisherComboPoints { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("Use Faerie Fire")]
-        [Description("Use FF in the Rotation?")]
-        public bool FeralFaerieFire { get; set; }
 
         [Setting]
         [DefaultValue(40)]
-        [Category("Feral")]
+        [Category("General")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "General")]
         [DisplayName("OOC Regrowth")]
         [Description("Set the health threshold for OOC Regrowth Healing")]
-        public int FeralRegrowth { get; set; }
+        public int OOCRegrowth { get; set; }
 
         [Setting]
         [DefaultValue(85)]
-        [Category("Feral")]
+        [Category("General")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "General")]
         [DisplayName("OOC Rejuvenation")]
         [Description("Set the health threshold for OOC Rejuvenation Healing")]
-        public int FeralRejuvenation { get; set; }
+        public int OOCRejuvenation { get; set; }
+        #endregion
 
+        #region SoloFeral Settings
         [Setting]
-        [DefaultValue(35)]
-        [Category("Feral")]
-        [DisplayName("IC heal %")]
-        [Description("Set the health threshold for in combat healing")]
-        public int FeralICHealThreshold { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("In combat Regrowth")]
-        [Description("Shapeshift and use Regrowth in combat?")]
-        public bool FeralRegrowthIC { get; set; }
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Bear")]
+        [Description("Set the Amount of Enemies in Close Range to switch to Bear?")]
+        public int SoloFeralBearCount { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("In combat Rejuvenation")]
-        [Description("Shapeshift and use Rejuvenation in combat?")]
-        public bool FeralRejuvenationIC { get; set; }
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Feral Charge")]
+        [Description("Use Feral Charge?")]
+        public bool SoloFeralCharge { get; set; }       
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Feral")]
-        [DisplayName("In combat Healing Touch")]
-        [Description("Shapeshift and use Healing Touch in combat?")]
-        public bool FeralHealingTouchIC { get; set; }        
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Prowl")]
+        [Description("Use Prowl?")]
+        public bool SoloFeralProwl { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Feral")]
-        [DisplayName("Decurse")]
-        [Description("Decurse Important Spells as Feral in Combat?")]
-        public bool FeralDecurse { get; set; }
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Force Faerie")]
+        [Description("Use Faerie for pull?")]
+        public bool SoloFeralForceFaerie { get; set; }
+
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Feral")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Tigers Fury")]
+        [Description("Use Tigers Fury on Cooldown?")]
+        public bool SoloFeralTigersFury { get; set; }
+
+        [Setting]
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Rip Health")]
+        [Description("Set the health threshold to stop using Rip")]
+        public int SoloFeralRipHealth { get; set; }
+
+        [Setting]
+        [DefaultValue(5)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Finisher Combo Points")]
+        [Description("Minimum Combo Points to use FB/Rip?")]
+        public int SoloFeralFinisherComboPoints { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Use Faerie Fire")]
+        [Description("Use FF in the Rotation?")]
+        public bool SoloFeralFaerieFire { get; set; }
+
+        [Setting]
+        [DefaultValue(35)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("IC heal %")]
+        [Description("Set the health threshold for in combat healing")]
+        public int SoloFeralICHealThreshold { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("In combat Regrowth")]
+        [Description("Shapeshift and use Regrowth in combat?")]
+        public bool SoloFeralRegrowthIC { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("In combat Rejuvenation")]
+        [Description("Shapeshift and use Rejuvenation in combat?")]
+        public bool SoloFeralRejuvenationIC { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("In combat Healing Touch")]
+        [Description("Shapeshift and use Healing Touch in combat?")]
+        public bool SoloFeralHealingTouchIC { get; set; }        
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
+        [DisplayName("Decurse")]
+        [Description("Decurse Important Spells as Feral in Combat?")]
+        public bool SoloFeralDecurse { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloFeral")]
         [DisplayName("Dash")]
         [Description("Use Dash while stealthed?")]
-        public bool FeralDash { get; set; }
+        public bool SoloFeralDash { get; set; }
+        #endregion
+
+        #region GroupFeralTank Settings
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupFeralTank")]
+        [DisplayName("Feral Charge")]
+        [Description("Use Feral Charge?")]
+        public bool GroupFeralCharge { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupFeralTank")]
+        [DisplayName("Use Faerie Fire")]
+        [Description("Use FF in the Rotation?")]
+        public bool GroupFeralFaerieFire { get; set; }
         #endregion
 
         #region SoloBalance Settings
         [Setting]
         [DefaultValue(true)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool SoloBalanceUseAOE { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Use Starfall in Instance")]
         [Description("Set this if you want to use Starfall in Instance")]
         public bool SoloBalanceUseStarfall { get; set; }
 
         [Setting]
         [DefaultValue(3)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("AOE in Instance")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -178,7 +224,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(10)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Healing Touch threshold")]
         [Description("Set the Healing threshold for Healing Touch")]
         [Percentage(false)]
@@ -186,7 +233,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(30)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Rejuvenation threshold")]
         [Description("Set the Healing threshold for Rejuvenation")]
         [Percentage(false)]
@@ -194,7 +242,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(60)]
-        [Category("Balance")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Regrowth threshold")]
         [Description("Set the Healing threshold for Regrowth")]
         [Percentage(false)]
@@ -204,7 +253,8 @@ namespace AIO.Settings
         #region SoloRestoration Settings
         [Setting]
         [DefaultValue(80)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Regrowth")]
         [Description("threshold for Regrowth")]
         [Percentage(true)]
@@ -212,7 +262,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Rejuvenation")]
         [Description("threshold for Rejuvenation")]
         [Percentage(true)]
@@ -220,7 +271,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Wild Growth")]
         [Description("threshold for Wild Growth")]
         [Percentage(true)]
@@ -228,7 +280,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(3)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Wild Growth")]
         [Description("threshold for Wild Growth Player Count")]
         [Percentage(false)]
@@ -236,7 +289,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(45)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Healing Touch")]
         [Description("threshold for Healing Touch")]
         [Percentage(true)]
@@ -244,7 +298,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Lifebloom")]
         [Description("threshold for Lifebloom")]
         [Percentage(true)]
@@ -252,7 +307,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(50)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Nourish")]
         [Description("threshold for Nourish use")]
         [Percentage(true)]
@@ -261,30 +317,34 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Curse")]
         [Description("Remove Curse?")]
         public bool SoloRestorationRemoveCurse { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Poison")]
         [Description("Remove Poison?")]
         public bool SoloRestorationRemovePoison { get; set; }
 
         [Setting]
         [DefaultValue("")]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloRestoration")]
         [DisplayName("Custom Tank")]
         [Description("If you want to override the tank. Leave empty if you don't know")]
         public string SoloRestoCustomTank { get; set; }
         #endregion
 
-        #region GroupRestoration Settings
+        #region GroupRestorationHeal Settings
         [Setting]
         [DefaultValue(80)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Regrowth")]
         [Description("Threshold for Regrowth")]
         [Percentage(true)]
@@ -292,7 +352,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Rejuvenation")]
         [Description("Threshold for Rejuvenation")]
         [Percentage(true)]
@@ -300,7 +361,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(60)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Swiftmend")]
         [Description("Threshold for Swiftmend")]
         [Percentage(true)]
@@ -308,7 +370,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]        
         [DisplayName("Wild Growth")]
         [Description("Threshold for Wild Growth")]
         [Percentage(true)]
@@ -316,7 +379,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(3)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Wild Growth")]
         [Description("Wild Growth minimum player count")]
         [Percentage(false)]
@@ -324,7 +388,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(45)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Healing Touch")]
         [Description("Threshold for Healing Touch")]
         [Percentage(true)]
@@ -332,7 +397,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(95)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Lifebloom")]
         [Description("Threshold for Lifebloom")]
         [Percentage(true)]
@@ -340,7 +406,8 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(50)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Nourish")]
         [Description("Threshold for Nourish use")]
         [Percentage(true)]
@@ -348,56 +415,54 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Curse")]
         [Description("Remove Curse?")]
         public bool GroupRestorationRemoveCurse { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Poison")]
         [Description("Remove Poison?")]
         public bool GroupRestorationRemovePoison { get; set; }
 
         [Setting]
         [DefaultValue("")]
-        [Category("Restoration")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "GroupRestorationHeal")]
         [DisplayName("Custom Tank")]
         [Description("If you want to override the tank. Leave empty if you don't know")]
         public string GroupRestoCustomTank { get; set; }
         #endregion
 
-        #region Selectors
-        [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration" })]
-        public override string ChooseTalent { get; set; }
-
-        [DropdownList(new string[] { "Auto", "FeralCombat", "Balance", "Restoration", "GroupFeralTank", "GroupRestorationHeal" })]
-        public override string ChooseRotation { get; set; }
-        #endregion
 
         public DruidLevelSettings()
         {
             ChooseTalent = "DruidFeral";
             BuffIC = true;
             HealOOC = true;
-            FeralProwl = true;
-            FeralForceFaerie = false;
-            FeralTigersFury = true;
-            FeralFinisherComboPoints = 5;
-            FeralFaerieFire = true;
-            FeralDash = true;
-            FeralCharge = true;           
-            FeralBearCount = 2;
+            SoloFeralProwl = true;
+            SoloFeralForceFaerie = false;
+            SoloFeralTigersFury = true;
+            SoloFeralFinisherComboPoints = 5;
+            SoloFeralFaerieFire = true;
+            SoloFeralDash = true;
+            SoloFeralCharge = true;           
+            SoloFeralBearCount = 2;
             Innervate = 25;
-            FeralRipHealth = 30;
-            FeralRegrowthIC = true;
-            FeralRegrowth = 60;
-            FeralRejuvenationIC = true;
-            FeralHealingTouchIC = true;
-            FeralICHealThreshold = 35;
-            FeralRejuvenation = 30;
-            FeralDecurse = false;
+            SoloFeralRipHealth = 30;
+            SoloFeralRegrowthIC = true;
+            OOCRegrowth = 60;
+            SoloFeralRejuvenationIC = true;
+            SoloFeralHealingTouchIC = true;
+            SoloFeralICHealThreshold = 35;
+            OOCRejuvenation = 30;
+            SoloFeralDecurse = false;
+            GroupFeralCharge = true;
+            GroupFeralFaerieFire = true;
             SoloBalanceUseAOE = true;
             SoloBalanceUseStarfall = true;
             SoloBalanceAOETargets = 3;
