@@ -35,7 +35,7 @@ namespace AIO.Combat.Druid
             new AutoPartyResurrect("Revive"),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(this)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));
         }
 
         public override void Initialize()

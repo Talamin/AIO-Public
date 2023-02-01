@@ -37,6 +37,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloAfflictionDrainlife, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Unstable Affliction"), 13f, (s,t) => !t.HaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => t.HealthPercent <= 25, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 16f ,(s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget)
         };
