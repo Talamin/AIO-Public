@@ -13,7 +13,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightFrost", "DeathKnightUnholy" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { "Auto", "SoloBlood", "SoloFrost", "SoloUnholy", "UnholyPVP" })]
+        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { "Auto", "SoloBlood", "GroupBloodTank", "SoloFrost", "SoloUnholy", "UnholyPVP" })]
         public override string ChooseRotation { get; set; }
 
         //General
@@ -159,10 +159,6 @@ namespace AIO.Settings
         [Description("Set Enemy Count larger X enemy to use DnD")]
         [Percentage(false)]
         public int SoloUnholyDnD { get; set; }
-
-
-
-
 
         public DeathKnightLevelSettings()
         {

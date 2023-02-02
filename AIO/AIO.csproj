@@ -248,6 +248,7 @@
     <Compile Include="Combat\Common\ICycleable.cs" />
     <Compile Include="Combat\Addons\PetAutoTarget.cs" />
     <Compile Include="Combat\Common\DeferredCycleable.cs" />
+    <Compile Include="Combat\DeathKnight\GroupBloodTank.cs" />
     <Compile Include="Combat\DeathKnight\SoloBlood.cs" />
     <Compile Include="Combat\DeathKnight\Buffs.cs" />
     <Compile Include="Combat\DeathKnight\DeathKnightBehavior.cs" />

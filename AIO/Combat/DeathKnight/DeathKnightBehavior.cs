@@ -21,6 +21,7 @@ namespace AIO.Combat.DeathKnight
             new Dictionary<string, BaseRotation>
             {
                 {"SoloBlood", new SoloBlood() },
+                {"GroupBloodTank", new GroupBloodTank() },
                 {"SoloUnholy", new SoloUnholy() },
                 {"SoloFrost", new SoloFrost() },
                 {"UnholyPVP", new UnholyPVP() },
