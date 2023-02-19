@@ -106,6 +106,13 @@ internal class TalentsManager : ICycleable
                     "2305020530003303231023101351000000000000000000000000000002302203050030000000000000000000"
                 };
                 break;
+            // BLOOD DEATHKNIGHT TANK
+            case "DeathKnightBloodTank":
+                Codes = new string[]
+                {
+                    "0055121533303300201020130300305050500002330100000000000000100000000000000000000000000000",
+                };
+                break;
 
             // Frost DEATHKNIGHT
             case "DeathKnightFrost":
@@ -116,7 +123,14 @@ internal class TalentsManager : ICycleable
                     "0100000000000000000000000000320023503422030123000331013512302003050030000000000000000000"
                 };
                 break;
-
+            // Group Frost DEATHKNIGHT
+            case "GroupDeathKnightFrost":
+                Codes = new string[]
+                {                    
+                    "0000000000000000000000000000320053503522030123000331013510000000000000000000000000000000",
+                    "2305000500000000000000000000320053503522030123000331013510000000000000000000000000000000"                    
+                };
+                break;
             // Unholy DEATHKNIGHT
             case "DeathKnightUnholy":
                 Codes = new string[]
@@ -130,7 +144,14 @@ internal class TalentsManager : ICycleable
                     "2305020500000000000000000000000000000000000000000000000002302003350032152000150003133151"
                 };
                 break;
-
+            // Group Unholy DEATHKNIGHT
+            case "GroupDeathKnightUnholy":
+                Codes = new string[]
+                {
+                    "0000000000000000000000000000000000000000000000000000000002300303050032152000150013133051",
+                    "0000000000000000000000000000320043500002000000000000000002300303050032152000150013133051"
+                };
+                break;
             // AFFLICTION WARLOCK
             case "WarlockAffliction":
                 Codes = new string[]
@@ -146,7 +167,13 @@ internal class TalentsManager : ICycleable
                     "235002200102351023351033115100322030113020000000000000000000000000000000000000000"
                 };
                 break;
-
+            // AFFLICTION WARLOCK
+            case "GroupWarlockAffliction":
+                Codes = new string[]
+                {
+                    "235000203002351025350033115100000000000000000000000000055000005100000000000000000"
+                };
+                break;
             // DEMONOLOGY WARLOCK
             case "WarlockDemonology":
                 Codes = new string[]
@@ -354,6 +381,17 @@ internal class TalentsManager : ICycleable
                 };
                 break;
 
+            // Groupo RESTO DRUID
+            case "GroupDruidRestoration":
+                Codes = new string[]
+                {
+                    "0000000000000000000000000000000000000000000000000000000000230033310030000000000000000",
+                    "0000000000000000000000000000000000000000000000000000000000230033312030000000000000000",
+                    "0000000000000000000000000000000000000000000000000000000000230033312031500531053313051",
+                    "0532000100000000000000000000000000000000000000000000000000230033312031500531053313051",
+                    "0532000100000000000000000000000000000000000000000000000000230033312031502531253313051"
+                };
+                break;
 
             // FROST MAGE
             case "MageFrost":
@@ -430,7 +468,14 @@ internal class TalentsManager : ICycleable
                     "000000000000000000000000000500513520310231133331230152230050000300000000000000"
                 };
                 break;
-
+            // Group PROTECTION PALADIN
+            case "GroupPaladinProtection":
+                Codes = new string[]
+                {
+                    "000000000000000000000000000500513520013231133331230100000000000000000000000000",
+                    "000000000000000000000000000500513520013231133331230152132201001300000000000000",
+                };
+                break;
             // HOLY PALADIN
             case "PaladinHoly":
                 Codes = new string[]

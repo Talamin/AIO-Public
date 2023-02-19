@@ -46,6 +46,7 @@ namespace AIO.Combat.Druid
             switch (Specialisation)
             {
                 case "SoloFeral":
+                case "LowLevel":
                     CombatRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
                     break;
                 case "GroupFeralTank":

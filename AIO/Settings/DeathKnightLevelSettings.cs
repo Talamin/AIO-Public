@@ -10,7 +10,7 @@ namespace AIO.Settings
     {
         //Lists
 
-        [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightFrost", "DeathKnightUnholy" })]
+        [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightBloodTank", "DeathKnightFrost", "GroupDeathKnightFrost", "DeathKnightUnholy", "GroupDeathKnightUnholy" })]
         public override string ChooseTalent { get; set; }
 
         [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { "Auto", "SoloBlood", "GroupBloodTank", "SoloFrost", "SoloUnholy", "UnholyPVP" })]

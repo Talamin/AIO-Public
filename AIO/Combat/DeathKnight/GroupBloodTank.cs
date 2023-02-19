@@ -26,18 +26,19 @@ namespace AIO.Combat.DeathKnight
             new RotationStep(new RotationSpell("Vampiric Blood"), 3.2f, (s,t) => Me.HealthPercent <= 30, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Rune Tap"), 3.3f, (s,t) => Me.HealthPercent <= Settings.Current.SoloBloodRuneTap, RotationCombatUtil.FindMe),
             // other useful  Spells
-            new RotationStep(new RotationSpell("Empower Rune Weapon"), 3.5f, (s,t) => Me.RunesReadyCount() <= 2, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Empower Rune Weapon"), 3.5f, (s,t) => Me.RunesReadyCount() <= 1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Chains of Ice"), 3.7f, (s,t) => t.Fleeing, RotationCombatUtil.BotTarget),
-            //Damage Part
+            
             new RotationStep(new RotationSpell("Death and Decay"), 4f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance < 15) >= Settings.Current.SoloBloodDnD, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Blood Tap"), 4.1f, (s,t) => Me.RuneIsReady(1) || Me.RuneIsReady(2), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Icebound Fortitude"), 5.1f, (s,t) => Me.HealthPercent < 80 && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.GetDistance <= 8) >=2, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Mark of Blood"), 6f, (s,t)  => BossList.isboss ||(t.IsElite && Me.IsInGroup), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Icebound Fortitude"), 5.1f, (s,t) => Me.HealthPercent < 40 && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.GetDistance <= 8) >=2, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Mark of Blood"), 6f, (s,t)  => BossList.isboss || (t.IsElite && Me.IsInGroup), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Dancing Rune Weapon"), 7f, (s,t)  => BossList.isboss ||(t.IsElite && !Me.IsInGroup) || (RotationFramework.Enemies.Count(o => o.GetDistance <= 10) >=2 && !Me.IsInGroup), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Death Grip"), 8.1f, (s,t) => !Me.IsInGroup && t.IsAttackable && !t.IsTargetingMe && t.IsMyTarget && !TraceLine.TraceLineGo(Me.Position, t.Position) && t.GetDistance >= 7 && Settings.Current.SoloBloodDeathGrip, RotationCombatUtil.BotTarget),
+            //Damage Part
             new RotationStep(new RotationSpell("Icy Touch"), 10f, (s,t) => !t.HaveMyBuff("Frost Fever"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Plague Strike"), 11f, (s,t) => !t.HaveMyBuff("Blood Plague"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Pestilence"), 12f, (s,t) => t.HaveMyBuff("Blood Plague", "Frost Fever") && RotationFramework.Enemies.Count(o => o.GetDistance < 15 && !o.HaveMyBuff("Blood Plague", "Frost Fever")) >=2, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Pestilence"), 12f, (s,t) => t.HaveMyBuff("Blood Plague", "Frost Fever") && RotationFramework.Enemies.Count(o => o.GetDistance < 15 && !o.HaveMyBuff("Blood Plague", "Frost Fever")) >=1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Rune Strike"), 13f, RotationCombatUtil.Always, _ =>  Me.RunicPower >= 40 && !RotationCombatUtil.IsCurrentSpell("Rune Strike"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Blood Strike"), 14f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) == Settings.Current.SoloBloodBloodStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heart Strike"), 15f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) >= Settings.Current.SoloBloodHearthStrike, RotationCombatUtil.BotTarget),

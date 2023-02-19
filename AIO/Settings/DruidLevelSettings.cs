@@ -10,7 +10,7 @@ namespace AIO.Settings
     {
 
         #region Selectors
-        [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration" })]
+        [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration", "GroupDruidRestoration" })]
         public override string ChooseTalent { get; set; }
 
         [TriggerDropdown("DruidTriggerDropdown", new string[] { "Auto", "SoloFeral", "SoloBalance", "SoloRestoration", "GroupFeralTank", "GroupRestorationHeal" })]
