@@ -10,10 +10,10 @@ namespace AIO.Settings
     {
         #region Selectors
 
-        [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "PaladinProtection", "GroupPaladinProtection" })]
+        [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "GroupPaladinHoly", "PaladinProtection", "GroupPaladinProtection" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "Retribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtection" })]
+        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "Retribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtectionTank" })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -185,6 +185,7 @@ namespace AIO.Settings
         public string Sealret { get; set; }
         #endregion
 
+        #region Aura
         [Setting]
         [DefaultValue(false)]
         [Category("Aura")]
@@ -192,6 +193,7 @@ namespace AIO.Settings
         [Description("Set Combat Aura")]
         [DropdownList(new string[] { "Devotion Aura", "Retribution Aura", "Concentration Aura" })]
         public string Aura { get; set; }
+        #endregion
 
         #region SoloProtectionTank
         [Setting]
@@ -293,7 +295,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Seal of Command or other")]
         [Description("Set the Seal you want to used by the FC")]
         [DropdownList(new string[] { "Seal of Command", "Seal of Righteousness", "Seal of Justice", "Seal of Light", "Seal of Wisdom", "Seal of Vengeance" })]
@@ -302,7 +304,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(95)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Seal of ... other then Wisdom")]
         [Description("Set your Treshhold when to use the Mainseal...")]
         [Percentage(true)]
@@ -311,7 +313,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Avenging Wrath")]
         [Description("Use Avenging Wrath?")]
         public bool GroupAvengingWrathProtection { get; set; }
@@ -319,7 +321,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(40)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Seal of Wisdom")]
         [Description("Set your Treshhold when to use Seal of Wisdom")]
         [Percentage(true)]
@@ -328,7 +330,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(5)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Lay on Hands")]
         [Description("Set your Treshhold for LoH on Paladin")]
         [Percentage(true)]
@@ -338,7 +340,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Hand of Reckoning")]
         [Description("Use HoR in Dungeons? Autotaunt.")]
         public bool GroupProtectionHoR { get; set; }
@@ -346,7 +348,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Hand of Protection")]
         [Description("Use HoP in Dungeons? ")]
         public bool GroupProtectionHoP { get; set; }
@@ -354,7 +356,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Cleanse")]
         [Description("Use Cleanse on which  Targets? ")]
         [DropdownList(new string[] { "Group", "Me", "None" })]
@@ -363,7 +365,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-[VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtection")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Hammer of Justice")]
         [Description("Hammer of Justice when more then 1 Target")]
         public bool GroupProtectionHammerofJustice { get; set; }
@@ -416,6 +418,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Holy")]
         [DisplayName("LoH")]
         [Description("Allow Lay on Hands on Tank with hp < 15%")]
         public bool HolyLoH { get; set; }
@@ -423,10 +426,73 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(15)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Holy")]
         [DisplayName("LoH Value")]
         [Description("Set your Treshhold when to LoH on Tank")]
         [Percentage(true)]
         public int HolyLoHTresh { get; set; }
+        #endregion
+
+        #region GroupHoly
+        [Setting]
+        [DefaultValue(60)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("Holy Shock")]
+        [Description("Set your Treshhold when to use Holy Shock")]
+        [Percentage(true)]
+        public int GroupHolyHS { get; set; }
+
+        [Setting]
+        [DefaultValue(75)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("Holy Light")]
+        [Description("Set your Treshhold when to use Holy Light")]
+        [Percentage(true)]
+        public int GroupHolyHL { get; set; }
+
+        [Setting]
+        [DefaultValue(95)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("Flash of Light")]
+        [Description("Set your Treshhold when to use Flash of Light")]
+        [Percentage(true)]
+        public int GroupHolyFL { get; set; }
+
+        [Setting]
+        [DefaultValue("")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("Custom Tank")]
+        [Description("If you want to override the tank. Leave empty if you don't know")]
+        public string GroupHolyCustomTank { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("Purify")]
+        [Description("Allow Purify on yourself")]
+        public bool GroupHolyPurify { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("LoH")]
+        [Description("Allow Lay on Hands on Tank with hp < 15%")]
+        public bool GroupHolyLoH { get; set; }
+
+        [Setting]
+        [DefaultValue(15)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupHolyHeal")]
+        [DisplayName("LoH Value")]
+        [Description("Set your Treshhold when to LoH on Tank")]
+        [Percentage(true)]
+        public int GroupHolyLoHTresh { get; set; }
         #endregion
 
         public PaladinLevelSettings()
@@ -441,7 +507,7 @@ namespace AIO.Settings
             Resurrect = true;
             Buffing = true;
             DivineProtection = true;
-            HolyHS = 60;
+            GroupHolyHS = 60;
             HolyHL = 75;
             HolyFL = 95;
             HolyLoH = false;
@@ -482,6 +548,16 @@ namespace AIO.Settings
             GroupProtectionHammerofJustice = true;
             GroupAvengingWrathProtection = true;
             GroupProtectionHammerofJustice = true;
+            GroupHolyLoH = true;
+            GroupHolyLoHTresh = 15;
+            GroupHolyHS = 60;
+            GroupHolyHL = 75;
+            GroupHolyFL = 95;
+            GroupHolyLoH = false;
+            GroupHolyLoHTresh = 15;
+            GroupHolyPurify = true;
+            GroupHolyCustomTank = "";
+
         }
     }
 }

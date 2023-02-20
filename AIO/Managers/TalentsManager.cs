@@ -32,7 +32,7 @@ internal class TalentsManager : ICycleable
         if (useDefaultTalents)
         {
             SetTalentCodes(specialisation);
-            Main.Log("Your are using the following default talents build:");
+            Main.Log("Your are using the "+ specialisation +" default talents build:");
         }
         else
         {
@@ -85,7 +85,15 @@ internal class TalentsManager : ICycleable
                     "0502000000000000000000000000000305000000000000000000000000053351225000212521330113321"
                 };
                 break;
-
+            // Prot WARRIOR
+            case "GroupWarriorProtection":
+                Codes = new string[]
+                {
+                    "0000000000000000000000000000000000000000000000000000000000053350225000012521032113321",
+                    "2500030023000000000000000000000000000000000000000000000000053350225000012521032113321",
+                    "2500030023000000000000000000000300000000000000000000000000053350225000012521032113321"
+                };
+                break;
             // Arms WARRIOR
             case "WarriorArms":
                 Codes = new string[]
@@ -485,7 +493,12 @@ internal class TalentsManager : ICycleable
                     "503501510200130531005152215000000000000000000000000005032050000000000000000000"
                 };
                 break;
-
+            case "GroupPaladinHoly":
+                Codes = new string[]
+                {
+                    "503501520200130531005152205032010420300000000000000000000000000000000000000000",                    
+                };
+                break;                
             // SHADOW PRIEST
             case "PriestShadow":
                 Codes = new string[]

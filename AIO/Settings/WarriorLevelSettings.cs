@@ -92,7 +92,7 @@ namespace AIO.Settings
         [Description("Enemycount for Shout?")]
         public int ProtectionShockwaveCount { get; set; }
 
-        [DropdownList(new string[] { "WarriorProtection", "WarriorArms", "WarriorFury" })]
+        [DropdownList(new string[] { "WarriorProtection", "GroupWarriorProtection", "WarriorArms", "WarriorFury" })]
         public override string ChooseTalent { get; set; }
 
         [DropdownList(new string[] { "Auto", "Protection", "Arms", "Fury","GroupFury" })]
