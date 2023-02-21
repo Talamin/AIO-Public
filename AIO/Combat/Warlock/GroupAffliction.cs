@@ -24,7 +24,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => !t.IsBoss && t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.CHaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),            
-            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.HaveBuff("Life Tap") && Settings.Current.GroupAfflictionGlyphLifetap && Me.HealthPercent > 30,RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.HaveBuff("Life Tap") && Settings.Current.GlyphLifeTap && Me.HealthPercent > 30,RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Life Tap"), 4.1f, (s,t) => Me.HealthPercent > 30 && Me.ManaPercentage < Settings.Current.GroupAfflictionLifetap,RotationCombatUtil.FindMe),
 
             //AOE

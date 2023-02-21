@@ -57,6 +57,13 @@ namespace AIO.Settings
         public bool Buffing { get; set; }
 
         [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Life Tap Glyph")]
+        [Description("Do we have Glyph of Life Tap?")]
+        public bool GlyphLifeTap { get; set; }
+
+        [Setting]
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Soulshards")]
@@ -312,6 +319,7 @@ namespace AIO.Settings
             UseWand = true;
             Buffing = true;
             Soulshards = true;
+            GlyphLifeTap = false;
 
             //Rotation SoloAffliction
             SoloAfflictionUseSeedGroup = true;
