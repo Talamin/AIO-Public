@@ -25,9 +25,10 @@ namespace AIO.Combat.Rogue
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"Combat", new Combat() },
+                {"SoloCombat", new SoloCombat() },
+                {"GroupCombat", new GroupCombat() },
                 //{"Assassination", new Combat() },
-                {"Default", new Combat() },
+                {"Default", new SoloCombat() },
             })
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Throw", SwapRange)));

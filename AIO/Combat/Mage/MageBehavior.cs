@@ -23,12 +23,12 @@ namespace AIO.Combat.Mage
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"Frost", new Frost() },
+                {"SoloFrost", new SoloFrost() },
                 {"GroupFrost", new GroupFrost() },
-                {"Arcane", new Arcane() },
-                {"Fire", new Fire() },
+                {"SoloArcane", new SoloArcane() },
+                {"SoloFire", new SoloFire() },
                 {"GroupFire", new GroupFire() },
-                {"Default", new Frost() },
+                {"Default", new SoloFrost() },
             },
             new Buffs(),
             new ConditionalCycleable(() => Settings.Current.Backpaddle,

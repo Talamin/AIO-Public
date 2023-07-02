@@ -7,7 +7,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Warlock
 {
     using Settings = WarlockLevelSettings;
-    internal class Destruction : BaseRotation
+    internal class SoloDestruction : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),

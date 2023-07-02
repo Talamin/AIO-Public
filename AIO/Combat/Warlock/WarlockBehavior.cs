@@ -24,10 +24,11 @@ namespace AIO.Combat.Warlock
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"Affliction", new Affliction() },
-                {"Destruction", new Destruction() },
-                {"Demonology", new Demonology() },
-                {"Default", new Affliction() },
+                {"SoloAffliction", new SoloAffliction() },
+                {"GroupAffliction", new GroupAffliction() },
+                {"SoloDestruction", new SoloDestruction() },
+                {"SoloDemonology", new SoloDemonology() },
+                {"Default", new SoloAffliction() },
             }, 
             new Buffs(), 
             new PetAutoTarget("Torment"))

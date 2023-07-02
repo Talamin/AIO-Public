@@ -39,8 +39,8 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) =>  Me.CHealthPercent() < 30 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 5f, (s,t) => t.CHealthPercent() < 80 && !t.HaveMyBuff("Ice Barrier"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Counterspell"), 6f, (s,t) => t.CIsCast(), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Cone of Cold"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.AOEInstance) && Settings.Current.UseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.AOEInstance) && Settings.Current.UseAOE, FindBlizzardCluster, checkLoS: true),
+            new RotationStep(new RotationSpell("Cone of Cold"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, FindBlizzardCluster, checkLoS: true),
             new RotationStep(new RotationSpell("Frostfire Bolt"), 8f, (s,t) => Me.CHaveMyBuff("Fireball!"), RotationCombatUtil.BotTargetFast, checkLoS: true),
 
             new RotationStep(new RotationSpell("Cold Snap"), 9f, (s,t) => !Me.CHaveBuff("Ice Barrier") && Me.CHealthPercent() < 95, RotationCombatUtil.FindMe),
@@ -51,7 +51,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh && (Me.CBuffStack("Fingers of Frost") > 0 || t.CHaveMyBuff("Frost Nova")), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Fire Blast"), 17f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && t.CHealthPercent() < Settings.Current.FrostFireBlast , RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Fire Blast"), 17f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && t.CHealthPercent() < Settings.Current.GroupFrostFrostFireBlast , RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Frostbolt"), 18f, (s,t) =>  Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast, checkLoS: true)
         };
 

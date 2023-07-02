@@ -8,44 +8,27 @@ namespace AIO.Settings
     [Serializable]
     public class DeathKnightLevelSettings : BasePersistentSettings<DeathKnightLevelSettings>
     {
+        //Lists
 
-        [Setting]
+        [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightFrost", "DeathKnightUnholy" })]
+        public override string ChooseTalent { get; set; }
+
+        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { "Auto", "SoloBlood", "SoloFrost", "SoloUnholy", "UnholyPVP" })]
+        public override string ChooseRotation { get; set; }
+
+        //General
         [DefaultValue(true)]
-        [Category("Fight")]
+        [Category("General")]
         [DisplayName("Raise Dead")]
         [Description("Use Raise Dead asap?")]
         public bool RaiseDead { get; set; }
 
-        [Setting]
         [DefaultValue(false)]
-        [Category("Fight")]
+        [Category("General")]
         [DisplayName("Glyph Raise Dead")]
         [Description("Have  Glyph and don´t need Dust?")]
         public bool GlyphRaiseDead { get; set; }
 
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Dark Command")]
-        [Description("Use Dark Command in Group?")]
-        public bool DarkCommand { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
-        [DisplayName("Deathgrip")]
-        [Description("use Deathgrip for in Group?")]
-        public bool DeathGrip { get; set; }
-
-        [Setting]
-        [DefaultValue(50)]
-        [Category("Fight")]
-        [DisplayName("Rune tap")]
-        [Description("Which health % to use Rune tap?")]
-        [Percentage(true)]
-        public int RuneTap { get; set; }
-
-        [Setting]
         [DefaultValue(false)]
         [Category("Fight")]
         [DisplayName("Choose Presence")]
@@ -53,57 +36,158 @@ namespace AIO.Settings
         [DropdownList(new string[] { "BloodPresence", "FrostPresence", "UnholyPresence" })]
         public string Presence { get; set; }
 
-        [Setting]
+        //SoloBlood
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [DisplayName("Dark Command")]
+        [Description("Use Dark Command in Group?")]
+        public bool SoloBloodDarkCommand { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [DisplayName("Deathgrip")]
+        [Description("use Deathgrip for in Group?")]
+        public bool SoloBloodDeathGrip { get; set; }
+
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [DisplayName("Rune tap")]
+        [Description("Which health % to use Rune tap?")]
+        [Percentage(true)]
+        public int SoloBloodRuneTap { get; set; }
+
         [DefaultValue(1)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
         [DisplayName("Bloodstrike")]
         [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
         [Percentage(false)]
-        public int BloodStrike { get; set; }
+        public int SoloBloodBloodStrike { get; set; }
 
-        [Setting]
         [DefaultValue(2)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
         [DisplayName("Hearthstrike")]
         [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
         [Percentage(false)]
-        public int HearthStrike { get; set; }
+        public int SoloBloodHearthStrike { get; set; }
 
-        [Setting]
         [DefaultValue(2)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
         [DisplayName("BloodBoil")]
         [Description("Set Enemy Count larger X enemy to use Bloodboil")]
         [Percentage(false)]
-        public int BloodBoil { get; set; }
+        public int SoloBloodBloodBoil { get; set; }
 
-        [Setting]
         [DefaultValue(3)]
-        [Category("Fight")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
         [DisplayName("Death and Decay")]
         [Description("Set Enemy Count larger X enemy to use DnD")]
         [Percentage(false)]
-        public int DnD { get; set; }
+        public int SoloBloodDnD { get; set; }
 
-        [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightFrost", "DeathKnightUnholy" })]
-        public override string ChooseTalent { get; set; }
+        //SoloFrost
 
-        [DropdownList(new string[] { "Auto", "Blood", "Frost", "Unholy", "UnholyPVP" })]
-        public override string ChooseRotation { get; set; }
+        [DefaultValue(1)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [DisplayName("Bloodstrike")]
+        [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
+        [Percentage(false)]
+        public int SoloFrostBloodStrike { get; set; }
+
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [DisplayName("Hearthstrike")]
+        [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
+        [Percentage(false)]
+        public int SoloFrostHearthStrike { get; set; }
+
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [DisplayName("BloodBoil")]
+        [Description("Set Enemy Count larger X enemy to use Bloodboil")]
+        [Percentage(false)]
+        public int SoloFrostBloodBoil { get; set; }
+
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [DisplayName("Death and Decay")]
+        [Description("Set Enemy Count larger X enemy to use DnD")]
+        [Percentage(false)]
+        public int SoloFrostDnD { get; set; }
+
+        //SoloUnholy
+
+        [DefaultValue(1)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [DisplayName("Bloodstrike")]
+        [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
+        [Percentage(false)]
+        public int SoloUnholyBloodStrike { get; set; }
+
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [DisplayName("Hearthstrike")]
+        [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
+        [Percentage(false)]
+        public int SoloUnholyHearthStrike { get; set; }
+
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [DisplayName("BloodBoil")]
+        [Description("Set Enemy Count larger X enemy to use Bloodboil")]
+        [Percentage(false)]
+        public int SoloUnholyBloodBoil { get; set; }
+
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [DisplayName("Death and Decay")]
+        [Description("Set Enemy Count larger X enemy to use DnD")]
+        [Percentage(false)]
+        public int SoloUnholyDnD { get; set; }
+
+
+
+
 
         public DeathKnightLevelSettings()
         {
+            ChooseTalent = "DeathKnightBlood";
             RaiseDead = true;
             GlyphRaiseDead = false;
-            ChooseTalent = "DeathKnightBlood";
-            DarkCommand = true;
-            DeathGrip = true;
-            RuneTap = 50;
             Presence = "BloodPresence";
-            BloodStrike = 1;
-            HearthStrike = 2;
-            BloodBoil = 2;
-            DnD = 3;
+            //SoloBlood
+            SoloBloodDarkCommand = true;
+            SoloBloodDeathGrip = true;
+            SoloBloodRuneTap = 50;
+            SoloBloodBloodStrike = 1;
+            SoloBloodHearthStrike = 2;
+            SoloBloodBloodBoil = 2;
+            SoloBloodDnD = 3;
+            //SoloFrost
+            SoloFrostBloodStrike = 1;
+            SoloFrostHearthStrike = 2;
+            SoloFrostBloodBoil = 2;
+            SoloFrostDnD = 3;
+            //SoloUnholy
+            SoloUnholyBloodStrike = 1;
+            SoloUnholyHearthStrike = 2;
+            SoloUnholyBloodBoil = 2;
+            SoloUnholyDnD = 3;
         }
     }
 }

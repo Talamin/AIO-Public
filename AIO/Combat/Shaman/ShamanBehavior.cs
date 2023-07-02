@@ -25,10 +25,10 @@ namespace AIO.Combat.Shaman
             new Dictionary<string, BaseRotation>
             {
                 {"LowLevel", new LowLevel() },
-                {"Elemental", new Elemental() },
-                {"Restoration", new Restoration() },
-                {"Enhancement", new Enhancement() },
-                {"Default", new Enhancement() },
+                {"SoloElemental", new SoloElemental() },
+                {"SoloRestoration", new SoloRestoration() },
+                {"SoloEnhancement", new SoloEnhancement() },
+                {"Default", new SoloEnhancement() },
             }, new AutoPartyResurrect("Ancestral Spirit"),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
@@ -44,10 +44,10 @@ namespace AIO.Combat.Shaman
 
             switch (Specialisation)
             {
-                case "Enhancement":
+                case "SoloEnhancement":
                     CombatRange = 5.0f;
                     break;
-                case "Elemental":
+                case "SoloElemental":
                     CombatRange = 24.0f;
                     break;
                 case "LowLevel":
@@ -117,7 +117,7 @@ namespace AIO.Combat.Shaman
             if (string.IsNullOrWhiteSpace(wManagerSetting.CurrentSetting.GroundMountName) &&
                 !new Regeneration().NeedToRun &&
                 !Me.HaveMyBuff("Ghost Wolf") &&
-                Settings.Current.Ghostwolf &&
+                Settings.Current.UseGhostWolf &&
                 Me.IsAlive &&
                 GhostWolf.KnownSpell &&
                 !Me.InCombat)
