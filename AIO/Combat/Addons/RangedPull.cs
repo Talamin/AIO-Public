@@ -46,7 +46,7 @@ namespace AIO.Combat.Addons
 
             if (OldRange != null)
             {
-                if (distanceToTarget <= OldRange || Target.IsCast || Timeout.IsReady)
+                if (distanceToTarget <= OldRange || Target.IsCast || Timeout.IsReady || ObjectManager.Target.HasTarget && ObjectManager.Target.Target != ObjectManager.Me.Guid)
                 {
                     _ = RangeSwap((float)OldRange);
                     OldRange = null;
