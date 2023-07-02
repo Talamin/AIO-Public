@@ -17,6 +17,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.HaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => Me.HealthPercent > 50 && Me.ManaPercentage < Settings.Current.SoloAfflictionLifetap,RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Life Tap"), 4.1f, (s,t) => Settings.Current.GlyphLifeTap && !Me.HaveBuff("Life Tap") && Me.HealthPercent > 25, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Seed of Corruption"), 4.4f, (s,t) => 
             Settings.Current.SoloAfflictionUseSeedGroup &&  !t.HaveMyBuff("Seed of Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloAfflictionAOECount && Settings.Current.SoloAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
             new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => 
@@ -37,6 +38,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloAfflictionDrainlife, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Unstable Affliction"), 13f, (s,t) => !t.HaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => t.HealthPercent <= 25, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 16f ,(s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget)
         };

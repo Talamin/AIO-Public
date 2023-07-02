@@ -40,12 +40,14 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationBuff("Seal of Justice"), 3f, (s, t) => Spec == "Retribution" && Settings.Current.Sealret == "Seal of Justice", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Righteous Fury"), 4f, (s, t) => (Spec == "Protection" || Spec =="GroupProtectionTank"), RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationBuff("Seal of Vengeance"), 4.1f, (s, t) => Spec == "Protection" && Settings.Current.Sealprot == "Seal of Vengeance" && Me.ManaPercentage >= Settings.Current.ProtectionSoL, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Seal of Command"), 4.2f, (s, t) => Spec == "Protection" && Settings.Current.Sealprot == "Seal of Command" && Me.ManaPercentage >= Settings.Current.ProtectionSoL, RotationCombatUtil.FindMe),
-
-            new RotationStep(new RotationBuff("Seal of Wisdom"), 5f, (s, t) => (Spec == "Protection" || Spec =="GroupProtectionTank") && Me.ManaPercentage < Settings.Current.ProtectionSoW , RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Vengeance"), 4.1f, (s, t) => Spec == "Protection" && Settings.Current.Sealprot == "Seal of Vengeance" && Me.ManaPercentage >= Settings.Current.ProtectionSoW, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Command"), 4.2f, (s, t) => Spec == "Protection" && Settings.Current.Sealprot == "Seal of Command" && Me.ManaPercentage >= Settings.Current.ProtectionSoW, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Vengeance"), 4.1f, (s, t) => Spec == "GroupProtectionTank" && Settings.Current.GroupSealprot == "Seal of Vengeance" && Me.ManaPercentage >= Settings.Current.GroupProtectionSoW, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Command"), 4.2f, (s, t) => Spec == "GroupProtectionTank" && Settings.Current.GroupSealprot == "Seal of Command" && Me.ManaPercentage >= Settings.Current.GroupProtectionSoW, RotationCombatUtil.FindMe),
+            
+            new RotationStep(new RotationBuff("Seal of Wisdom"), 5f, (s, t) => (Spec == "Protection") && Me.ManaPercentage < Settings.Current.ProtectionSoW , RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Wisdom"), 5.1f, (s, t) => Spec == "Holy", RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Seal of Light"), 6f, (s, t) => (Spec == "Protection" || Spec =="GroupProtectionTank") && Me.ManaPercentage >= Settings.Current.ProtectionSoL && Settings.Current.Sealprot != "Seal of Vengeance" && Settings.Current.Sealprot != "Seal of Command", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Light"), 6f, (s, t) => (Spec == "Protection") && Me.ManaPercentage >= Settings.Current.ProtectionSoW && Settings.Current.Sealprot != "Seal of Vengeance" && Settings.Current.Sealprot != "Seal of Command", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Righteousness"), 7f, (s, t) => (Spec == "Protection" || Spec =="GroupProtectionTank") && !SpellManager.KnowSpell("Seal of Light"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Blessing of Might"), 7.1f, (s, t) => !Me.IsInGroup && Spec == "Retribution" && !Me.HaveBuff("Battle Shout"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Blessing of Might"), 7.2f, (s,t) => !Me.IsInGroup && (Spec == "Protection" || Spec =="GroupProtectionTank") && !SpellManager.KnowSpell("Blessing of Sanctuary"), RotationCombatUtil.FindMe),

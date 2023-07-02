@@ -11,10 +11,10 @@ namespace AIO.Settings
 
         //Lists
 
-        [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology" })]
+        [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology", "GroupWarlockAffliction" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("WarlockTriggerDropdown",new string[] { "Auto", "SoloDestruction", "SoloAffliction", "SoloDemonology" })]
+        [TriggerDropdown("WarlockTriggerDropdown",new string[] { "Auto", "SoloDestruction", "SoloAffliction", "SoloDemonology", "GroupAffliction" })]
         public override string ChooseRotation { get; set; }
 
         //Pet
@@ -55,6 +55,13 @@ namespace AIO.Settings
         [DisplayName("Buffing")]
         [Description("True/False for Buffing?")]
         public bool Buffing { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Life Tap Glyph")]
+        [Description("Do we have Glyph of Life Tap?")]
+        public bool GlyphLifeTap { get; set; }
 
         [Setting]
         [DefaultValue(true)]
@@ -224,6 +231,13 @@ namespace AIO.Settings
         [Percentage(true)]
         public int GroupAfflictionLifetap { get; set; }
 
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [DisplayName("Glyph Life Tap")]
+        [Description("Set this if you have the life tap Glyph")]
+        public bool GroupAfflictionGlyphLifetap { get; set; }
+
         [DefaultValue(40)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
@@ -305,6 +319,7 @@ namespace AIO.Settings
             UseWand = true;
             Buffing = true;
             Soulshards = true;
+            GlyphLifeTap = false;
 
             //Rotation SoloAffliction
             SoloAfflictionUseSeedGroup = true;
@@ -332,6 +347,7 @@ namespace AIO.Settings
             GroupAfflictionUseSeedGroup = true;
             GroupAfflictionUseCorruptionGroup = true;
             GroupAfflictionLifetap = 20;
+            GroupAfflictionGlyphLifetap = false;
             GroupAfflictionDrainlife = 40;
             GroupAfflictionHealthfunnelPet = 30;
             GroupAfflictionHealthfunnelMe = 50;
