@@ -34,13 +34,6 @@ namespace AIO.Settings
         public bool DivineProtection { get; set; }
 
         [Setting]
-        [DefaultValue(2)]
-        [Category("General")]
-        [DisplayName("Consecration")]
-        [Description("Set the Enemycount >= for Consecration on all Specs ")]
-        public int GeneralConsecration { get; set; }
-
-        [Setting]
         [DefaultValue(false)]
         [Category("General")]
         [DisplayName("Crusader")]
@@ -108,6 +101,13 @@ namespace AIO.Settings
         [DisplayName("Hand of Reckoning")]
         [Description("Use Hand of Reckoning in Rotation?")]
         public bool RetributionHOR { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int RetributionConsecration { get; set; }
 
         [Setting]
         [DefaultValue(50)]
@@ -311,6 +311,13 @@ namespace AIO.Settings
         public int GroupProtectionSoL { get; set; }
 
         [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int GroupProtConsecration { get; set; }
+
+        [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
@@ -503,7 +510,8 @@ namespace AIO.Settings
             DivinePleaOOC = true;
             DivinePleaIC = true;
             GeneralDivinePlea = 50;
-            GeneralConsecration = 2;
+            GroupProtConsecration = 2;
+            RetributionConsecration = 2;
             Resurrect = true;
             Buffing = true;
             DivineProtection = true;
