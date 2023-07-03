@@ -76,5 +76,9 @@ namespace AIO.Framework
 
         public static bool HaveImportantMagic(this WoWUnit unit) => SpecialSpells.ImportantMagic.Any(unit.HaveBuff);
 
+        public static bool HaveImportantSlow(this WoWUnit unit) => SpecialSpells.ImportantSlow.Any(unit.HaveBuff);
+
+        public static bool HaveImportantRoot(this WoWUnit unit) => SpecialSpells.ImportantRoot.Any(unit.HaveBuff);
+
     }
 }
