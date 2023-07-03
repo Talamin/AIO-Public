@@ -208,6 +208,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(2)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Protection")]
         [DisplayName("Consecration")]
         [Description("How many nearby enemies do we need to use Concectration ")]
         public int ProtConsecration { get; set; }
@@ -320,6 +321,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(2)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Consecration")]
         [Description("How many nearby enemies do we need to use Concectration ")]
         public int GroupProtConsecration { get; set; }
