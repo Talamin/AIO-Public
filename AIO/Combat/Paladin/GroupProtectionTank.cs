@@ -24,13 +24,9 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lay on Hands"), 1.1f, (s,t) => t.CHealthPercent() <= Settings.Current.GroupProtectionLoH && !Me.CHaveBuff("Forbearance"), RotationCombatUtil.FindMe,checkRange:false),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, RotationCombatUtil.Always, _ => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe,checkRange:false),
-<<<<<<< HEAD
             new RotationStep(new RotationSpell("Hand of Freedom"), 1.8f, (s,t) => t.HaveImportantSlow() || t.HaveImportantRoot(), RotationCombatUtil.FindMe),
             // Hand of Freedom needs testing
-            new RotationStep(new RotationSpell("Consecration"), 2f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(unit => unit.CGetDistance() <=8), RotationCombatUtil.FindMe, checkRange: false),
-=======
             new RotationStep(new RotationSpell("Consecration"), 2f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Count(unit => unit.CGetDistance() <=8) >= Settings.Current.GroupProtConsecration, RotationCombatUtil.FindMe, checkRange: false),
->>>>>>> origin/master
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Hand of Reckoning"), 3f, (s,t) => !t.CIsTargetingMe(),_ => Settings.Current.GroupProtectionHoR, FindEnemyAttackingGroup, checkLoS:true),
             //maybe needs some better Targeting
