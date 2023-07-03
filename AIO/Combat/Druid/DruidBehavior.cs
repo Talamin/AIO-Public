@@ -17,7 +17,10 @@ namespace AIO.Combat.Druid
         public static int RejuvenationValue = 0;
         public static int TransformValue = 0;
         private float CombatRange;
+        private float DefaultRange;
         public override float Range => CombatRange;
+        private void SetDefaultRange() => CombatRange = DefaultRange;
+        private void SetRange(float range) => CombatRange = range;
 
         internal DruidBehavior() : base(
             Settings.Current,
@@ -35,28 +38,29 @@ namespace AIO.Combat.Druid
             new AutoPartyResurrect("Revive"),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
+            SetDefaultRange();
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupFeralTank", new RangedPull(new List<string> { "Faerie Fire (Feral)" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
 
         public override void Initialize()
         {
-
             base.Initialize();
-
             switch (Specialisation)
             {
                 case "SoloFeral":
                 case "LowLevel":
-                    CombatRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
+                    DefaultRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
                     break;
                 case "GroupFeralTank":
-                    CombatRange = 5.0f;
+                    DefaultRange = 5.0f;
                     break;
                 default:
-                    CombatRange = 29.0f;
+                    DefaultRange = 29.0f;
                     break;
             }
         }
+
         protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
         {
             HealingTouchValue = RotationSpell.GetSpellCost("Healing Touch");

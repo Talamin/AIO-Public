@@ -34,13 +34,6 @@ namespace AIO.Settings
         public bool DivineProtection { get; set; }
 
         [Setting]
-        [DefaultValue(2)]
-        [Category("General")]
-        [DisplayName("Consecration")]
-        [Description("Set the Enemycount >= for Consecration on all Specs ")]
-        public int GeneralConsecration { get; set; }
-
-        [Setting]
         [DefaultValue(false)]
         [Category("General")]
         [DisplayName("Crusader")]
@@ -108,6 +101,13 @@ namespace AIO.Settings
         [DisplayName("Hand of Reckoning")]
         [Description("Use Hand of Reckoning in Rotation?")]
         public bool RetributionHOR { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int RetributionConsecration { get; set; }
 
         [Setting]
         [DefaultValue(50)]
@@ -204,6 +204,14 @@ namespace AIO.Settings
         [Description("Set the Seal you want to used by the FC")]
         [DropdownList(new string[] { "Seal of Command", "Seal of Righteousness", "Seal of Justice", "Seal of Light", "Seal of Wisdom", "Seal of Vengeance" })]
         public string Sealprot { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Protection")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int ProtConsecration { get; set; }
 
         [Setting]
         [DefaultValue(95)]
@@ -309,6 +317,14 @@ namespace AIO.Settings
         [Description("Set your Treshhold when to use the Mainseal...")]
         [Percentage(true)]
         public int GroupProtectionSoL { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int GroupProtConsecration { get; set; }
 
         [Setting]
         [DefaultValue(true)]
@@ -503,7 +519,9 @@ namespace AIO.Settings
             DivinePleaOOC = true;
             DivinePleaIC = true;
             GeneralDivinePlea = 50;
-            GeneralConsecration = 2;
+            ProtConsecration = 2;
+            GroupProtConsecration = 2;
+            RetributionConsecration = 2;
             Resurrect = true;
             Buffing = true;
             DivineProtection = true;

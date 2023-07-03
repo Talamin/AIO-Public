@@ -17,7 +17,7 @@ namespace AIO.Combat.Paladin
         {
             var hostilesIn20Yards = RotationFramework.Enemies.Count(o => o.GetDistance <= 10);
 
-            return hostilesIn20Yards >= Settings.Current.GeneralConsecration && (Me.Level >= 43 || t.HealthPercent > 25);
+            return hostilesIn20Yards >= Settings.Current.RetributionConsecration && (Me.Level >= 43 || t.HealthPercent > 25);
         }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {

@@ -8,15 +8,10 @@ namespace AIO.Combat.Warrior
     using Settings = WarriorLevelSettings;
     internal class WarriorBehavior : BaseCombatClass
     {
-        private float CombatRange = 5.0f;
+        private float CombatRange;
         public override float Range => CombatRange;
-
-        private float SwapRange(float range)
-        {
-            var old = CombatRange;
-            CombatRange = range;
-            return old;
-        }
+        private void SetDefaultRange() => CombatRange = 5.0f;
+        private void SetRange(float range) => CombatRange = range;
 
         internal WarriorBehavior() : base(
             Settings.Current,
@@ -30,8 +25,10 @@ namespace AIO.Combat.Warrior
                 {"Default", new Protection() },
             })
         {
+            SetDefaultRange();
             Addons.Add(new Buffs(this));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Throw", SwapRange)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation != "Protection" && Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "Protection", new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
     }
 }
