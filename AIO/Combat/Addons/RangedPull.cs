@@ -1,10 +1,10 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
-using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using wManager.Events;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -62,12 +62,12 @@ namespace AIO.Combat.Addons
                 ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
                 return;
             }
-            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns"))
+            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns" || item.GetItemInfo.ItemSubType == "Crossbows"))
             {
                 ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Shoot");
                 return;
             }
-            ChosenPullSPell = PullSpells.FirstOrDefault();
+            ChosenPullSPell = availableSpells.FirstOrDefault();
         }
 
         private void Run()
@@ -108,7 +108,7 @@ namespace AIO.Combat.Addons
             {
                 MovementManager.StopMove();
                 RotationCombatUtil.CastSpell(ChosenPullSPell, Target, true);
-                Usefuls.WaitIsCasting();
+                Thread.Sleep(2000);
             }
         }
 
