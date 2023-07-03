@@ -32,6 +32,7 @@ namespace AIO.Combat.Warrior
         {
             Addons.Add(new Buffs(this));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Throw", SwapRange)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Shoot", SwapRange)));
         }
     }
 }

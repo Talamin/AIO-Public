@@ -19,6 +19,13 @@ namespace AIO.Combat.Druid
         private float CombatRange;
         public override float Range => CombatRange;
 
+        private float SwapRange(float range)
+        {
+            var old = CombatRange;
+            CombatRange = range;
+            return old;
+        }
+
         internal DruidBehavior() : base(
             Settings.Current,
             new Dictionary<string, BaseRotation>
@@ -36,6 +43,7 @@ namespace AIO.Combat.Druid
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupFeralTank", new RangedPull("Faerie Fire (Feral)", SwapRange)));
         }
 
         public override void Initialize()

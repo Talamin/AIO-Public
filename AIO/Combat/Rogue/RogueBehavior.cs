@@ -32,6 +32,7 @@ namespace AIO.Combat.Rogue
             })
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Throw", SwapRange)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Shoot", SwapRange)));
         }
 
         protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => PoisonHelper.CheckPoison();

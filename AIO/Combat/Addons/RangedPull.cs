@@ -52,7 +52,7 @@ namespace AIO.Combat.Addons
                     OldRange = null;
                 }
             }
-            if (!Extension.HaveRangedWeaponEquipped)
+            if ((Pull.Name == "Throw" || Pull.Name == "Shoot") && !Extension.HaveRangedWeaponEquipped)
             {
                 return;
             }
@@ -67,7 +67,7 @@ namespace AIO.Combat.Addons
 
             if (distanceToTarget <= 29f &&
                 distanceToTarget >= 10f &&
-                HasNearbyEnemies(Target, 20f))
+                HasNearbyEnemies(Target, 25f))
             {
                 if (OldRange == null)
                 {
@@ -76,6 +76,7 @@ namespace AIO.Combat.Addons
                 }
 
                 RotationCombatUtil.CastSpell(Pull, Target, true);
+                MovementManager.StopMove();
                 Usefuls.WaitIsCasting();
             }
         }

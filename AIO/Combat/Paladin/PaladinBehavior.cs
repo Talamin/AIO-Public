@@ -16,6 +16,13 @@ namespace AIO.Combat.Paladin
         public override float Range => CombatRange;
         private static readonly string crusader = "Crusader Aura";
 
+        private float SwapRange(float range)
+        {
+            var old = CombatRange;
+            CombatRange = range;
+            return old;
+        }
+
         internal PaladinBehavior() : base(
             Settings.Current,
             new Dictionary<string, BaseRotation>
@@ -34,7 +41,9 @@ namespace AIO.Combat.Paladin
             //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull("Exorcism", SwapRange)));
         }
+
         public override void Initialize()
         {
             base.Initialize();
