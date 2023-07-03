@@ -206,6 +206,13 @@ namespace AIO.Settings
         public string Sealprot { get; set; }
 
         [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int ProtConsecration { get; set; }
+
+        [Setting]
         [DefaultValue(95)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Protection")]
@@ -510,6 +517,7 @@ namespace AIO.Settings
             DivinePleaOOC = true;
             DivinePleaIC = true;
             GeneralDivinePlea = 50;
+            ProtConsecration = 2;
             GroupProtConsecration = 2;
             RetributionConsecration = 2;
             Resurrect = true;

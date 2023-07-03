@@ -16,7 +16,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lay on Hands"), 1.1f, (s,t) => t.HealthPercent <= Settings.Current.ProtectionLoH && !Me.HaveBuff("Forbearance"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Consecration"), 2f, (s,t) => t.HealthPercent > 25 && RotationFramework.Enemies.Count(o => o.GetDistance <=15) >= Settings.Current.GroupProtConsecration, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Consecration"), 2f, (s,t) => t.HealthPercent > 25 && RotationFramework.Enemies.Count(o => o.GetDistance <=15) >= Settings.Current.ProtConsecration, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Righteous Defense"), 3f, (s,t) => t.Name != Me.Name && RotationFramework.Enemies.Count(o => o.IsAttackable && !o.IsTargetingMe && o.IsTargetingPartyMember) >=2,RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Hand of Reckoning"), 4f, (s,t) => t.GetDistance <= 25 && !t.IsTargetingMe && !Me.IsInGroup && Settings.Current.RetributionHOR, RotationCombatUtil.BotTarget),
