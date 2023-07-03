@@ -56,7 +56,8 @@ namespace AIO.Combat.Addons
             {
                 return;
             }
-            if (Me.InCombatFlagOnly)
+            //if (Me.InCombatFlagOnly)
+            if (Target.HasTarget)
             {
                 return;
             }
