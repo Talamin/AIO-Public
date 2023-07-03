@@ -1,6 +1,8 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using robotManager.Helpful;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using wManager.Events;
@@ -13,18 +15,29 @@ namespace AIO.Combat.Addons
 {
     internal class RangedPull : ICycleable
     {
-        private readonly RotationSpell Pull;
-        private readonly Func<float, float> RangeSwap;
-        private readonly Timer Timeout = new Timer();
+        private readonly List<RotationSpell> PullSpells = new List<RotationSpell>();
+        private Timer Timeout = new Timer();
+        private RotationSpell ChosenPullSPell;
+        private Action SetDefaultRange;
+        private Action<float> SetRange;
+        private PullCondition _pullCondition;
 
-        private float? OldRange;
-
-        public RangedPull(string pull, Func<float, float> rangeSwap)
+        public enum PullCondition
         {
-            Pull = new RotationSpell(pull);
-            RangeSwap = rangeSwap;
+            ALWAYS,
+            ENEMIES_AROUND
         }
 
+        public RangedPull(List<string> pullSPells, Action setDefaultRange, Action<float> setRange, PullCondition pullCondition)
+        {
+            foreach (string pullSPell in pullSPells)
+            {
+                PullSpells.Add(new RotationSpell(pullSPell));
+            }
+            SetDefaultRange = setDefaultRange;
+            SetRange = setRange;
+            _pullCondition = pullCondition;
+        }
         public void Dispose()
         {
             FightEvents.OnFightStart -= OnFightStart;
@@ -37,47 +50,64 @@ namespace AIO.Combat.Addons
             FightEvents.OnFightLoop += OnFightLoop;
         }
 
-        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable) => Run();
+        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable) => FighStart();
         private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable) => Run();
+
+        private void FighStart()
+        {
+            Timeout = new Timer(7 * 1000);
+            List<RotationSpell> availableSpells = PullSpells.FindAll(spell => spell.KnownSpell && spell.IsSpellUsable);
+            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Thrown"))
+            {
+                ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
+                return;
+            }
+            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns"))
+            {
+                ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Shoot");
+                return;
+            }
+            ChosenPullSPell = PullSpells.FirstOrDefault();
+        }
 
         private void Run()
         {
             var distanceToTarget = Me.Position.DistanceTo(Target.Position);
 
-            if (OldRange != null)
-            {
-                if (distanceToTarget <= OldRange || Target.IsCast || Timeout.IsReady || ObjectManager.Target.HasTarget && ObjectManager.Target.Target != ObjectManager.Me.Guid)
-                {
-                    _ = RangeSwap((float)OldRange);
-                    OldRange = null;
-                }
-            }
-            if ((Pull.Name == "Throw" || Pull.Name == "Shoot") && !Extension.HaveRangedWeaponEquipped)
-            {
-                return;
-            }
-            //if (Me.InCombatFlagOnly)
-            if (Target.HasTarget)
-            {
-                return;
-            }
-            if (!Pull.KnownSpell)
+            // No pull spell known
+            if (ChosenPullSPell == null) 
             {
                 return;
             }
 
-            if (distanceToTarget <= 29f &&
-                distanceToTarget >= 10f &&
-                HasNearbyEnemies(Target, 25f))
+            if (Timeout.IsReady || Target.IsCast || Target.HasTarget && Target.Target != Me.Guid)
             {
-                if (OldRange == null)
-                {
-                    OldRange = RangeSwap(29f);
-                    Timeout.Reset(7 * 1000);
-                }
+                SetDefaultRange();
+                return;
+            }
 
-                RotationCombatUtil.CastSpell(Pull, Target, true);
+            // Pull succesful, wait for the enemy to come
+            if (Target.Target == Me.Guid)
+            {
+                return;
+            }
+
+            bool pullCOnditionMet = _pullCondition == PullCondition.ALWAYS
+                || _pullCondition == PullCondition.ENEMIES_AROUND && HasNearbyEnemies(Target, 25f);
+            if (!pullCOnditionMet)
+            {
+                SetDefaultRange();
+                return;
+            }
+
+            float pullRange = ChosenPullSPell.MaxRange - 5;
+            SetRange(pullRange);
+
+            if (distanceToTarget <= pullRange + 4
+                && distanceToTarget >= 10f)
+            {
                 MovementManager.StopMove();
+                RotationCombatUtil.CastSpell(ChosenPullSPell, Target, true);
                 Usefuls.WaitIsCasting();
             }
         }

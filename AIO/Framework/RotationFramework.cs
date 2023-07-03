@@ -270,7 +270,7 @@ namespace AIO.Framework
         }
 
         private static Dictionary<ushort, List<long>> Stats = new Dictionary<ushort, List<long>>();
-        private static ushort _ticks = 0;
+        //private static ushort _ticks = 0;
 
         private static void PrintStats() {
             foreach (KeyValuePair<ushort, List<long>> stat

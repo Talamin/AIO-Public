@@ -10,15 +10,11 @@ namespace AIO.Combat.Rogue
     using Settings = RogueLevelSettings;
     internal class RogueBehavior : BaseCombatClass
     {
-        private float CombatRange = 5.0f;
+        private float CombatRange;
         public override float Range => CombatRange;
 
-        private float SwapRange(float range)
-        {
-            var old = CombatRange;
-            CombatRange = range;
-            return old;
-        }
+        private void SetDefaultRange() => CombatRange = 5.0f;
+        private void SetRange(float range) => CombatRange = range;
 
         internal RogueBehavior() : base(
             Settings.Current,
@@ -31,8 +27,8 @@ namespace AIO.Combat.Rogue
                 {"Default", new SoloCombat() },
             })
         {
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Throw", SwapRange)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull("Shoot", SwapRange)));
+            SetDefaultRange();
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
         }
 
         protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => PoisonHelper.CheckPoison();

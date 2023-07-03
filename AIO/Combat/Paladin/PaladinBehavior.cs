@@ -1,9 +1,7 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Settings;
-using robotManager.Helpful;
 using System.Collections.Generic;
-using System.ComponentModel;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -12,16 +10,12 @@ namespace AIO.Combat.Paladin
     using Settings = PaladinLevelSettings;
     internal class PaladinBehavior : BaseCombatClass
     {
-        private float CombatRange;
-        public override float Range => CombatRange;
         private static readonly string crusader = "Crusader Aura";
-
-        private float SwapRange(float range)
-        {
-            var old = CombatRange;
-            CombatRange = range;
-            return old;
-        }
+        private float CombatRange;
+        private float DefaultRange;
+        public override float Range => CombatRange;
+        private void SetDefaultRange() => CombatRange = DefaultRange;
+        private void SetRange(float range) => CombatRange = range;
 
         internal PaladinBehavior() : base(
             Settings.Current,
@@ -38,10 +32,11 @@ namespace AIO.Combat.Paladin
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
+            SetDefaultRange();
             //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull("Exorcism", SwapRange)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull(new List<string> { "Avenger's Shield", "Hand of Reckoning", "Exorcism" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
 
         public override void Initialize()
@@ -52,10 +47,10 @@ namespace AIO.Combat.Paladin
             {
                 case "Holy":
                 case "GroupHolyHeal":
-                    CombatRange = 29.0f;
+                    DefaultRange = 29.0f;
                     break;
                 default:
-                    CombatRange = 5.0f;
+                    DefaultRange = 5.0f;
                     break;
             }
         }
@@ -64,7 +59,7 @@ namespace AIO.Combat.Paladin
         {
             if (!Settings.Current.Crusader)
                 return;
-            if(SpellManager.KnowSpell(crusader) && ObjectManager.Me.IsMounted && !ObjectManager.Me.HaveBuff(crusader))
+            if (SpellManager.KnowSpell(crusader) && ObjectManager.Me.IsMounted && !ObjectManager.Me.HaveBuff(crusader))
             {
                 SpellManager.CastSpellByNameLUA(crusader);
             }
