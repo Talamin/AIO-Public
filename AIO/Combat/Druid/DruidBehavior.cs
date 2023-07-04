@@ -38,7 +38,6 @@ namespace AIO.Combat.Druid
             new AutoPartyResurrect("Revive"),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
-            SetDefaultRange();
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupFeralTank", new RangedPull(new List<string> { "Faerie Fire (Feral)" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
@@ -59,6 +58,7 @@ namespace AIO.Combat.Druid
                     DefaultRange = 29.0f;
                     break;
             }
+            SetRange(DefaultRange);
         }
 
         protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)

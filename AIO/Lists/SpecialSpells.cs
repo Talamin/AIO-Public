@@ -67,7 +67,8 @@ namespace AIO.Lists
             "Hex",
             "Psychic Scream",
             "Sleep",
-            "Mind Tremor"
+            "Mind Tremor",
+            "Pacify"
         };
         public static readonly List<string> ImportantSlow = new List<string> {
             "Frostbolt",
@@ -76,7 +77,9 @@ namespace AIO.Lists
         public static readonly List<string> ImportantRoot = new List<string> {
             "Frost Nova",
             "Net",
-            "Chains of Ice"
+            "Chains of Ice",
+            "Ice Blast",
+            "Electrified Net"
         };
     }
 }

@@ -29,8 +29,8 @@ namespace AIO.Combat.Warlock
                 {"SoloDestruction", new SoloDestruction() },
                 {"SoloDemonology", new SoloDemonology() },
                 {"Default", new SoloAffliction() },
-            }, 
-            new Buffs(), 
+            },
+            new Buffs(),
             new PetAutoTarget("Torment"))
         { }
 
@@ -108,6 +108,7 @@ namespace AIO.Combat.Warlock
         private readonly Spell SummonVoidWalker = new Spell("Summon Voidwalker");
         private readonly Spell SummonFelguard = new Spell("Summon Felguard");
         private readonly Spell SummonFelhunter = new Spell("Summon Felhunter");
+        private readonly Spell LifeTapOOC = new Spell("Life Tap");
 
         //protected override void OnMovementCalculation(Vector3 from, Vector3 to, string continentnamempq, CancelEventArgs cancelable)
         //{
@@ -126,6 +127,7 @@ namespace AIO.Combat.Warlock
             RefreshPet();
             SpellstoneHelper.Refresh();
             HealthstoneRefresh();
+            LifeTapOutOfCombat();
         }
 
         private void HealthstoneRefresh()
@@ -190,6 +192,15 @@ namespace AIO.Combat.Warlock
                 Thread.Sleep(50);
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
+        }
+
+       private void LifeTapOutOfCombat()
+        {
+            while (!Fight.InFight && LifeTapOOC.KnownSpell && Me.ManaPercentage < 93 && Settings.Current.LifeTapOOC && Me.IsInParty && !Me.IsMounted && !Me.InCombat)
+            {
+                LifeTapOOC.Launch();
+            }
+         
         }
     }
 }

@@ -3,6 +3,7 @@ using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
+using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -19,7 +20,7 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationBuff("Nature's Swiftness"), 4f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= 50 && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Healing Wave"), 5f, (s,t) => t.HealthPercent <= 25, s => Me.HaveBuff("Nature's Swiftness"), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Earth Shield"), 6f, RotationCombatUtil.Always, RotationCombatUtil.FindTank),
-            new RotationStep(new RotationBuff("Mana Spring Totem"), 6.5f, (s,t) => !Me.HaveBuff("Mana Spring"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Mana Spring Totem"), 6.5f, (s,t) => !Me.HaveBuff("Mana Spring") && !SpellManager.KnowSpell("Call of the Elements"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tidal Force"), 7f, RotationCombatUtil.Always, s => RotationFramework.AllUnits.Count(o => o.IsAlive && o.Target == _tank?.Guid && o.GetDistance <= 40) >= 4 && _tank?.HealthPercent < 80, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tidal Force"), 8f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= 80 && o.GetDistance <= 40) >= 3, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cleanse Spirit"), 9f, (s,t) => !Me.IsInGroup && t.HasDebuffType("Disease", "Poison", "Curse"), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),

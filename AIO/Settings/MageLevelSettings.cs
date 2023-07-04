@@ -86,7 +86,7 @@ namespace AIO.Settings
         [DisplayName("Use AOE in Instance")][Description("Set this if you want to use AOE in Instance")]
         public bool SoloFrostUseAOE { get; set; }
 
-        [DefaultValue(3)][Category("Rotation")]
+        [DefaultValue(4)][Category("Rotation")]
         [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
         [DisplayName("AOE in Instance")][Description("Number of Targets around the Tank to use AOE in Instance")][Percentage(false)]
         public int SoloFrostAOEInstance { get; set; }
@@ -248,25 +248,25 @@ namespace AIO.Settings
             SoloFrostSheep = false;
             SoloFrostManastone = 10;
             SoloFrostUseAOE = false;
-            SoloFrostAOEInstance = 3;
+            SoloFrostAOEInstance = 4;
 
             //GroupFrostSheep = false;
             GroupFrostFrostFireBlast = 10;
             GroupFrostManastone = 10;
             GroupFrostUseAOE = false;
-            GroupFrostAOEInstance = 3;
+            GroupFrostAOEInstance = 4;
 
             SoloFireSheep = false;
             SoloFireManastone = 10;
             SoloFireUseAOE = false;
-            SoloFireAOEInstance = 3;
+            SoloFireAOEInstance = 4;
             SoloFireFlamestrikeWithoutFire = true;
             SoloFireFlamestrikeWithoutCountFire = 3;
 
             //GroupFireSheep = false;
             GroupFireManastone = 10;
             GroupFireUseAOE = false;
-            GroupFireAOEInstance = 3;
+            GroupFireAOEInstance = 4;
             GroupFireFlamestrikeWithoutFire = true;
             GroupFireFlamestrikeWithoutCountFire = 3;
 

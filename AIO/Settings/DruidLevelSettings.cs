@@ -465,7 +465,7 @@ namespace AIO.Settings
             GroupFeralFaerieFire = true;
             SoloBalanceUseAOE = true;
             SoloBalanceUseStarfall = true;
-            SoloBalanceAOETargets = 3;
+            SoloBalanceAOETargets = 4;
             RebirthAuto = true;
             SoloBalanceHealingTouch = 10;
             SoloBalanceRegrowth = 60;

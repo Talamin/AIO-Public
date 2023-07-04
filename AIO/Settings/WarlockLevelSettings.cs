@@ -66,6 +66,13 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
+        [DisplayName("Life Tap OOC")]
+        [Description("Should Life Tap be used out of combat in dungeons?")]
+        public bool LifeTapOOC { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("General")]
         [DisplayName("Soulshards")]
         [Description("Automanage your Soulshards?")]
         public bool Soulshards { get; set; }
@@ -76,6 +83,14 @@ namespace AIO.Settings
         [DisplayName("Healthstone")]
         [Description("Use Healthstone / Cast Healthstone?")]
         public bool Healthstone { get; set; }
+
+        [DefaultValue(4)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "")]
+        [DisplayName("AOE in Instance")]
+        [Description("Number of Targets around the Tank to use AOE in Instance")]
+        [Percentage(false)]
+        public int SoloFrostAOEInstance { get; set; }
 
         //Rotation SoloAffliction
         [DefaultValue(20)]
@@ -139,7 +154,7 @@ namespace AIO.Settings
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool SoloAfflictionUseCorruptionGroup { get; set; }
 
-        [DefaultValue(3)]
+        [DefaultValue(4)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
         [DisplayName("Use AOE Count")]
@@ -163,8 +178,6 @@ namespace AIO.Settings
         [Description("When to use  Metamorphosis?")]
         [DropdownList(new string[] { "OnCooldown", "OnBosses", "None" })]
         public string SoloDemonologyMetamorphosis { get; set; }
-
-        //Rotation SoloDestruction
 
         [DefaultValue(20)]
         [Category("Rotation")]
@@ -205,7 +218,7 @@ namespace AIO.Settings
         [Percentage(true)]
         public int SoloDemonologyHealthfunnelMe { get; set; }
 
-        [DefaultValue(3)]
+        [DefaultValue(4)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
         [DisplayName("Use AOE Count")]
@@ -221,6 +234,22 @@ namespace AIO.Settings
         public bool SoloDemonologyUseAOE { get; set; }
 
         //Rotation SoloDestruction
+
+        [DefaultValue(4)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDestruction")]
+        [DisplayName("Use AOE Count")]
+        [Description("Number of Targets around the Tank to use AOE in Instance")]
+        [Percentage(false)]
+        public int SoloDestructionAOECount { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDestruction")]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE in Instance")]
+
+        public bool SoloDestructionUseAOE { get; set; }
 
         //Rotation GroupAffliction
         [DefaultValue(20)]
@@ -291,7 +320,7 @@ namespace AIO.Settings
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool GroupAfflictionUseCorruptionGroup { get; set; }
 
-        [DefaultValue(3)]
+        [DefaultValue(4)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
         [DisplayName("Use AOE Count")]
@@ -320,6 +349,7 @@ namespace AIO.Settings
             Buffing = true;
             Soulshards = true;
             GlyphLifeTap = false;
+            LifeTapOOC = true;
 
             //Rotation SoloAffliction
             SoloAfflictionUseSeedGroup = true;
@@ -329,7 +359,7 @@ namespace AIO.Settings
             SoloAfflictionHealthfunnelPet = 30;
             SoloAfflictionHealthfunnelMe = 50;
             SoloAfflictionUseAOE = false;
-            SoloAfflictionAOECount = 3;
+            SoloAfflictionAOECount = 4;
             SoloAfflictionShadowboltWand = true;
             SoloAfflictionAfflCurse = "Agony";
 
@@ -339,7 +369,7 @@ namespace AIO.Settings
             SoloDemonologyHealthfunnelPet = 30;
             SoloDemonologyHealthfunnelMe = 50;
             SoloDemonologyUseAOE = false;
-            SoloDemonologyAOECount = 3;
+            SoloDemonologyAOECount = 4;
             SoloDemonologyShadowboltWand = true;
             SoloDemonologyMetamorphosis = "OnCooldown";
 
@@ -352,10 +382,13 @@ namespace AIO.Settings
             GroupAfflictionHealthfunnelPet = 30;
             GroupAfflictionHealthfunnelMe = 50;
             GroupAfflictionUseAOE = false;
-            GroupAfflictionAOECount = 3;
+            GroupAfflictionAOECount = 4;
             GroupAfflictionShadowboltWand = true;
             GroupAfflictionAfflCurse = "Agony";
 
+            //Rotation SoloDestruction
+            SoloDestructionUseAOE = true;
+            SoloDestructionAOECount = 4;
         }
     }
 }
