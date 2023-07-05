@@ -31,7 +31,6 @@ namespace AIO.Lists
             "Terrifying Screech",
             "Warlock Terror",
             "Wings of Despair",
-            "Frostbolt"
         };
         public static readonly List<string> ImportantPoison = new List<string> {
             "Venom Sting",
@@ -51,7 +50,9 @@ namespace AIO.Lists
             "Dark Energy",
             "Curse of Blood",
             "Shrink",
-            "Curse of the Firebrand"
+            "Curse of the Firebrand",
+            "Curse of Weakness",
+            "Cursed Blood"
         };
         public static readonly List<string> ImportantMagic = new List<string> {
             "Hammer of Justice",
@@ -65,7 +66,20 @@ namespace AIO.Lists
             "Mark of Shadow",
             "Hex",
             "Psychic Scream",
-            "Sleep"
+            "Sleep",
+            "Mind Tremor",
+            "Pacify"
+        };
+        public static readonly List<string> ImportantSlow = new List<string> {
+            "Frostbolt",
+            "Frost Shot"
+        };
+        public static readonly List<string> ImportantRoot = new List<string> {
+            "Frost Nova",
+            "Net",
+            "Chains of Ice",
+            "Ice Blast",
+            "Electrified Net"
         };
     }
 }

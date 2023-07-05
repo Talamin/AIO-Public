@@ -33,8 +33,8 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Faerie Fire"), 0f, (s, t) => !t.HaveBuff("Faerie Fire") && t.IsBoss, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Moonfire"), 13f, (s, t) => !t.HaveMyBuff("Moonfire") && (t.HealthPercent >= 60 || t.IsBoss) && !Me.HaveBuff("Eclipse (Lunar)") && !Me.HaveBuff("Eclipse (Solar)"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Starfire"), 14f, (s, t) => t.HealthPercent >= 10 && !Me.HaveBuff("Eclipse (Solar)") && Me.HaveBuff("Nature's Grace") || Me.HaveBuff("Eclipse (Lunar)"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Wrath"), 15f, (s, t) => Me.HaveBuff("Eclipse (Solar)"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Wrath"), 16f, (s, t) => !Me.HaveBuff("Eclipse (Solar)") && !Me.HaveBuff("Eclipse (Lunar)"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Wrath"), 15f, (s, t) => Me.HaveBuff("Eclipse (Solar)") && Me.ManaPercentage > 5, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Wrath"), 16f, (s, t) => !Me.HaveBuff("Eclipse (Solar)") && !Me.HaveBuff("Eclipse (Lunar)"), RotationCombatUtil.BotTarget, checkLoS: true),
         };
     }
 }

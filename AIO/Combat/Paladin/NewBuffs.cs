@@ -23,7 +23,7 @@ namespace AIO.Combat.Paladin
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationBuff("Seal of Command"), 1f, (s, t) => Settings.Current.ChooseRotation == "SoloRetribution" && Settings.Current.SoloSealret == "Seal of Command", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Vengeance"), 1.1f, (s, t) => Settings.Current.ChooseRotation == "SoloRetribution" && Settings.Current.SoloSealret == "Seal of Vengeance", RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Seal of Righteousness"), 1.2f, (s, t) => Settings.Current.SoloSealret == "Seal of Righteousness", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Righteousness"), 1.2f, (s, t) =>Settings.Current.ChooseRotation == "SoloRetribution" && Settings.Current.SoloSealret == "Seal of Righteousness", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Command"), 1.3f, (s, t) => Settings.Current.ChooseRotation == "GroupRetribution" && Settings.Current.GroupSealret == "Seal of Command", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Vengeance"), 1.4f, (s, t) => Settings.Current.ChooseRotation == "GroupRetribution" && Settings.Current.GroupSealret == "Seal of Vengeance", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Righteousness"), 1.5f, (s, t) => Settings.Current.ChooseRotation == "GroupRetribution" && Settings.Current.GroupSealret == "Seal of Righteousness", RotationCombatUtil.FindMe),

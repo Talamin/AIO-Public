@@ -127,6 +127,15 @@ namespace AIO.Combat.Shaman
                                 earth = StrengthOfEarthTotem;
                             }
 
+                            if (ManaSpringTotem.KnownSpell)
+                            {
+                                water = ManaSpringTotem;
+                            }
+                            else if (HealingStreamTotem.KnownSpell)
+                            {
+                                water = HealingStreamTotem;
+                            }
+
                             if (TotemOfWrath.KnownSpell)
                             {
                                 fire = TotemOfWrath;
@@ -145,14 +154,7 @@ namespace AIO.Combat.Shaman
                                 air = WindfuryTotem;
                             }
 
-                            if (ManaSpringTotem.KnownSpell)
-                            {
-                                water = ManaSpringTotem;
-                            }
-                            else if (HealingStreamTotem.KnownSpell)
-                            {
-                                water = HealingStreamTotem;
-                            }
+                         
                             break;
                         }
                 }
