@@ -1,7 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
 using System.Collections.Generic;
-using static AIO.Constants;
 
 namespace AIO.Combat.Warlock
 {
@@ -16,7 +15,6 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationBuff("Demon Armor"), 4f, RotationCombatUtil.Always, RotationCombatUtil.FindMe, Exclusive.WarlockSkin),
             new RotationStep(new RotationBuff("Demon Skin"), 5f, RotationCombatUtil.Always, RotationCombatUtil.FindMe, Exclusive.WarlockSkin),
             new RotationStep(new RotationBuff("Soul Link"), 6f, RotationCombatUtil.Always, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Lifetap"), 7f, (s,t) => !Me.IsResting(), RotationCombatUtil.FindMe)
         };
     }
 }

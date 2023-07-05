@@ -23,7 +23,7 @@ namespace AIO.Combat.Shaman
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
 
-            new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => (Spec == "Restoration" || Spec == "Elemental" || Me.ManaPercentage <= 50), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
+            new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => (Spec == "SoloRestoration" || Spec == "Elemental" || (Spec == "SoloEnhancement" && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
 
             new RotationStep(new RotationSpell("Totemic Recall"), 10f, (s,t) => Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),

@@ -33,11 +33,10 @@ namespace AIO.Combat.Paladin
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
-            SetDefaultRange();
             //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull(new List<string> { "Avenger's Shield", "Hand of Reckoning", "Exorcism" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
 
         public override void Initialize()
@@ -54,6 +53,7 @@ namespace AIO.Combat.Paladin
                     DefaultRange = 5.0f;
                     break;
             }
+            SetRange(DefaultRange);
         }
 
         protected override void OnObjectManagerPulse()
