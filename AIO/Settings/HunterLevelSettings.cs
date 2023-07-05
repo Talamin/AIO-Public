@@ -14,7 +14,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("HunterTriggerDropdown", new string[] { "Auto", "SoloBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
+        [TriggerDropdown("HunterTriggerDropdown", new string[] { "Auto", "SoloBeastMastery", "GroupBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
         public override string ChooseRotation { get; set; }
         #endregion
         #region General Settings for all specs
@@ -133,7 +133,58 @@ namespace AIO.Settings
         [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
         [DisplayName("AOE Enemy Count")]
         [Description("Number of Targets to use AOE")]
-        public int SoloBeastMasteryAOECount { get; set; }       
+        public int SoloBeastMasteryAOECount { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Feign Death")]
+        [Description("Use Feign Death when targeted?")]
+        public bool GroupBeastMasteryFD { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Enable Deterrence")]
+        [Description("Use Deterrence at all?")]
+        public bool GroupBeastMasteryDeterrence { get; set; }
+
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Enable Multishot")]
+        [Description("Use Multishot at all?")]
+        public bool GroupBeastMasteryMultiShot { get; set; }
+
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Multishot Targets")]
+        [Description("Multishot minimum target Count?")]
+        public int GroupBeastMasteryMultiShotCount { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Misdirection")]
+        [Description("Use Misdirection on Tank?")]
+        public bool GroupBeastMasteryMisdirection { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE")]
+        public bool GroupBeastMasteryUseAOE { get; set; }
+
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [DisplayName("AOE Enemy Count")]
+        [Description("Number of Targets to use AOE")]
+        public int GroupBeastMasteryAOECount { get; set; }
+
+
         #endregion
 
         #region Marksmanship
@@ -252,6 +303,14 @@ namespace AIO.Settings
             SoloBeastMasteryFD = true;
             SoloBeastMasteryUseAOE = true;
             SoloBeastMasteryAOECount = 3;
+
+            GroupBeastMasteryMultiShot = false;
+            GroupBeastMasteryMultiShotCount = 3;
+            GroupBeastMasteryMisdirection = true;
+            GroupBeastMasteryFD = true;
+            GroupBeastMasteryUseAOE = true;
+            GroupBeastMasteryAOECount = 3;
+            GroupBeastMasteryDeterrence = true;
 
             SoloMarksmanshipMultiShot = false;
             SoloMarksmanshipMultiShotCount = 3;

@@ -13,7 +13,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "GroupPaladinHoly", "PaladinProtection", "GroupPaladinProtection" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "Retribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtectionTank" })]
+        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "SoloRetribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtectionTank" })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -81,109 +81,213 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("In Combat Heal")]
         [Description("Activate this to let Retribution Paladin Heal himself in Combat")]
-        public bool RetributionHealInCombat { get; set; }
+        public bool SoloRetributionHealInCombat { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Hammer of Justice")]
         [Description("Hammer of Justice when more then 1 Target")]
-        public bool RetributionHammerofJustice { get; set; }
+        public bool SoloRetributionHammerofJustice { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Hand of Reckoning")]
         [Description("Use Hand of Reckoning in Rotation?")]
-        public bool RetributionHOR { get; set; }
+        public bool SoloRetributionHOR { get; set; }
 
         [Setting]
         [DefaultValue(2)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Consecration")]
         [Description("How many nearby enemies do we need to use Concectration ")]
-        public int RetributionConsecration { get; set; }
+        public int SoloRetributionConsecration { get; set; }
 
         [Setting]
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Holy Light")]
         [Description("Set your Treshhold when to use Holy Light")]
         [Percentage(true)]
-        public int RetributionHL { get; set; }
+        public int SoloRetributionHL { get; set; }
 
         [Setting]
         [DefaultValue(30)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Flash of Light")]
         [Description("Set your Treshhold when to use Flash of Light")]
         [Percentage(true)]
-        public int RetributionFL { get; set; }
+        public int SoloRetributionFL { get; set; }
 
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Group Heal")]
         [Description("Use Hand Heals on Groupmembers too?")]
-        public bool RetributionHealGroup { get; set; }
+        public bool SoloRetributionHealGroup { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Purify")]
         [Description("Allow Purify on yourself")]
-        public bool RetributionPurify { get; set; }
+        public bool SoloRetributionPurify { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
         [DisplayName("Sacred Shield")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [Description("Allow the Use of Sacredshield")]
-        public bool RetributionSShield { get; set; }
+        public bool SoloRetributionSShield { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Lay on Hands")]
         [Description("Allow the Use of Lay on Hands")]
-        public bool RetributionLayOnHands { get; set; }
+        public bool SoloRetributionLayOnHands { get; set; }
 
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Judgement Spam")]
         [Description("Use Judgement just when the debuff runs out? (false will spam Judgement)")]
-        public bool RetributionJudgementofWisdomSpam { get; set; }
+        public bool SoloRetributionJudgementofWisdomSpam { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Avenging Wrath")]
         [Description("Use Avenging Wrath?")]
-        public bool AvengingWrathRetribution { get; set; }
+        public bool SoloAvengingWrathRetribution { get; set; }
 
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "Retribution")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "SoloRetribution")]
         [DisplayName("Seal of Command or other")]
         [Description("Set the Seal you want to used by the FC")]
         [DropdownList(new string[] { "Seal of Command", "Seal of Righteousness", "Seal of Justice", "Seal of Vengeance" })]
-        public string Sealret { get; set; }
+        public string SoloSealret { get; set; }
         #endregion
+
+        #region GroupRetribution
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("In Combat Heal")]
+        [Description("Activate this to let Retribution Paladin Heal himself in Combat")]
+        public bool GroupRetributionHealInCombat { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Hammer of Justice")]
+        [Description("Hammer of Justice when more then 1 Target")]
+        public bool GroupRetributionHammerofJustice { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Hand of Reckoning")]
+        [Description("Use Hand of Reckoning in Rotation?")]
+        public bool GroupRetributionHOR { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Consecration")]
+        [Description("How many nearby enemies do we need to use Concectration ")]
+        public int GroupRetributionConsecration { get; set; }
+
+        [Setting]
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Holy Light")]
+        [Description("Set your Treshhold when to use Holy Light")]
+        [Percentage(true)]
+        public int GroupRetributionHL { get; set; }
+
+        [Setting]
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Flash of Light")]
+        [Description("Set your Treshhold when to use Flash of Light")]
+        [Percentage(true)]
+        public int GroupRetributionFL { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Purify")]
+        [Description("Allow Purify on yourself")]
+        public bool GroupRetributionPurify { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [DisplayName("Sacred Shield")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [Description("Allow the Use of Sacredshield")]
+        public bool GroupRetributionSShield { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Lay on Hands")]
+        [Description("Allow the Use of Lay on Hands")]
+        public bool GroupRetributionLayOnHands { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Judgement Spam")]
+        [Description("Use Judgement just when the debuff runs out? (false will spam Judgement)")]
+        public bool GroupRetributionJudgementofWisdomSpam { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Avenging Wrath")]
+        [Description("Use Avenging Wrath?")]
+        public bool GroupAvengingWrathRetribution { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupRetribution")]
+        [DisplayName("Seal of Command or other")]
+        [Description("Set the Seal you want to used by the FC")]
+        [DropdownList(new string[] { "Seal of Command", "Seal of Righteousness", "Seal of Justice", "Seal of Vengeance" })]
+        public string GroupSealret { get; set; }
+        #endregion
+
 
         #region Aura
         [Setting]
@@ -521,7 +625,7 @@ namespace AIO.Settings
             GeneralDivinePlea = 50;
             ProtConsecration = 2;
             GroupProtConsecration = 2;
-            RetributionConsecration = 2;
+
             Resurrect = true;
             Buffing = true;
             DivineProtection = true;
@@ -532,19 +636,11 @@ namespace AIO.Settings
             HolyLoHTresh = 15;
             HolyCustomTank = "";
             HolyPurify = true;
-            RetributionHammerofJustice = true;
-            RetributionHOR = true;
-            RetributionPurify = true;
-            RetributionSShield = true;
-            RetributionLayOnHands = true;
-            RetributionJudgementofWisdomSpam = false;
-            RetributionHealInCombat = false;
-            RetributionHealGroup = false;
+
             RightDefense = true;
             ProtectionHammerofJustice = true;
             ProtectionHoP = true;
-            RetributionHL = 50;
-            RetributionFL = 30;
+
             ProtectionHolyLight = true;
             ProtectionSoL = 95;
             ProtectionSoW = 40;
@@ -552,9 +648,37 @@ namespace AIO.Settings
             ProtectionLoH = 5;
             ProtectionCleanse = "None";
             AvengingWrathProtection = true;
-            AvengingWrathRetribution = true;
+
+
+            SoloRetributionConsecration = 2;
+            SoloRetributionHammerofJustice = true;
+            SoloRetributionHOR = true;
+            SoloRetributionPurify = true;
+            SoloRetributionSShield = true;
+            SoloRetributionLayOnHands = true;
+            SoloRetributionJudgementofWisdomSpam = false;
+            SoloRetributionHealInCombat = false;
+            SoloRetributionHealGroup = false;
+            SoloRetributionHL = 50;
+            SoloRetributionFL = 30;
+            SoloAvengingWrathRetribution = true;
+
+            GroupRetributionConsecration = 2;
+            GroupRetributionHammerofJustice = true;
+            GroupRetributionHOR = true;
+            GroupRetributionPurify = true;
+            GroupRetributionSShield = true;
+            GroupRetributionLayOnHands = true;
+            GroupRetributionJudgementofWisdomSpam = false;
+            GroupRetributionHealInCombat = false;
+            GroupRetributionHL = 50;
+            GroupRetributionFL = 30;
+            GroupAvengingWrathRetribution = true;
+
+
             Aura = "Devotion Aura";
-            Sealret = "Seal of Righteousness";
+            SoloSealret = "Seal of Righteousness";
+            GroupSealret= "Seal of Righteousness";
             Sealprot = "Seal of Light";
             GroupProtectionSoL = 95;
             GroupSealprot = "Seal of Wisdom";
