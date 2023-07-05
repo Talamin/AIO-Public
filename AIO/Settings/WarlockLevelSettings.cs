@@ -84,14 +84,6 @@ namespace AIO.Settings
         [Description("Use Healthstone / Cast Healthstone?")]
         public bool Healthstone { get; set; }
 
-        [DefaultValue(4)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "")]
-        [DisplayName("AOE in Instance")]
-        [Description("Number of Targets around the Tank to use AOE in Instance")]
-        [Percentage(false)]
-        public int SoloFrostAOEInstance { get; set; }
-
         //Rotation SoloAffliction
         [DefaultValue(20)]
         [Category("Rotation")]
