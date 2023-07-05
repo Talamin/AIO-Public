@@ -26,8 +26,9 @@ namespace AIO.Combat.Paladin
                 {"GroupHolyHeal", new GroupHolyHeal() },
                 {"Protection", new Protection() },
                 {"GroupProtectionTank", new GroupProtectionTank() },
-                {"Retribution", new Retribution() },
-                {"Default", new Retribution() },
+                {"SoloRetribution", new SoloRetribution() },
+                {"GroupRetribution", new GroupRetribution() },
+                {"Default", new SoloRetribution() },
             },
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))

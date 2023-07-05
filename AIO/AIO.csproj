@@ -291,7 +291,6 @@
     <Compile Include="Combat\Mage\LowLevel.cs" />
     <Compile Include="Combat\Mage\MageBehavior.cs" />
     <Compile Include="Combat\Paladin\Blessings.cs" />
-    <Compile Include="Combat\Paladin\Buffs.cs" />
     <Compile Include="Combat\Paladin\GroupHolyHeal.cs" />
     <Compile Include="Combat\Paladin\GroupProtectionTank.cs" />
     <Compile Include="Combat\Paladin\HealOOC.cs" />
@@ -300,7 +299,8 @@
     <Compile Include="Combat\Paladin\NewBuffs.cs" />
     <Compile Include="Combat\Paladin\PaladinBehavior.cs" />
     <Compile Include="Combat\Paladin\Protection.cs" />
-    <Compile Include="Combat\Paladin\Retribution.cs" />
+    <Compile Include="Combat\Paladin\GroupRetribution.cs" />
+    <Compile Include="Combat\Paladin\SoloRetribution.cs" />
     <Compile Include="Combat\Priest\Buffs.cs" />
     <Compile Include="Combat\Priest\Holy.cs" />
     <Compile Include="Combat\Priest\LowLevel.cs" />

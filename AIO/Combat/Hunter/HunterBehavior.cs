@@ -29,6 +29,7 @@ namespace AIO.Combat.Hunter
             {
                 {"LowLevel", new LowLevel() },
                 {"SoloBeastMastery", new SoloBeastMastery() },
+                {"GroupBeastMastery", new GroupBeastMastery() },
                 {"SoloMarksmanship", new SoloMarksmanship() },
                 {"SoloSurvival", new SoloSurvival() },
                 {"Default", new SoloBeastMastery() },

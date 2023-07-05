@@ -23,8 +23,8 @@ namespace AIO.Combat.Hunter
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Auto Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Feign Death"), 2f, (s,t) => Me.CHealthPercent() < 50 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1) && Settings.Current.GroupBeastMasteryFD, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Deterrence"), 2.1f, (s,t) => Me.CHealthPercent() < 80 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 25 && u.CIsTargetingMe(), 1) && Settings.Current.GroupBeastMasteryDeterrence, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Feign Death"), 2f, (s,t) => Me.CHealthPercent() < 50 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1) && Settings.Current.GroupBeastMasteryFD, RotationCombatUtil.FindMe, checkLoS: false),
+            new RotationStep(new RotationSpell("Deterrence"), 2.1f, (s,t) => Me.CHealthPercent() < 80 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 25 && u.CIsTargetingMe(), 1) && Settings.Current.GroupBeastMasteryDeterrence, RotationCombatUtil.FindMe, checkLoS: false),
             new RotationStep(new RotationSpell("Intimidation"), 3f, (s,t) => Pet.Target != 0 && Pet.CGetPosition().DistanceTo(t.CGetPosition()) <= 6 && t.CIsCast(), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Concussive Shot"), 3.1f, (s,t) => t.Fleeing && !t.CHaveBuff("Concussive Shot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Misdirection"), 3.3f, 
