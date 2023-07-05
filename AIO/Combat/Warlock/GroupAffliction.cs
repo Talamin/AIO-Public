@@ -24,8 +24,8 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => !t.IsBoss && t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.CHaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),            
-            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.HaveBuff("Life Tap") && Settings.Current.GlyphLifeTap && Me.HealthPercent > 30,RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Life Tap"), 4.1f, (s,t) => Me.HealthPercent > 30 && Me.ManaPercentage < Settings.Current.GroupAfflictionLifetap,RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.CHaveBuff("Life Tap") && Settings.Current.GlyphLifeTap && Me.HealthPercent > 30,RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Life Tap"), 4.1f, (s,t) => Me.CHealthPercent() > 30 && Me.ManaPercentage < Settings.Current.GroupAfflictionLifetap,RotationCombatUtil.FindMe),
 
             //AOE
             new RotationStep(new RotationSpell("Seed of Corruption"), 4.4f, (s,t) =>  Settings.Current.GroupAfflictionUseSeedGroup 
@@ -36,8 +36,8 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Settings.Current.GroupAfflictionUseCorruptionGroup &&
             !t.HaveMyBuff("Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) < Settings.Current.GroupAfflictionAOECount && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
             
-            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.HaveBuff("Shadow Trance"),RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.HaveBuff("Health Funnel") && Pet.HealthPercent < Settings.Current.GroupAfflictionHealthfunnelPet && Me.HealthPercent > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"),RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.CHaveBuff("Health Funnel") && Pet.CHealthPercent() < Settings.Current.GroupAfflictionHealthfunnelPet && Me.CHealthPercent() > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Haunt"), 7.5f, (s,t) => !t.CHaveMyBuff("Haunt"), RotationCombatUtil.BotTargetFast),
             //Curses
             new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.CHaveMyBuff("Curse of Agony") && Settings.Current.GroupAfflictionAfflCurse == "Agony", RotationCombatUtil.BotTargetFast),
