@@ -36,7 +36,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.CFindPartyMember,checkLoS:true),
             new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.GroupProtectionCleanse == "Me" && Me.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Divine Plea"), 5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe, checkRange: false),
-            new RotationStep(new RotationSpell("Hand of Freedom"), 5.5f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe, checkRange: false),
+            new RotationStep(new RotationSpell("Hand of Freedom"), 5.5f, (s, t) => Me.Rooted && t.GetDistance > 8, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => Settings.Current.DivineProtection && (EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 2) && Me.HealthPercent < 90 || BossList.isboss && Me.HealthPercent < 90), RotationCombatUtil.FindMe, checkRange:false),
             new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.CCanInterruptCasting() && Settings.Current.GroupProtectionHammerofJustice, RotationCombatUtil.BotTargetFast),            
             new RotationStep(new RotationSpell("Hand of Salvation"), 9.1f, (s,t) => EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()), RotationCombatUtil.CFindHeal),
