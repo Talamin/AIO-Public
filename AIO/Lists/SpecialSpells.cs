@@ -35,12 +35,16 @@ namespace AIO.Lists
         public static readonly List<string> ImportantPoison = new List<string> {
             "Venom Sting",
             "Leech Poison",
-            "Slowing Poison"
+            "Slowing Poison",
+            "Deadly Poison",
+            "Poison Bolt",
+            "Poison"
         };
         public static readonly List<string> ImportantDisease = new List<string> {
             "Diseased Shot",
             "Plague Cloud",
-            "Ghoul Rot"
+            "Ghoul Rot",
+            "Noxious Catalyst"
         };
         public static readonly List<string> ImportantCurse = new List<string> {
             "Veil of Shadow",
@@ -52,7 +56,8 @@ namespace AIO.Lists
             "Shrink",
             "Curse of the Firebrand",
             "Curse of Weakness",
-            "Cursed Blood"
+            "Cursed Blood",
+            "Curse of Tuten'kash"
         };
         public static readonly List<string> ImportantMagic = new List<string> {
             "Hammer of Justice",
@@ -68,18 +73,25 @@ namespace AIO.Lists
             "Psychic Scream",
             "Sleep",
             "Mind Tremor",
-            "Pacify"
+            "Pacify",
+            "Amplify Damage",
+            "Slow",
+            "Cripple"
         };
         public static readonly List<string> ImportantSlow = new List<string> {
             "Frostbolt",
-            "Frost Shot"
+            "Frost Shot",
+            "Thunder Clap"
         };
         public static readonly List<string> ImportantRoot = new List<string> {
             "Frost Nova",
             "Net",
             "Chains of Ice",
             "Ice Blast",
-            "Electrified Net"
+            "Electrified Net",
+            "Web",
+            "Web Spray",
+            "Entangling Roots"
         };
     }
 }

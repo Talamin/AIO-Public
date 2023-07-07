@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30523.141
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIO", "AIO\AIO.csproj", "{5C357F9C-F69B-4D5D-A494-313851AE6C19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Energia|Any CPU = Energia|Any CPU
 		Release|Any CPU = Release|Any CPU
 		Talamin|Any CPU = Talamin|Any CPU
 		Zero|Any CPU = Zero|Any CPU
@@ -15,6 +16,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Energia|Any CPU.ActiveCfg = Energia|Any CPU
+		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Energia|Any CPU.Build.0 = Energia|Any CPU
 		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C357F9C-F69B-4D5D-A494-313851AE6C19}.Talamin|Any CPU.ActiveCfg = Talamin|Any CPU

@@ -31,7 +31,7 @@ namespace AIO.Combat.Paladin
                 {"Default", new SoloRetribution() },
             },
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
-            new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
+            new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(Settings.Current)))
         {
             //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));

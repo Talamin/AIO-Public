@@ -173,10 +173,47 @@ namespace AIO.Settings
         [Description("Set the Player Treshhold for Lesser Healing Wave?")]
         [Percentage(true)]
         public int RestorationLesserHealingWaveGroup { get; set; }
-        #endregion        
+        #endregion
         #endregion
 
         #region Totem Settings for all specs
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Totem")]
+        [DisplayName("Earthbind Totem")]
+        [Description("Use Earthbind Totem?")]
+        public bool UseEarthbindTotem { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Totem")]
+        [DisplayName("Searing Totem")]
+        [Description("Use Searing Totem?")]
+        public bool UseSearingTotem { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Totem")]
+        [DisplayName("Fire Nova")]
+        [Description("Use Fire Nova?")]
+        public bool UseFireNova { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Totem")]
+        [DisplayName("Cleansing Totem")]
+        [Description("Use Cleansing Totem?")]
+        public bool UseCleansingTotem { get; set; }
+
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Totem")]
+        [DisplayName("Grounding Totem")]
+        [Description("Use Grounding Totem?")]
+        public bool UseGroundingTotem { get; set; }
+
         [Setting]
         [DefaultValue(true)]
         [Category("Totem")]
@@ -194,37 +231,11 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Totem")]
-        [DisplayName("Fire Nova")]
-        [Description("Use Fire Nova?")]
-        public bool UseFireNova { get; set; }
+        [DisplayName("Air Totem")]
+        [Description("Use Air Totem inside Call of the Elements?")]
+        public bool UseAirTotemInCotE { get; set; }
 
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Totem")]
-        [DisplayName("Searing Totem")]
-        [Description("Use Searing Totem?")]
-        public bool UseSearingTotem { get; set; }
 
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("Cleansing Totem")]
-        [Description("Use Cleansing Totem?")]
-        public bool UseCleansingTotem { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("Grounding Totem")]
-        [Description("Use Grounding Totem?")]
-        public bool UseGroundingTotem { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Totem")]
-        [DisplayName("Earthbind Totem")]
-        [Description("Use Earthbind Totem?")]
-        public bool UseEarthbindTotem { get; set; }
         #endregion
 
         public ShamanLevelSettings()
@@ -248,13 +259,14 @@ namespace AIO.Settings
             RestorationHealingWaveGroup = 70;
             RestorationLesserHealingWaveGroup = 85;
             RestorationRiptideGroup = 75;
-            UseTotemicCall = true;
-            UseFireNova = true;
+            UseEarthbindTotem = false;
             UseSearingTotem = false;
+            UseFireNova = true;
             UseCleansingTotem = true;
             UseGroundingTotem = true;
-            UseEarthbindTotem = false;
             UseCotE = true;
+            UseTotemicCall = true;
+            UseAirTotemInCotE = true;
         }
     }
 }

@@ -215,6 +215,13 @@ namespace AIO.Settings
         [DisplayName("Use Flamestrike?")][Description("Use Flamestrike without Firestarter Buff?")]
         public bool GroupFireFlamestrikeWithoutFire { get; set; }
 
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [DisplayName("Use Fire Blast?")]
+        [Description("Check this if you want to finish the mobs using Fire Blast")]
+        public bool GroupFireUseFireBlast { get; set; }
+
         [DefaultValue(3)][Category("Rotation")]
         [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
         [DisplayName("Flamestrike EnemyCount")][Description("Number of Targets around the Tank to use FS in Instance")]
@@ -269,6 +276,7 @@ namespace AIO.Settings
             GroupFireAOEInstance = 4;
             GroupFireFlamestrikeWithoutFire = true;
             GroupFireFlamestrikeWithoutCountFire = 3;
+            GroupFireUseFireBlast = true;
 
             SoloArcaneSheep = false;
 

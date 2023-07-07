@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,7 @@ using wManager.Wow.ObjectManager;
 
 namespace AIO.Combat.Shaman
 {
+    using Settings = ShamanLevelSettings;
     internal class Totems : ICycleable
     {
         private static IEnumerable<WoWUnit> Pets => RotationFramework.AllUnits.Where(o => o.IsMyPet);
@@ -92,19 +94,6 @@ namespace AIO.Combat.Shaman
                                 fire = FlametongueTotem;
                             }
 
-                            if (WindfuryTotem.KnownSpell)
-                            {
-                                air = WindfuryTotem;
-                            }
-                            else if (WrathOfAirTotem.KnownSpell)
-                            {
-                                air = WrathOfAirTotem;
-                            }
-                            else if(NatureResistanceTotem.KnownSpell)
-                            {
-                                air = NatureResistanceTotem;
-                            }
-
                             if (HealingStreamTotem.KnownSpell)
                             {
                                 water = HealingStreamTotem;
@@ -113,9 +102,24 @@ namespace AIO.Combat.Shaman
                             {
                                 water = ManaSpringTotem;
                             }
+
+                            if (WindfuryTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            {
+                                air = WindfuryTotem;
+                            }
+                            else if (WrathOfAirTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            {
+                                air = WrathOfAirTotem;
+                            }
+                            else if(NatureResistanceTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            {
+                                air = NatureResistanceTotem;
+                            }
+
+                         
                             break;
                         }
-                    case "Restoration":
+                    case "SoloRestoration":
                     case "Elemental":
                         {
                             if (StoneskinTotem.KnownSpell)
@@ -125,6 +129,15 @@ namespace AIO.Combat.Shaman
                             else if (StrengthOfEarthTotem.KnownSpell)
                             {
                                 earth = StrengthOfEarthTotem;
+                            }  
+
+                            if (TotemOfWrath.KnownSpell)
+                            {
+                                fire = TotemOfWrath;
+                            }
+                            else if (FlametongueTotem.KnownSpell)
+                            {
+                                fire = FlametongueTotem;
                             }
 
                             if (ManaSpringTotem.KnownSpell)
@@ -136,25 +149,15 @@ namespace AIO.Combat.Shaman
                                 water = HealingStreamTotem;
                             }
 
-                            if (TotemOfWrath.KnownSpell)
-                            {
-                                fire = TotemOfWrath;
-                            }
-                            else if (FlametongueTotem.KnownSpell)
-                            {
-                                fire = FlametongueTotem;
-                            }
-
-                            if (WrathOfAirTotem.KnownSpell)
+                            if (WrathOfAirTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
                             {
                                 air = WrathOfAirTotem;
                             }
-                            else if (WindfuryTotem.KnownSpell)
+                            else if (WindfuryTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
                             {
                                 air = WindfuryTotem;
                             }
 
-                         
                             break;
                         }
                 }

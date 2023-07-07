@@ -201,6 +201,14 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
+        [DisplayName("Use Moonfire")]
+        [Description("Do you want to use moonfire only on bosses in group?")]
+        public bool SoloBalanceUseMoonfire { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", "SoloBalance")]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool SoloBalanceUseAOE { get; set; }
@@ -463,6 +471,7 @@ namespace AIO.Settings
             SoloFeralDecurse = false;
             GroupFeralCharge = true;
             GroupFeralFaerieFire = true;
+            SoloBalanceUseMoonfire = true;
             SoloBalanceUseAOE = true;
             SoloBalanceUseStarfall = true;
             SoloBalanceAOETargets = 4;
