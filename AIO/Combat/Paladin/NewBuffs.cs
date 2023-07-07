@@ -36,7 +36,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationBuff("Seal of Wisdom"), 5f, (s, t) => ProtSpecs() && Me.ManaPercentage < Settings.Current.ProtectionSoW , RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Wisdom"), 5.1f, (s, t) => Spec == "Holy" && Me.Level >= 38, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Wisdom"), 5.1f, (s, t) => Spec == "GroupHolyHeal" && Me.Level >= 38, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Seal of Light"), 6f, (s, t) => ProtSpecs() && Me.ManaPercentage >= Settings.Current.ProtectionSoL && Settings.Current.Sealprot != "Seal of Vengeance" && Settings.Current.Sealprot != "Seal of Command", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Seal of Light"), 6f, (s, t) => ProtSpecs() && Me.ManaPercentage >= Settings.Current.ProtectionSoL && Settings.Current.Sealprot == "Seal of Light", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Righteousness"), 7f, (s, t) => ProtSpecs() && !SpellManager.KnowSpell("Seal of Light"), RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationBuff("Righteous Fury"), 4f, (s, t) => ProtSpecs(), RotationCombatUtil.FindMe),

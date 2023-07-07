@@ -35,12 +35,16 @@ namespace AIO.Lists
         public static readonly List<string> ImportantPoison = new List<string> {
             "Venom Sting",
             "Leech Poison",
-            "Slowing Poison"
+            "Slowing Poison",
+            "Deadly Poison",
+            "Poison Bolt",
+            "Poison"
         };
         public static readonly List<string> ImportantDisease = new List<string> {
             "Diseased Shot",
             "Plague Cloud",
-            "Ghoul Rot"
+            "Ghoul Rot",
+            "Noxious Catalyst"
         };
         public static readonly List<string> ImportantCurse = new List<string> {
             "Veil of Shadow",
@@ -86,7 +90,8 @@ namespace AIO.Lists
             "Ice Blast",
             "Electrified Net",
             "Web",
-            "Web Spray"
+            "Web Spray",
+            "Entangling Roots"
         };
     }
 }

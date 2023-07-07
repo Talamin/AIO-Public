@@ -23,7 +23,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lay on Hands"), 1.1f, (s,t) => t.CHealthPercent() <= Settings.Current.GroupProtectionLoH && !Me.CHaveBuff("Forbearance"), RotationCombatUtil.FindMe,checkRange:false),
-            new RotationStep(new RotationSpell("Holy Light"), 1.2f, (s,t) => Me.HealthPercent < 25, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Holy Light"), 1.2f, (s,t) => Me.HealthPercent < 35, RotationCombatUtil.FindMe),
             //TODO: add Holy Light combat usage to settings
             new RotationStep(new RotationSpell("Hand of Freedom"), 1.5f, (s,t) => (Me.HaveImportantSlow() || Me.HaveImportantRoot()) && EnemiesAttackingGroup.ContainsAtLeast(enem => enem.CGetDistance() <= 8 && enem.IsTargetingMe, 1), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.8f, RotationCombatUtil.Always, _ => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe,checkRange:false),
@@ -36,7 +36,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.CFindPartyMember,checkLoS:true),
             new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.GroupProtectionCleanse == "Me" && Me.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Divine Plea"), 5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe, checkRange: false),
-            new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => Settings.Current.DivineProtection && (EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 2) && Me.HealthPercent < 90 || BossList.isboss && Me.HealthPercent < 90), RotationCombatUtil.FindMe, checkRange:false),
+            new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => Settings.Current.DivineProtection && (EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 3) && Me.HealthPercent < 85 || BossList.isboss && Me.HealthPercent < 85), RotationCombatUtil.FindMe, checkRange:false),
             new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.CCanInterruptCasting() && Settings.Current.GroupProtectionHammerofJustice, RotationCombatUtil.BotTargetFast),            
             new RotationStep(new RotationSpell("Hand of Salvation"), 9.1f, (s,t) => EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()), RotationCombatUtil.CFindHeal),
             new RotationStep(new RotationSpell("Hand of Protection"), 9.2f, (s,t) => 
