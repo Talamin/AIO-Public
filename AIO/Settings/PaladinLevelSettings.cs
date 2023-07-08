@@ -452,7 +452,7 @@ namespace AIO.Settings
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", "GroupProtectionTank")]
         [DisplayName("Lay on Hands")]
-        [Description("Set your Treshhold for LoH on Paladin")]
+        [Description("Set your Treshhold for LoH & Divine Shield on Paladin")]
         [Percentage(true)]
         public int GroupProtectionLoH { get; set; }
 
