@@ -76,7 +76,9 @@ namespace AIO.Lists
             "Pacify",
             "Amplify Damage",
             "Slow",
-            "Cripple"
+            "Cripple",
+            "Freeze Solid",
+            "Crystalline Slumber"
         };
         public static readonly List<string> ImportantSlow = new List<string> {
             "Frostbolt",
