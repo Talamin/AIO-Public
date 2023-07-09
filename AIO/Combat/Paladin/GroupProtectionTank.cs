@@ -52,7 +52,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Hammer of Wrath"), 14f, (s,t) => t.CHealthPercent() < 20 && Me.CManaPercentage() > 50 , FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Hammer of the Righteous"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Shield of Righteousness"), 17f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Holy Shield"), 18f, RotationCombatUtil.Always, RotationCombatUtil.FindMe, checkRange:false)
+            new RotationStep(new RotationSpell("Holy Shield"), 18f, (s,t) => t.IsTargetingMe, RotationCombatUtil.FindMe, checkRange:false)
         };
 
         private bool DoPreCalculations()

@@ -57,7 +57,8 @@ namespace AIO.Lists
             "Curse of the Firebrand",
             "Curse of Weakness",
             "Cursed Blood",
-            "Curse of Tuten'kash"
+            "Curse of Tuten'kash",
+            "Aural Shock"
         };
         public static readonly List<string> ImportantMagic = new List<string> {
             "Hammer of Justice",
@@ -93,7 +94,10 @@ namespace AIO.Lists
             "Electrified Net",
             "Web",
             "Web Spray",
-            "Entangling Roots"
+            "Entangling Roots",
+            "Hooked Net",
+            "Web Explosion",
+            "Hooked Net"
         };
     }
 }
