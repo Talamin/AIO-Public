@@ -4,8 +4,6 @@ using robotManager.FiniteStateMachine;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using wManager.Events;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -39,12 +37,13 @@ namespace AIO.Combat.Common
             _rotation = Rotation;
             _rotation.Sort();
 
-            if (CompletelySynthetic) {
+            if (CompletelySynthetic)
+            {
                 RotationFramework.CacheDirectTransmission = true;
                 RotationFramework.OnCacheUpdated += TickRotation;
                 return;
             }
-            
+
             if (RunInCombat)
             {
                 if (UseCombatSynthetics)
@@ -64,12 +63,13 @@ namespace AIO.Combat.Common
 
         public virtual void Dispose()
         {
-            if (CompletelySynthetic) {
+            if (CompletelySynthetic)
+            {
                 RotationFramework.OnCacheUpdated -= TickRotation;
                 RotationFramework.CacheDirectTransmission = false;
                 return;
             }
-            
+
             if (RunInCombat)
             {
                 if (UseCombatSynthetics)
@@ -108,8 +108,9 @@ namespace AIO.Combat.Common
             }
         }
 
-        private void TickRotation(object sender, EventArgs e) {
-            if(Conditions.ProductIsStartedNotInPause) 
+        private void TickRotation(object sender, EventArgs e)
+        {
+            if (Conditions.ProductIsStartedNotInPause)
                 RotationFramework.RunRotation(RotationName, _rotation, true);
         }
     }

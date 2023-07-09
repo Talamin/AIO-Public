@@ -16,6 +16,7 @@ namespace AIO.Framework {
         private readonly bool CheckRange = true;
         private readonly bool CheckLoS = false;
         private readonly string Name;
+        private readonly Timer ForcedTimer;
 
         public RotationStep(IRotationAction action,
             float priority,
@@ -25,7 +26,9 @@ namespace AIO.Framework {
             Exclusive exclusive = null,
             bool forceCast = false,
             bool checkRange = true,
-            bool checkLoS = false) {
+            bool checkLoS = false,
+            int forcedTimerMS = 0)
+        {
             Action = action;
             Priority = priority;
             TargetPredicate = targetPredicate;
@@ -37,8 +40,14 @@ namespace AIO.Framework {
             CheckLoS = checkLoS;
 
             Name = action.GetType().FullName;
-            if (Action is RotationSpell spell) {
+            if (Action is RotationSpell spell)
+            {
                 Name = spell.Name;
+            }
+
+            if (forcedTimerMS > 0)
+            {
+                ForcedTimer = new Timer(forcedTimerMS);
             }
         }
 
@@ -49,9 +58,10 @@ namespace AIO.Framework {
             Exclusive exclusive = null,
             bool forceCast = false,
             bool checkRange = true,
-            bool checkLoS = false) :
+            bool checkLoS = false,
+            int forcedTimerMS = 0) :
             this(action, priority, targetPredicate, (_) => true, targetFinder, exclusive, forceCast, checkRange,
-                checkLoS) { }
+                checkLoS, forcedTimerMS) { }
 
         public int CompareTo(RotationStep other) => Priority.CompareTo(other.Priority);
 
@@ -122,6 +132,17 @@ namespace AIO.Framework {
 
             if (target == null) {
                 return false;
+            }
+
+            // Check if the step has a forced timer
+            if (ForcedTimer != null)
+            {
+                if (!ForcedTimer.IsReady)
+                {
+                    RotationLogger.Trace($"{Name} false because its forced timer is not ready.");
+                    return false;
+                }
+                ForcedTimer.Reset();
             }
 
             watch.Restart();
