@@ -57,7 +57,7 @@ namespace AIO.Settings
         [DefaultValue(false)]
         [Category("General")]
         [DisplayName("Free Move")]
-        [Description("Will allow you to move freely.")]
+        [Description("Prevent casting during movement")]
         public bool FreeMove { get; set; }
 
         [Setting]
