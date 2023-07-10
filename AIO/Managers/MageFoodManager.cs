@@ -138,15 +138,12 @@ public static class MageFoodManager
                 }
             }
 
-            if (!haveManaStone && Bag.GetContainerNumFreeSlotsNormalType > 1)
+            if (!haveManaStone && Bag.GetContainerNumFreeSlotsNormalType >= 1)
             {
-                if (ConjureManaGem.KnownSpell)
+                if (ConjureManaGem.KnownSpell && ConjureManaGem.IsSpellUsable)
                 {
-                    if (ConjureManaGem.IsSpellUsable)
-                    {
-                        ConjureManaGem.Launch();
-                        Usefuls.WaitIsCasting();
-                    }
+                    ConjureManaGem.Launch();
+                    Usefuls.WaitIsCasting();
                 }
             }
         }
@@ -155,6 +152,7 @@ public static class MageFoodManager
     public static void UseManaStone()
     {
         ItemsManager.UseItemByNameOrId(ManaStone);
+        ManaStone = "";
     }
 
     public static void LuaDeleteItem(string item)

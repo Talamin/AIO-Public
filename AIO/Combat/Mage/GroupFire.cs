@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using wManager.Wow.Enums;
-using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -21,6 +19,10 @@ namespace AIO.Combat.Mage
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
 
+        const int flamestrikeTimeout = 10000;
+        const int scorchTimeout = 1600;
+
+
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
@@ -30,16 +32,15 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Evocation"), 4f, (s,t) => Settings.Current.GlyphOfEvocation && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 2), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Pyroblast"), 4.5f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && Me.HaveBuff("Hot Streak") && t.HealthPercent > 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Living Bomb"), 5f, (s,t) => !t.CHaveMyBuff("Living Bomb") && RotationFramework.Enemies.Count() >= 2, RotationCombatUtil.FindEnemyAttackingGroup, checkLoS: true),
-            new RotationStep(new RotationSpell("Flamestrike"), 6f, (s,t) => Settings.Current.GroupFireFlamestrikeWithoutFire && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.GroupFireFlamestrikeWithoutCountFire && Settings.Current.GroupFireUseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true, forcedTimerMS: 10000),
+            new RotationStep(new RotationSpell("Flamestrike"), 6f, (s,t) => Settings.Current.GroupFireFlamestrikeWithoutFire && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.GroupFireFlamestrikeWithoutCountFire && Settings.Current.GroupFireUseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true, forcedTimerMS: flamestrikeTimeout),
             new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.GroupFireAOEInstance) && Settings.Current.GroupFireUseAOE, FindBlizzardCluster, checkLoS: true),
-            new RotationStep(new RotationSpell("Scorch"), 9f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && TalentsManager.HaveTalent(2,11) && !t.HaveMyBuff("Improved Scorch"), RotationCombatUtil.BotTarget, forcedTimerMS: 100),
+            new RotationStep(new RotationSpell("Scorch"), 9f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && TalentsManager.HaveTalent(2,11) && !t.HaveMyBuff("Improved Scorch"), RotationCombatUtil.BotTarget, forcedTimerMS: scorchTimeout),
             new RotationStep(new RotationSpell("Combustion"), 10f, (s,t) => t.HaveMyBuff("Combustion"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Blast Wave"), 11f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && t.CGetDistance() < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Dragon's Breath"), 12f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && t.CGetDistance() < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && !t.CHaveMyBuff("Living Bomb"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fire Blast"), 14f, (s,t) => Settings.Current.GroupFireUseFireBlast && Me.ManaPercentage > Settings.Current.UseWandTresh && t.CHealthPercent() < 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.isboss), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Scorch"), 16f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() < 10 || BossList.isboss) , RotationCombatUtil.BotTargetFast, checkLoS: true),
             
             //// Only cast Polymorph if Sheep is enabled in settings
             //new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 

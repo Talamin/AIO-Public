@@ -183,8 +183,8 @@ namespace AIO.Settings
         [DefaultValue(10)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
-        [DisplayName("Manastone")]
-        [Description("Treshhold for Manastone")]
+        [DisplayName("Mana gem")]
+        [Description("Mana threshold when mage should use mana gem")]
         public int GroupFireManastone { get; set; }
 
         //[DefaultValue(false)]
