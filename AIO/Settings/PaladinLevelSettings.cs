@@ -13,7 +13,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "GroupPaladinHoly", "PaladinProtection", "GroupPaladinProtection" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "SoloRetribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtectionTank" })]
+        [TriggerDropdown("PaladinTriggerDropdown",new string[] { "Auto", "SoloRetribution", "GroupRetribution", "Holy", "GroupHolyHeal", "Protection", "GroupProtectionTank" })]
         public override string ChooseRotation { get; set; }
         #endregion
 
