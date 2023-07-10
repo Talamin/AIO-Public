@@ -8,16 +8,18 @@ namespace AIO.Framework
     {
         public readonly Spell Spell;
 
-        public RotationSpell(string name, bool ignoresGlobal = false)
+        public RotationSpell(string name, bool ignoresGlobal = false, bool ignoreMovement = false)
         {
             Spell = new Spell(name);
             IgnoresGlobal = ignoresGlobal;
+            IgnoreMovement = ignoreMovement;
         }
         
-        public RotationSpell(Spell spell, bool ignoresGlobal = false)
+        public RotationSpell(Spell spell, bool ignoresGlobal = false, bool ignoreMovement = false)
         {
             Spell = spell;
             IgnoresGlobal = ignoresGlobal;
+            IgnoreMovement = ignoreMovement;
         }
 
         public string Name => Spell.Name;
@@ -30,11 +32,13 @@ namespace AIO.Framework
 
         public float MaxRange => Spell.MaxRange;
 
-        public virtual bool Execute(WoWUnit target, bool force = false) => RotationCombatUtil.CastSpell(this, target, force);
+        public virtual bool Execute(WoWUnit target, bool force = false) => RotationCombatUtil.CastSpell(this, target, force, false);
 
         public virtual (bool, bool) Should(WoWUnit target) => (true, true);
 
         public bool IgnoresGlobal { get; }
+
+        public bool IgnoreMovement { get; }
 
         //
         public static int GetSpellCost(string spellName)

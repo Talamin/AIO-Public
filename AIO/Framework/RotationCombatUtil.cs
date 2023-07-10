@@ -345,7 +345,7 @@ namespace AIO.Framework {
         public static bool IsAutoAttacking() =>
             Lua.LuaDoString<bool>("return IsCurrentSpell('Auto Attack') == 1 or IsCurrentSpell('Auto Attack') == true");
 
-        public static bool CastSpell(RotationSpell spell, WoWUnit unit, bool force) {
+        public static bool CastSpell(RotationSpell spell, WoWUnit unit, bool force, bool ignoreMovement) {
             if (unit == null ||
                 !spell.KnownSpell ||
                 !spell.IsSpellUsable ||
@@ -357,7 +357,7 @@ namespace AIO.Framework {
                 return false;
 
             //Lua.LuaDoString("if IsMounted() then Dismount() end");
-            if (spell.CastTime > 0.0 && Me.GetMove) {
+            if (spell.CastTime > 0.0 && Me.GetMove && ignoreMovement) {
                 if (freeMove) return false;
                 MovementManager.StopMoveTo(false, (int) (spell.CastTime * 1000));
             }

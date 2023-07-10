@@ -17,6 +17,7 @@ namespace AIO.Framework {
         private readonly bool CheckLoS = false;
         private readonly string Name;
         private readonly Timer ForcedTimer;
+        private readonly bool IgnoreMovement = false;
 
         public RotationStep(IRotationAction action,
             float priority,
@@ -27,7 +28,8 @@ namespace AIO.Framework {
             bool forceCast = false,
             bool checkRange = true,
             bool checkLoS = false,
-            int forcedTimerMS = 0)
+            int forcedTimerMS = 0,
+            bool ignoreMovement = false)
         {
             Action = action;
             Priority = priority;
@@ -38,6 +40,7 @@ namespace AIO.Framework {
             ForceCast = forceCast;
             CheckRange = checkRange;
             CheckLoS = checkLoS;
+            IgnoreMovement = ignoreMovement;
 
             Name = action.GetType().FullName;
             if (Action is RotationSpell spell)
@@ -59,9 +62,10 @@ namespace AIO.Framework {
             bool forceCast = false,
             bool checkRange = true,
             bool checkLoS = false,
-            int forcedTimerMS = 0) :
+            int forcedTimerMS = 0,
+            bool ignoreMovement = false) :
             this(action, priority, targetPredicate, (_) => true, targetFinder, exclusive, forceCast, checkRange,
-                checkLoS, forcedTimerMS) { }
+                checkLoS, forcedTimerMS, ignoreMovement) { }
 
         public int CompareTo(RotationStep other) => Priority.CompareTo(other.Priority);
 
