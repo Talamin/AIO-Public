@@ -63,7 +63,7 @@ namespace AIO.Combat.Mage
                 }
             }
 
-            if (Me.IsAlive && Me.ManaPercentage <= Settings.Current.GroupFireManastone)
+            if (Me.IsAlive && Me.ManaPercentage <= Settings.Current.ManaGemThreshold)
             {
                 MageFoodManager.UseManaStone();
             }

@@ -18,6 +18,13 @@ namespace AIO.Settings
         public override string ChooseRotation { get; set; }
 
         //General
+        [DefaultValue(10)]
+        [Category("Rotation")]
+        [DisplayName("Mana gem")]
+        [Description("Mana threshold when mage should use mana gem")]
+        public int ManaGemThreshold { get; set; }
+
+
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Backpaddle")]
@@ -180,13 +187,6 @@ namespace AIO.Settings
 
         //Rotation GroupFire
 
-        [DefaultValue(10)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
-        [DisplayName("Mana gem")]
-        [Description("Mana threshold when mage should use mana gem")]
-        public int GroupFireManastone { get; set; }
-
         //[DefaultValue(false)]
         //[Category("Rotation")]
         //[VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
@@ -271,7 +271,7 @@ namespace AIO.Settings
             SoloFireFlamestrikeWithoutCountFire = 3;
 
             //GroupFireSheep = false;
-            GroupFireManastone = 10;
+            ManaGemThreshold = 10;
             GroupFireUseAOE = false;
             GroupFireAOEInstance = 4;
             GroupFireFlamestrikeWithoutFire = true;
