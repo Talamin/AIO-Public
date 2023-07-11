@@ -45,7 +45,7 @@ namespace AIO.Combat.Paladin
             && EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()) 
             && t.HealthPercent < 50 
             && (t.WowClass == WoWClass.Mage || t.WowClass == WoWClass.Warlock || t.WowClass == WoWClass.Priest || t.WowClass == WoWClass.Druid), RotationCombatUtil.CFindPartyMember,checkLoS:true),
-            new RotationStep(new RotationSpell("Avenger's Shield"), 10f, (s,t) => Me.CManaPercentage() > 20, RotationCombatUtil.BotTargetFast, checkLoS:true),
+            new RotationStep(new RotationSpell("Avenger's Shield"), 10f, (s,t) => Me.CManaPercentage() > 20 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3), RotationCombatUtil.BotTargetFast, checkLoS:true),
             new RotationStep(new RotationSpell("Avenging Wrath"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 2) && Settings.Current.GroupAvengingWrathProtection,RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Judgement of Light"), 12f, (s,t) => !SpellManager.KnowSpell("Judgement of Wisdom"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Exorcism"), 13f, (s,t) => (t.IsCreatureType("Undead") || t.IsCreatureType("Demon")) && Me.ManaPercentage > 25, RotationCombatUtil.BotTargetFast),
