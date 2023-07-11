@@ -38,6 +38,7 @@ namespace AIO.Combat.Paladin
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
             Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_GroupProtection, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_SoloProtection || Specialisation == Spec.Paladin_SoloRetribution, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
         }
 
         public override void Initialize()
