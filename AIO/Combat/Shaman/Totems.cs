@@ -120,7 +120,7 @@ namespace AIO.Combat.Shaman
                             break;
                         }
                     case "SoloRestoration":
-                    case "Elemental":
+                    case "SoloElemental":
                         {
                             if (StoneskinTotem.KnownSpell)
                             {
