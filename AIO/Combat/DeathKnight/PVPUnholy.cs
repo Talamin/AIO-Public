@@ -11,7 +11,7 @@ using static AIO.Constants;
 
 namespace AIO.Combat.DeathKnight
 {
-    internal class UnholyPVP : BaseRotation
+    internal class PVPUnholy : BaseRotation
     {
         private static readonly LinkedList<WoWUnit> CastingOnMeOrGroup = new LinkedList<WoWUnit>();
         private static readonly LinkedList<WoWUnit> EnemiesTargetingMe = new LinkedList<WoWUnit>();

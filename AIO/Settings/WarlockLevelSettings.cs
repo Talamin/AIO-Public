@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -14,7 +15,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology", "GroupWarlockAffliction" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("WarlockTriggerDropdown",new string[] { "Auto", "SoloDestruction", "SoloAffliction", "SoloDemonology", "GroupAffliction" })]
+        [TriggerDropdown("WarlockTriggerDropdown",new string[] { nameof(Spec.Auto), nameof(Spec.Warlock_SoloDestruction), nameof(Spec.Warlock_SoloAffliction), nameof(Spec.Warlock_SoloDemonology), nameof(Spec.Warlock_GroupAffliction) })]
         public override string ChooseRotation { get; set; }
 
         //Pet
@@ -87,7 +88,7 @@ namespace AIO.Settings
         //Rotation SoloAffliction
         [DefaultValue(20)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Lifetap")]
         [Description("Tells on which Mana % to use Lifetap")]
         [Percentage(true)]
@@ -95,7 +96,7 @@ namespace AIO.Settings
 
         [DefaultValue(40)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Drain Life")]
         [Description("Tells on which Health % to use Drain Life")]
         [Percentage(true)]
@@ -103,14 +104,14 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Shadowbolt")]
         [Description("should Shadowbolt ignore Wand Treshhold?")]
         public bool SoloAfflictionShadowboltWand { get; set; }
 
         [DefaultValue(30)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Health Funnel Pet")]
         [Description("Tells on which PetHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -118,7 +119,7 @@ namespace AIO.Settings
 
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Health Funnel Player")]
         [Description("Tells until which PlayerHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -126,7 +127,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Curse of")]
         [Description("Which Curse you want?")]
         [DropdownList(new string[] { "Agony", "Doom", "Elements", "Tongues", "Weakness", "Exhaustion" })]
@@ -134,21 +135,21 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Use Seed of Corruption")]
         [Description("Make use of SoC while in Group?")]
         public bool SoloAfflictionUseSeedGroup { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Use Corruption on Multidot")]
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool SoloAfflictionUseCorruptionGroup { get; set; }
 
         [DefaultValue(4)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Use AOE Count")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -156,7 +157,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloAffliction))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool SoloAfflictionUseAOE { get; set; }
@@ -165,7 +166,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Metamorphosis")]
         [Description("When to use  Metamorphosis?")]
         [DropdownList(new string[] { "OnCooldown", "OnBosses", "None" })]
@@ -173,7 +174,7 @@ namespace AIO.Settings
 
         [DefaultValue(20)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Lifetap")]
         [Description("Tells on which Mana % to use Lifetap")]
         [Percentage(true)]
@@ -181,7 +182,7 @@ namespace AIO.Settings
 
         [DefaultValue(40)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Drain Life")]
         [Description("Tells on which Health % to use Drain Life")]
         [Percentage(true)]
@@ -189,14 +190,14 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Shadowbolt")]
         [Description("should Shadowbolt ignore Wand Treshhold?")]
         public bool SoloDemonologyShadowboltWand { get; set; }
 
         [DefaultValue(30)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Health Funnel Pet")]
         [Description("Tells on which PetHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -204,7 +205,7 @@ namespace AIO.Settings
 
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Health Funnel Player")]
         [Description("Tells until which PlayerHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -212,7 +213,7 @@ namespace AIO.Settings
 
         [DefaultValue(4)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Use AOE Count")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -220,7 +221,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDemonology")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDemonology))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool SoloDemonologyUseAOE { get; set; }
@@ -229,7 +230,7 @@ namespace AIO.Settings
 
         [DefaultValue(4)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDestruction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDestruction))]
         [DisplayName("Use AOE Count")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -237,7 +238,7 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "SoloDestruction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDestruction))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE in Instance")]
 
@@ -246,7 +247,7 @@ namespace AIO.Settings
         //Rotation GroupAffliction
         [DefaultValue(20)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Lifetap")]
         [Description("Tells on which Mana % to use Lifetap")]
         [Percentage(true)]
@@ -254,14 +255,14 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Glyph Life Tap")]
         [Description("Set this if you have the life tap Glyph")]
         public bool GroupAfflictionGlyphLifetap { get; set; }
 
         [DefaultValue(40)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Drain Life")]
         [Description("Tells on which Health % to use Drain Life")]
         [Percentage(true)]
@@ -269,14 +270,14 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Shadowbolt")]
         [Description("should Shadowbolt ignore Wand Treshhold?")]
         public bool GroupAfflictionShadowboltWand { get; set; }
 
         [DefaultValue(30)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Health Funnel Pet")]
         [Description("Tells on which PetHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -284,7 +285,7 @@ namespace AIO.Settings
 
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Health Funnel Player")]
         [Description("Tells until which PlayerHealth % to use Health Funnel")]
         [Percentage(true)]
@@ -292,7 +293,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Curse of")]
         [Description("Which Curse you want?")]
         [DropdownList(new string[] { "Agony", "Doom", "Elements", "Tongues", "Weakness", "Exhaustion" })]
@@ -300,21 +301,21 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Use Seed of Corruption")]
         [Description("Make use of SoC while in Group?")]
         public bool GroupAfflictionUseSeedGroup { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Use Corruption on Multidot")]
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool GroupAfflictionUseCorruptionGroup { get; set; }
 
         [DefaultValue(4)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Use AOE Count")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -322,7 +323,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("WarlockTriggerDropdown", "GroupAffliction")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool GroupAfflictionUseAOE { get; set; }

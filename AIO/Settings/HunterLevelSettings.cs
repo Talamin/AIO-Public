@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -14,7 +15,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("HunterTriggerDropdown", new string[] { "Auto", "SoloBeastMastery", "GroupBeastMastery", "SoloSurvival", "SoloMarksmanship" })]
+        [TriggerDropdown("HunterTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Hunter_SoloBeastMastery), nameof(Spec.Hunter_GroupBeastMastery), nameof(Spec.Hunter_SoloSurvival), nameof(Spec.Hunter_SoloMarksmanship) })]
         public override string ChooseRotation { get; set; }
         #endregion
         #region General Settings for all specs
@@ -88,98 +89,98 @@ namespace AIO.Settings
         #region Beast Mastery       
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Feign Death")]
         [Description("Use Feign Death when targeted and pet is alive?")]
         public bool SoloBeastMasteryFD { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Disengage")]
         [Description("Use Disengage?")]
         public bool SoloBeastMasteryDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Enable Multishot")]
         [Description("Use Multishot at all?")]
         public bool SoloBeastMasteryMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Multishot Targets")]
         [Description("Multishot minimum target Count?")]
         public int SoloBeastMasteryMultiSCount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Misdirection")]
         [Description("Use Misdirection Solo on Pet/Group on Tank?")]
         public bool SoloBeastMasteryMisdirection { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE")]
         public bool SoloBeastMasteryUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloBeastMastery))]
         [DisplayName("AOE Enemy Count")]
         [Description("Number of Targets to use AOE")]
         public int SoloBeastMasteryAOECount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Feign Death")]
         [Description("Use Feign Death when targeted?")]
         public bool GroupBeastMasteryFD { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Enable Deterrence")]
         [Description("Use Deterrence at all?")]
         public bool GroupBeastMasteryDeterrence { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Enable Multishot")]
         [Description("Use Multishot at all?")]
         public bool GroupBeastMasteryMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Multishot Targets")]
         [Description("Multishot minimum target Count?")]
         public int GroupBeastMasteryMultiShotCount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Misdirection")]
         [Description("Use Misdirection on Tank?")]
         public bool GroupBeastMasteryMisdirection { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE")]
         public bool GroupBeastMasteryUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "GroupBeastMastery")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_GroupBeastMastery))]
         [DisplayName("AOE Enemy Count")]
         [Description("Number of Targets to use AOE")]
         public int GroupBeastMasteryAOECount { get; set; }
@@ -190,63 +191,63 @@ namespace AIO.Settings
         #region Marksmanship
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Feign Death")]
         [Description("Use Feign Death when targeted and pet is alive?")]
         public bool SoloMarksmanshipFD { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Disengage")]
         [Description("Use Disengage?")]
         public bool SoloMarksmanshipDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Multishot")]
         [Description("Use Multishot?")]
         public bool SoloMarksmanshipMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Multishot")]
         [Description("Use Multishot?")]
         public int SoloMarksmanshipMultiShotCount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Misdirection")]
         [Description("Use Misdirection Solo on Pet/Group on Tank?")]
         public bool SoloMarksmanshipMisdirection { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Use AOE")]
         [Description("Set this if you want to use AOE")]
         public bool SoloMarksmanshipUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("AOE Enemy Count")]
         [Description("Number of Targets to use AOE")]
         public int SoloMarksmanshipAOECount { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Aimed Shot")]
         [Description("Use Aimed Shot in Rota?")]
         public bool SoloMarksmanshipAimedShot { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloMarksmanship")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloMarksmanship))]
         [DisplayName("Arcane Shot")]
         [Description("Use Arcane Shot in Rota?")]
         public bool SoloMarksmanshipArcaneShot { get; set; }
@@ -255,28 +256,28 @@ namespace AIO.Settings
         #region Survival
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloSurvival))]
         [DisplayName("Feign Death")]
         [Description("Use Feign Death when targeted and pet is alive?")]
         public bool SoloSurvivalFD { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloSurvival))]
         [DisplayName("Disengage")]
         [Description("Use Disengage?")]
         public bool SoloSurvivalDisengage { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloSurvival))]
         [DisplayName("Multishot")]
         [Description("Use Multishot?")]
         public bool SoloSurvivalUseMultiShot { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("HunterTriggerDropdown", "SoloSurvival")]
+        [VisibleWhenDropdownValue("HunterTriggerDropdown", nameof(Spec.Hunter_SoloSurvival))]
         [DisplayName("Multishot")]
         [Description("Use Multishot?")]
         public int SoloSurvivalMultiShotCount { get; set; }

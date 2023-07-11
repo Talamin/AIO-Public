@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 
@@ -15,20 +16,20 @@ namespace AIO.Combat.Warrior
 
         internal WarriorBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"Arms", new Arms() },
-                {"Protection", new Protection() },
-                {"Fury", new Fury() },
-                {"GroupFury", new Fury() },
-                {"Default", new Protection() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Warrior_SoloArms, new SoloArms() },
+                { Spec.Warrior_GroupProtection, new GroupProtection() },
+                { Spec.Warrior_SoloFury, new SoloFury() },
+                { Spec.Warrior_GroupFury, new GroupFury() },
+                { Spec.Default, new SoloFury() },
             })
         {
             SetDefaultRange();
             Addons.Add(new Buffs(this));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation != "Protection" && Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "Protection", new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation != Spec.Warrior_GroupProtection && Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Warrior_GroupProtection, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
     }
 }

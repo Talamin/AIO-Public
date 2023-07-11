@@ -2,6 +2,7 @@
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System;
@@ -99,11 +100,11 @@ namespace AIO.Combat.Paladin
         {
             if (player == Me)
             {
-                if (CombatClass.Specialisation == "Protection" || CombatClass.Specialisation == "GroupProtectionTank")
+                if (CombatClass.Specialisation == Spec.Paladin_SoloProtection || CombatClass.Specialisation == Spec.Paladin_GroupProtection)
                     return GetTankBuff(player);
-                if (CombatClass.Specialisation == "Holy" || CombatClass.Specialisation == "GroupHolyHeal")
+                if (CombatClass.Specialisation == Spec.Paladin_GroupHoly)
                     return GetHealerBuff(player);
-                if (CombatClass.Specialisation == "Retribution")
+                if (CombatClass.Specialisation == Spec.Paladin_SoloRetribution)
                     return GetMeleeBuff(player);
             }
             if (RotationFramework.TankName == player.Name)

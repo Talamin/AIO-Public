@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -12,7 +13,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "ShamanEnhancement", "ShamanRestoration", "ShamanElemental" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("ShamanTriggerDropdown", new string[] { "Auto", "SoloEnhancement", "SoloRestoration", "SoloElemental" })]
+        [TriggerDropdown("ShamanTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Shaman_SoloEnhancement), nameof(Spec.Shaman_GroupRestoration), nameof(Spec.Shaman_SoloElemental) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -45,7 +46,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]                
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]                
         [DisplayName("Chain Lightning Count")]
         [Description("Required number of enemies to use Chain Lightning")]
         public int SoloElementalChainlightningTresshold { get; set; }
@@ -53,7 +54,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]        
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]        
         [DisplayName("Cure Toxin")]
         [Description("Use on Groupmembers??")]
         public bool SoloElementalCureToxin { get; set; }
@@ -61,7 +62,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]
         [DisplayName("Flame Shock")]
         [Description("Use Flame Shock in Rotation??")]
         public bool SoloElementalFlameShock { get; set; }
@@ -69,7 +70,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloElemental")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]
         [DisplayName("Earth Shock")]
         [Description("Use Earth Shock in Rotation?")]
         public bool SoloElementalEarthShock { get; set; }
@@ -78,7 +79,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(5)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]        
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]        
         [DisplayName("Fire  Nova")]
         [Description("Use Fire Nova?")]
         public int SoloEnhancementUseFireNova { get; set; }        
@@ -86,7 +87,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(10)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
         [DisplayName("Self heal min enemy HP")]
         [Description("The min Enemy HP at which to stop healing")]
         [Percentage(true)]
@@ -95,7 +96,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
         [DisplayName("HealthTreshhold")]
         [Description("Set the HP treshhold for self healing?")]
         [Percentage(true)]
@@ -104,7 +105,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(0)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
         [DisplayName("Reserve Healing Mana")]
         [Description("Set the Treshhold for offensive spells to save mana for heals?")]
         [Percentage(true)]
@@ -113,7 +114,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloEnhancement")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
         [DisplayName("Feral Spirit")]
         [Description("Use Feral Spirit on which  Targets? ")]
         [DropdownList(new string[] { "+2 and Elite", "+3 and Elite", "only Elite", "None" })]
@@ -123,7 +124,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(99)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]        
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]        
         [DisplayName("Earthshield")]
         [Description("Set the Tank Treshhold for Earthshield?")]
         [Percentage(true)]
@@ -132,7 +133,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(75)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Riptide")]
         [Description("Set the Treshhold for Riptide usage?")]
         [Percentage(true)]
@@ -141,7 +142,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(85)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Chain Heal / Health")]
         [Description("Set the Player Treshhold for Chain Heal?")]
         [Percentage(true)]
@@ -150,7 +151,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Chain Heal / Player")]
         [Description("Set the PlayerCount Treshhold for Chain Heal (more then x  Player) ?")]
         [Percentage(false)]
@@ -159,7 +160,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(70)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Healing Wave")]
         [Description("Set the Player Treshhold for Healing Wave?")]
         [Percentage(true)]
@@ -168,7 +169,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(85)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Lesser Healing Wave")]
         [Description("Set the Player Treshhold for Lesser Healing Wave?")]
         [Percentage(true)]

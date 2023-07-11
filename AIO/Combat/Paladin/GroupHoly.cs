@@ -2,23 +2,16 @@
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Settings;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
 namespace AIO.Combat.Paladin
 {
     using Settings = PaladinLevelSettings;
 
-    internal class GroupHolyHeal : HealerRotation
+    internal class GroupHoly : HealerRotation
     {
-        public GroupHolyHeal() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents)
-        {
-        }
+        public GroupHoly() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             //Pre Calculations
             new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f, (action, me) => DoPreCalculations(), RotationCombatUtil.FindMe),

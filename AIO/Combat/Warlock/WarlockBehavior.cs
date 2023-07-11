@@ -1,6 +1,7 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -21,14 +22,14 @@ namespace AIO.Combat.Warlock
 
         internal WarlockBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloAffliction", new SoloAffliction() },
-                {"GroupAffliction", new GroupAffliction() },
-                {"SoloDestruction", new SoloDestruction() },
-                {"SoloDemonology", new SoloDemonology() },
-                {"Default", new SoloAffliction() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Warlock_SoloAffliction, new SoloAffliction() },
+                { Spec.Warlock_GroupAffliction, new GroupAffliction() },
+                { Spec.Warlock_SoloDestruction, new SoloDestruction() },
+                { Spec.Warlock_SoloDemonology, new SoloDemonology() },
+                { Spec.Default, new SoloAffliction() },
             },
             new Buffs(),
             new PetAutoTarget("Torment"))
