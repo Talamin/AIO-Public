@@ -15,7 +15,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Priest {
     using Settings = PriestLevelSettings;
 
-    internal class Holy : BaseRotation {
+    internal class GroupHoly : BaseRotation {
         private const bool IsDebug = true;
         private static readonly LinkedList<WoWUnit> CastingOnMeOrGroup = new LinkedList<WoWUnit>();
         private static readonly LinkedList<WoWUnit> EnemiesTargetingMe = new LinkedList<WoWUnit>();
@@ -32,7 +32,7 @@ namespace AIO.Combat.Priest {
         // private const float Default = 1f;
 
 
-        public Holy() : base(IsDebug, IsDebug,
+        public GroupHoly() : base(IsDebug, IsDebug,
             Settings.Current.UseSyntheticCombatEvents) {
             Logging.Write("Loading FlXWare's Heal Rotation ...");
             _slowHealSpell = FindCorrectSlowHealSpell();

@@ -16,7 +16,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Warrior
 {
     using Settings = WarriorLevelSettings;
-    internal class Protection : BaseRotation
+    internal class GroupProtection : BaseRotation
     {
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();

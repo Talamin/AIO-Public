@@ -9,7 +9,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Warrior
 {
     using Settings = WarriorLevelSettings;
-    internal class Fury : BaseRotation
+    internal class SoloFury : BaseRotation
     {
         private static readonly string Intercept = "Blessing of Sanctuary";
         private readonly bool KnowIntercept = SpellManager.KnowSpell(Intercept);

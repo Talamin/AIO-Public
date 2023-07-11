@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace AIO.Combat.Shaman
         public static bool HasTemporary() => HasAny("Mana Tide Totem", "Earth Elemental Totem", "Tremor Totem", "Grounding Totem", "Earthbind Totem", "Stoneclaw Totem");
 
         private readonly BaseCombatClass CombatClass;
-        private string Spec => CombatClass.Specialisation;
+        private Spec Spec => CombatClass.Specialisation;
         internal Totems(BaseCombatClass combatClass) => CombatClass = combatClass;
 
         public void Initialize() => MovementEvents.OnMovementPulse += OnMovementPulse;
@@ -70,7 +71,7 @@ namespace AIO.Combat.Shaman
 
                 switch (Spec)
                 {
-                    case "Enhancement":
+                    case Spec.Shaman_SoloEnhancement:
                         {
                             if (StrengthOfEarthTotem.KnownSpell)
                             {
@@ -119,8 +120,8 @@ namespace AIO.Combat.Shaman
                          
                             break;
                         }
-                    case "SoloRestoration":
-                    case "SoloElemental":
+                    case Spec.Shaman_GroupRestoration:
+                    case Spec.Shaman_SoloElemental:
                         {
                             if (StoneskinTotem.KnownSpell)
                             {

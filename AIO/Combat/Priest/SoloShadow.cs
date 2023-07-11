@@ -18,7 +18,7 @@ using Math = System.Math;
 namespace AIO.Combat.Priest {
     using Settings = PriestLevelSettings;
 
-    internal class Shadow : BaseRotation {
+    internal class SoloShadow : BaseRotation {
         private static readonly HashSet<ulong> PartyGuids = new HashSet<ulong>();
         private static CancelableSpell _healSpell;
         private static WoWUnit _tank;
@@ -26,7 +26,7 @@ namespace AIO.Combat.Priest {
         private static bool _haveShadowWeaving;
         private static bool _targetAttackable;
 
-        public Shadow() : base(completelySynthetic: Settings.Current.CompletelySynthetic) {
+        public SoloShadow() : base(completelySynthetic: Settings.Current.CompletelySynthetic) {
             _healSpell = FindCorrectHealSpell();
             _haveShadowWeaving = TalentsManager.HaveTalent(3, 12);
 

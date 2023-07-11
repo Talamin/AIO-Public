@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -13,7 +14,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightBloodTank", "DeathKnightFrost", "GroupDeathKnightFrost", "DeathKnightUnholy", "GroupDeathKnightUnholy" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { "Auto", "SoloBlood", "GroupBloodTank", "SoloFrost", "SoloUnholy", "UnholyPVP" })]
+        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.DK_SoloBlood), nameof(Spec.DK_GroupBloodTank), nameof(Spec.DK_SoloFrost), nameof(Spec.DK_SoloUnholy), "UnholyPVP" })]
         public override string ChooseRotation { get; set; }
 
         //General
@@ -30,7 +31,7 @@ namespace AIO.Settings
         public bool GlyphRaiseDead { get; set; }
 
         [DefaultValue(false)]
-        [Category("Fight")]
+        [Category("General")]
         [DisplayName("Choose Presence")]
         [Description("Set the Presence you want the FC to fight in")]
         [DropdownList(new string[] { "BloodPresence", "FrostPresence", "UnholyPresence" })]
@@ -40,21 +41,21 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Dark Command")]
         [Description("Use Dark Command in Group?")]
         public bool SoloBloodDarkCommand { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Deathgrip")]
         [Description("use Deathgrip for in Group?")]
         public bool SoloBloodDeathGrip { get; set; }
 
         [DefaultValue(50)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Rune tap")]
         [Description("Which health % to use Rune tap?")]
         [Percentage(true)]
@@ -62,7 +63,7 @@ namespace AIO.Settings
 
         [DefaultValue(1)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Bloodstrike")]
         [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
         [Percentage(false)]
@@ -70,7 +71,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Hearthstrike")]
         [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
         [Percentage(false)]
@@ -78,7 +79,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("BloodBoil")]
         [Description("Set Enemy Count larger X enemy to use Bloodboil")]
         [Percentage(false)]
@@ -86,7 +87,7 @@ namespace AIO.Settings
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloBlood")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloBlood))]
         [DisplayName("Death and Decay")]
         [Description("Set Enemy Count larger X enemy to use DnD")]
         [Percentage(false)]
@@ -96,7 +97,7 @@ namespace AIO.Settings
 
         [DefaultValue(1)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloFrost))]
         [DisplayName("Bloodstrike")]
         [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
         [Percentage(false)]
@@ -104,7 +105,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloFrost))]
         [DisplayName("Hearthstrike")]
         [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
         [Percentage(false)]
@@ -112,7 +113,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloFrost))]
         [DisplayName("BloodBoil")]
         [Description("Set Enemy Count larger X enemy to use Bloodboil")]
         [Percentage(false)]
@@ -120,7 +121,7 @@ namespace AIO.Settings
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloFrost))]
         [DisplayName("Death and Decay")]
         [Description("Set Enemy Count larger X enemy to use DnD")]
         [Percentage(false)]
@@ -130,7 +131,7 @@ namespace AIO.Settings
 
         [DefaultValue(1)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloUnholy))]
         [DisplayName("Bloodstrike")]
         [Description("Set Enemy Count Equal X enemy to use Bloodstrike")]
         [Percentage(false)]
@@ -138,7 +139,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloUnholy))]
         [DisplayName("Hearthstrike")]
         [Description("Set Enemy Count Equal X enemy to use Hearthstrike")]
         [Percentage(false)]
@@ -146,7 +147,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloUnholy))]
         [DisplayName("BloodBoil")]
         [Description("Set Enemy Count larger X enemy to use Bloodboil")]
         [Percentage(false)]
@@ -154,7 +155,7 @@ namespace AIO.Settings
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", "SoloUnholy")]
+        [VisibleWhenDropdownValue("DeathKnightTriggerDropdown", nameof(Spec.DK_SoloUnholy))]
         [DisplayName("Death and Decay")]
         [Description("Set Enemy Count larger X enemy to use DnD")]
         [Percentage(false)]

@@ -10,7 +10,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Paladin
 {
     using Settings = PaladinLevelSettings;
-    internal class Protection : BaseRotation
+    internal class SoloProtection : BaseRotation
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),

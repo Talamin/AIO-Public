@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -9,12 +10,10 @@ namespace AIO.Settings
     public class MageLevelSettings : BasePersistentSettings<MageLevelSettings>
     {
         //Lists
-
-
         [DropdownList(new string[] { "MageFrost", "MageFire", "MageArcane" })]
         public override string ChooseTalent { get; set; }
 
-        [TriggerDropdown("MageTriggerDropdown", new string[] { "Auto", "SoloFrost", "GroupFrost", "SoloFire", "GroupFire", "SoloArcane" })]
+        [TriggerDropdown("MageTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Mage_SoloFrost), nameof(Spec.Mage_GroupFrost), nameof(Spec.Mage_SoloFire), nameof(Spec.Mage_GroupFire), nameof(Spec.Mage_SoloArcane) })]
         public override string ChooseRotation { get; set; }
 
         //General
@@ -70,40 +69,36 @@ namespace AIO.Settings
         public bool GlyphOfEternalWater { get; set; }
 
         //Rotation SoloFrost
-
-
         [DefaultValue(10)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFrost))]
         [DisplayName("Manastone")][Description("Treshhold for Manastone")]
         public int SoloFrostManastone { get; set; }
 
         [DefaultValue(10)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFrost))]
         [DisplayName("Fire Blast")][Description("Treshhold for Enemy Health <= to use Fire Blast")]
         [Percentage(true)]
         public int SoloFrostFrostFireBlast { get; set; }
 
         [DefaultValue(false)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFrost))]
         [DisplayName("Sheep")][Description("Uses Sheep if 2 Targets attacking")]
         public bool SoloFrostSheep { get; set; }
 
         [DefaultValue(false)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFrost))]
         [DisplayName("Use AOE in Instance")][Description("Set this if you want to use AOE in Instance")]
         public bool SoloFrostUseAOE { get; set; }
 
         [DefaultValue(4)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFrost))]
         [DisplayName("AOE in Instance")][Description("Number of Targets around the Tank to use AOE in Instance")][Percentage(false)]
         public int SoloFrostAOEInstance { get; set; }
 
         //Rotation GroupFrost
-
-
         [DefaultValue(10)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFrost))]
         [DisplayName("Fire Blast")]
         [Description("Treshhold for Enemy Health <= to use Fire Blast")]
         [Percentage(true)]
@@ -111,28 +106,28 @@ namespace AIO.Settings
 
         [DefaultValue(10)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFrost))]
         [DisplayName("Manastone")]
         [Description("Treshhold for Manastone")]
         public int GroupFrostManastone { get; set; }
 
         //[DefaultValue(false)]
         //[Category("Rotation")]
-        //[VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFrost")]
+        //[VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFrost))]
         //[DisplayName("Sheep")]
         //[Description("Uses Sheep if 2 Targets attacking")]
         //public bool GroupFrostSheep { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFrost))]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool GroupFrostUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFrost")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFrost))]
         [DisplayName("AOE in Instance")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -142,28 +137,28 @@ namespace AIO.Settings
 
         [DefaultValue(10)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("Manastone")]
         [Description("Treshhold for Manastone")]
         public int SoloFireManastone { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("Sheep")]
         [Description("Uses Sheep if 2 Targets attacking")]
         public bool SoloFireSheep { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool SoloFireUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("AOE in Instance")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -172,14 +167,14 @@ namespace AIO.Settings
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("Use Flamestrike?")]
         [Description("Use Flamestrike without Firestarter Buff?")]
         public bool SoloFireFlamestrikeWithoutFire { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloFire))]
         [DisplayName("Flamestrike EnemyCount")]
         [Description("Number of Targets around the Tank to use FS in Instance")]
         [Percentage(false)]
@@ -189,21 +184,21 @@ namespace AIO.Settings
 
         //[DefaultValue(false)]
         //[Category("Rotation")]
-        //[VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        //[VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         //[DisplayName("Sheep")]
         //[Description("Uses Sheep if 2 Targets attacking")]
         //public bool GroupFireSheep { get; set; }
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         [DisplayName("Use AOE in Instance")]
         [Description("Set this if you want to use AOE in Instance")]
         public bool GroupFireUseAOE { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         [DisplayName("AOE in Instance")]
         [Description("Number of Targets around the Tank to use AOE in Instance")]
         [Percentage(false)]
@@ -211,19 +206,19 @@ namespace AIO.Settings
 
 
         [DefaultValue(true)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         [DisplayName("Use Flamestrike?")][Description("Use Flamestrike without Firestarter Buff?")]
         public bool GroupFireFlamestrikeWithoutFire { get; set; }
 
         [DefaultValue(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         [DisplayName("Use Fire Blast?")]
         [Description("Check this if you want to finish the mobs using Fire Blast")]
         public bool GroupFireUseFireBlast { get; set; }
 
         [DefaultValue(3)][Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "GroupFire")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_GroupFire))]
         [DisplayName("Flamestrike EnemyCount")][Description("Number of Targets around the Tank to use FS in Instance")]
         [Percentage(false)]
         public int GroupFireFlamestrikeWithoutCountFire { get; set; }
@@ -232,7 +227,7 @@ namespace AIO.Settings
 
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("MageTriggerDropdown", "SoloArcane")]
+        [VisibleWhenDropdownValue("MageTriggerDropdown", nameof(Spec.Mage_SoloArcane))]
         [DisplayName("Sheep")]
         [Description("Uses Sheep if 2 Targets attacking")]
         public bool SoloArcaneSheep { get; set; }

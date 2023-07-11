@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -95,7 +96,7 @@ namespace AIO.Settings
         [DropdownList(new string[] { "WarriorProtection", "GroupWarriorProtection", "WarriorArms", "WarriorFury" })]
         public override string ChooseTalent { get; set; }
 
-        [DropdownList(new string[] { "Auto", "Protection", "Arms", "Fury","GroupFury" })]
+        [DropdownList(new string[] { nameof(Spec.Auto), nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury), nameof(Spec.Warrior_GroupFury) })]
         public override string ChooseRotation { get; set; }
 
         public WarriorLevelSettings()

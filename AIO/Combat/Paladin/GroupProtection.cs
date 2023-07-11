@@ -15,7 +15,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Paladin
 {
     using Settings = PaladinLevelSettings;
-    internal class GroupProtectionTank : BaseRotation
+    internal class GroupProtection : BaseRotation
     {
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();

@@ -1,11 +1,10 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
-using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -20,15 +19,15 @@ namespace AIO.Combat.Mage
 
         internal MageBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloFrost", new SoloFrost() },
-                {"GroupFrost", new GroupFrost() },
-                {"SoloArcane", new SoloArcane() },
-                {"SoloFire", new SoloFire() },
-                {"GroupFire", new GroupFire() },
-                {"Default", new SoloFrost() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Mage_SoloFrost, new SoloFrost() },
+                { Spec.Mage_GroupFrost, new GroupFrost() },
+                { Spec.Mage_SoloArcane, new SoloArcane() },
+                { Spec.Mage_SoloFire, new SoloFire() },
+                { Spec.Mage_GroupFire, new GroupFire() },
+                { Spec.Default, new SoloFrost() },
             },
             new Buffs(),
             new ConditionalCycleable(() => Settings.Current.Backpaddle,

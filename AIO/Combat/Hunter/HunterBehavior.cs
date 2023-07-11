@@ -1,6 +1,7 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -25,14 +26,14 @@ namespace AIO.Combat.Hunter
 
         internal HunterBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloBeastMastery", new SoloBeastMastery() },
-                {"GroupBeastMastery", new GroupBeastMastery() },
-                {"SoloMarksmanship", new SoloMarksmanship() },
-                {"SoloSurvival", new SoloSurvival() },
-                {"Default", new SoloBeastMastery() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Hunter_SoloBeastMastery, new SoloBeastMastery() },
+                { Spec.Hunter_GroupBeastMastery, new GroupBeastMastery() },
+                { Spec.Hunter_SoloMarksmanship, new SoloMarksmanship() },
+                { Spec.Hunter_SoloSurvival, new SoloSurvival() },
+                { Spec.Default, new SoloBeastMastery() },
             },
             new Buffs(),
             new PetAutoTarget("Growl"),

@@ -10,10 +10,10 @@ using static AIO.Constants;
 namespace AIO.Combat.Shaman
 {
     using Settings = ShamanLevelSettings;
-    internal class SoloRestoration : BaseRotation
+    internal class GroupRestoration : BaseRotation
     {
         private static WoWUnit _tank => RotationCombatUtil.FindTank(unit => true);
-        public SoloRestoration() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
+        public GroupRestoration() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),

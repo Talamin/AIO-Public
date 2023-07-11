@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace AIO.Combat.Shaman
     {
         private readonly BaseCombatClass CombatClass;
         private readonly Totems Totems;
-        private string Spec => CombatClass.Specialisation;
+        private Spec Spec => CombatClass.Specialisation;
         internal Buffs(BaseCombatClass combatClass, Totems totems) : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents)
         {
             CombatClass = combatClass;
@@ -23,7 +24,7 @@ namespace AIO.Combat.Shaman
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
 
-            new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => (Spec == "SoloRestoration" || Spec == "Elemental" || (Spec == "SoloEnhancement" && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
+            new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
 
             new RotationStep(new RotationSpell("Totemic Recall"), 10f, (s,t) => Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),
@@ -41,7 +42,7 @@ namespace AIO.Combat.Shaman
                 RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 20) >= 2, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Magma Totem"), 40f, (s,t) =>
-                Spec == "SoloEnhancement" &&
+                Spec == Spec.Shaman_SoloEnhancement &&
                 Target.GetDistance <= 15 &&
                 !Totems.HasAny("Magma Totem") &&
                 Me.ManaPercentage > 40, RotationCombatUtil.FindMe),
