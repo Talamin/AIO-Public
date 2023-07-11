@@ -173,6 +173,15 @@ namespace AIO.Settings
         [Description("Set the Player Treshhold for Lesser Healing Wave?")]
         [Percentage(true)]
         public int RestorationLesserHealingWaveGroup { get; set; }
+
+        [Setting]
+        [DefaultValue(25)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", "SoloRestoration")]
+        [DisplayName("Nature's Swiftness")]
+        [Description("Set the threshold for instant Healing Wave usage")]
+        [Percentage(true)]
+        public int NatureSwiftness { get; set; }
         #endregion
         #endregion
 
@@ -259,6 +268,7 @@ namespace AIO.Settings
             RestorationHealingWaveGroup = 70;
             RestorationLesserHealingWaveGroup = 85;
             RestorationRiptideGroup = 75;
+            NatureSwiftness = 25;
             UseEarthbindTotem = false;
             UseSearingTotem = false;
             UseFireNova = true;

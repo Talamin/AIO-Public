@@ -11,6 +11,8 @@ namespace AIO.Combat.Mage
     using Settings = MageLevelSettings;
     internal class SoloFire : BaseRotation
     {
+        const int scorchTimeout = 1500;
+
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
@@ -30,8 +32,8 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Living Bomb"), 5f, (s,t) => !t.HaveMyBuff("Living Bomb") && RotationFramework.Enemies.Count() >= 2, RotationCombatUtil.FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Flamestrike"), 6f, (s,t) => Settings.Current.SoloFireFlamestrikeWithoutFire && !t.HaveMyBuff("Flamestrike") && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloFireFlamestrikeWithoutCountFire && Settings.Current.SoloFireUseAOE, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloFireAOEInstance && Settings.Current.SoloFireUseAOE, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Scorch"), 9f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh && TalentsManager.HaveTalent(2,11) &&  !t.HaveMyBuff("Improved Scorch"), RotationCombatUtil.BotTarget),
-            //new RotationStep(new RotationSpell("Combustion"), 10f, (s,t) => t.HaveMyBuff("Combustion"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Scorch"), 9f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh && TalentsManager.HaveTalent(2,11) &&  !t.HaveMyBuff("Improved Scorch"), RotationCombatUtil.BotTarget, forcedTimerMS: scorchTimeout),
+            new RotationStep(new RotationSpell("Combustion"), 10f, (s,t) => t.HaveMyBuff("Combustion"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Blast Wave"), 11f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  t.GetDistance < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Dragon's Breath"), 12f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  t.GetDistance < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  !t.HaveMyBuff("Living Bomb"), RotationCombatUtil.BotTarget),

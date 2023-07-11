@@ -62,11 +62,17 @@ namespace AIO.Combat.Mage
                     Logging.WriteFight($"Changing pet target to {Target.Name} [{Target.Guid}]");
                 }
             }
+
+            if (Me.IsAlive && Me.ManaPercentage <= Settings.Current.ManaGemThreshold)
+            {
+                MageFoodManager.UseManaStone();
+            }
         }
 
         protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
             MageFoodManager.CheckIfEnoughFoodAndDrinks();
+            MageFoodManager.CheckIfHaveManaStone();
         }
     }
 }
