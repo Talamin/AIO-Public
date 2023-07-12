@@ -282,7 +282,6 @@
     <Compile Include="Combat\Druid\LowLevel.cs" />
     <Compile Include="Combat\Druid\SoloBalance.cs" />
     <Compile Include="Combat\Druid\SoloFeral.cs" />
-    <Compile Include="Combat\Druid\SoloRestoration.cs" />
     <Compile Include="Combat\Hunter\Buffs.cs" />
     <Compile Include="Combat\Hunter\HunterBehavior.cs" />
     <Compile Include="Combat\Hunter\GroupBeastMastery.cs" />

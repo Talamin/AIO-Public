@@ -29,7 +29,7 @@ namespace AIO.Combat.Shaman
                 { Spec.Shaman_SoloElemental, new SoloElemental() },
                 { Spec.Shaman_GroupRestoration, new GroupRestoration() },
                 { Spec.Shaman_SoloEnhancement, new SoloEnhancement() },
-                { Spec.Default, new SoloEnhancement() },
+                { Spec.Fallback, new SoloEnhancement() },
             }, new AutoPartyResurrect("Ancestral Spirit"),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {

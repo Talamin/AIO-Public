@@ -11,11 +11,7 @@ namespace AIO.Settings
     {
 
         //Lists
-
-        [DropdownList(new string[] { "WarlockDestruction", "WarlockAffliction", "WarlockDemonology", "GroupWarlockAffliction" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("WarlockTriggerDropdown",new string[] { nameof(Spec.Auto), nameof(Spec.Warlock_SoloDestruction), nameof(Spec.Warlock_SoloAffliction), nameof(Spec.Warlock_SoloDemonology), nameof(Spec.Warlock_GroupAffliction) })]
+        [TriggerDropdown("WarlockTriggerDropdown",new string[] { nameof(Spec.Warlock_SoloDestruction), nameof(Spec.Warlock_SoloAffliction), nameof(Spec.Warlock_SoloDemonology), nameof(Spec.Warlock_GroupAffliction) })]
         public override string ChooseRotation { get; set; }
 
         //Pet
@@ -331,7 +327,6 @@ namespace AIO.Settings
 
         public WarlockLevelSettings()
         {
-            ChooseTalent = "WarlockAffliction";
             //Pet
             Pet = "Voidwalker";
             PetInfight = true;

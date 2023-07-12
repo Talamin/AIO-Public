@@ -23,7 +23,7 @@ namespace AIO.Combat.Warrior
                 { Spec.Warrior_GroupProtection, new GroupProtection() },
                 { Spec.Warrior_SoloFury, new SoloFury() },
                 { Spec.Warrior_GroupFury, new GroupFury() },
-                { Spec.Default, new SoloFury() },
+                { Spec.Fallback, new SoloFury() },
             })
         {
             SetDefaultRange();

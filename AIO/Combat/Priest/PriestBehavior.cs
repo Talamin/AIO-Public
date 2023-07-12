@@ -18,7 +18,7 @@ namespace AIO.Combat.Priest
                 { Spec.LowLevel, new LowLevel() },
                 { Spec.Priest_GroupHoly, new GroupHoly() },
                 { Spec.Priest_SoloShadow, new SoloShadow() },
-                { Spec.Default, new SoloShadow() },
+                { Spec.Fallback, new SoloShadow() },
             } , 
             new AutoPartyResurrect("Resurrection"),
             new Buffs())

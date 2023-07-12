@@ -1,5 +1,4 @@
 ﻿using AIO.Combat.Common;
-using AIO.Framework;
 using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
@@ -26,7 +25,7 @@ namespace AIO.Combat.DeathKnight
                 { Spec.DK_SoloUnholy, new SoloUnholy() },
                 { Spec.DK_SoloFrost, new SoloFrost() },
                 { Spec.DK_PVPUnholy, new PVPUnholy() },
-                { Spec.Default, new SoloBlood() },
+                { Spec.Fallback, new SoloBlood() },
             }, new Buffs())
         { }
         private readonly Spell RaiseDead = new Spell("Raise Dead");
@@ -35,7 +34,7 @@ namespace AIO.Combat.DeathKnight
         {
             if (!Pet.IsAlive)
             {
-                if (RaiseDead.IsSpellUsable && RaiseDead.KnownSpell && !Me.IsMounted 
+                if (RaiseDead.IsSpellUsable && RaiseDead.KnownSpell && !Me.IsMounted
                     && Settings.Current.RaiseDead && (ItemsManager.HasItemById(37201) || Settings.Current.GlyphRaiseDead))
                 {
                     RaiseDead.Launch();

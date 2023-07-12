@@ -10,10 +10,7 @@ namespace AIO.Settings
     public class ShamanLevelSettings : BasePersistentSettings<ShamanLevelSettings>
     {
         #region Selectors
-        [DropdownList(new string[] { "ShamanEnhancement", "ShamanRestoration", "ShamanElemental" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("ShamanTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Shaman_SoloEnhancement), nameof(Spec.Shaman_GroupRestoration), nameof(Spec.Shaman_SoloElemental) })]
+        [TriggerDropdown("ShamanTriggerDropdown", new string[] { nameof(Spec.Shaman_SoloEnhancement), nameof(Spec.Shaman_GroupRestoration), nameof(Spec.Shaman_SoloElemental) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -250,7 +247,6 @@ namespace AIO.Settings
 
         public ShamanLevelSettings()
         {
-            ChooseTalent = "ShamanEnhancement";
             HealOOC = true;
             UseGhostWolf = true;
             SoloEnhancementEnemyHPSkipHealing = 10;

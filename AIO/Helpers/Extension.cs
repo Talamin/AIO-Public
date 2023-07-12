@@ -8,10 +8,25 @@ using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
-using Math = System.Math;
+using AIO.Lists;
+using wManager.Wow.Enums;
 
 static class Extension
 {
+    public static Dictionary<WoWClass, string> DefaultRotations = new Dictionary<WoWClass, string>()
+    {
+        { WoWClass.Paladin, nameof(Spec.Paladin_SoloRetribution) },
+        { WoWClass.Shaman, nameof(Spec.Shaman_SoloEnhancement) },
+        { WoWClass.Mage, nameof(Spec.Mage_SoloFrost) },
+        { WoWClass.Warlock, nameof(Spec.Warlock_SoloAffliction) },
+        { WoWClass.Druid, nameof(Spec.Druid_SoloFeral) },
+        { WoWClass.DeathKnight, nameof(Spec.DK_SoloBlood) },
+        { WoWClass.Priest, nameof(Spec.Priest_SoloShadow) },
+        { WoWClass.Rogue, nameof(Spec.Rogue_SoloCombat) },
+        { WoWClass.Warrior, nameof(Spec.Warrior_SoloFury) },
+        { WoWClass.Hunter, nameof(Spec.Hunter_SoloBeastMastery) },
+    };
+
     public static void RunAdaptive(this Timer timer, Action action, TimeSpan maxDuration, int factor = 8)
     {
         if (!timer.IsReady)

@@ -11,10 +11,7 @@ namespace AIO.Settings
     {
 
         #region Selectors
-        [DropdownList(new string[] { "DruidFeral", "DruidBalance", "DruidRestoration", "GroupDruidRestoration" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("DruidTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Druid_SoloFeral), nameof(Spec.Druid_SoloBalance), nameof(Spec.Druid_SoloRestoration), nameof(Spec.Druid_GroupFeralTank), nameof(Spec.Druid_GroupRestoration) })]
+        [TriggerDropdown("DruidTriggerDropdown", new string[] { nameof(Spec.Druid_SoloFeral), nameof(Spec.Druid_SoloBalance), nameof(Spec.Druid_GroupFeralTank), nameof(Spec.Druid_GroupRestoration) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -259,96 +256,6 @@ namespace AIO.Settings
         public int SoloBalanceRegrowth { get; set; }
         #endregion
 
-        #region SoloRestoration Settings
-        [Setting]
-        [DefaultValue(80)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Regrowth")]
-        [Description("threshold for Regrowth")]
-        [Percentage(true)]
-        public int SoloRestorationRegrowth { get; set; }
-
-        [Setting]
-        [DefaultValue(95)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Rejuvenation")]
-        [Description("threshold for Rejuvenation")]
-        [Percentage(true)]
-        public int SoloRestorationRejuvenation { get; set; }
-
-        [Setting]
-        [DefaultValue(95)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Wild Growth")]
-        [Description("threshold for Wild Growth")]
-        [Percentage(true)]
-        public int SoloRestorationWildGrowth { get; set; }
-
-        [Setting]
-        [DefaultValue(3)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Wild Growth")]
-        [Description("threshold for Wild Growth Player Count")]
-        [Percentage(false)]
-        public int SoloRestorationWildGrowthCount { get; set; }
-
-        [Setting]
-        [DefaultValue(45)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Healing Touch")]
-        [Description("threshold for Healing Touch")]
-        [Percentage(true)]
-        public int SoloRestorationHealingTouch { get; set; }
-
-        [Setting]
-        [DefaultValue(95)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Lifebloom")]
-        [Description("threshold for Lifebloom")]
-        [Percentage(true)]
-        public int SoloRestorationLifebloom { get; set; }
-
-        [Setting]
-        [DefaultValue(50)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Nourish")]
-        [Description("threshold for Nourish use")]
-        [Percentage(true)]
-        public int SoloRestorationNourish { get; set; }
-
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Curse")]
-        [Description("Remove Curse?")]
-        public bool SoloRestorationRemoveCurse { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Poison")]
-        [Description("Remove Poison?")]
-        public bool SoloRestorationRemovePoison { get; set; }
-
-        [Setting]
-        [DefaultValue("")]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_SoloRestoration))]
-        [DisplayName("Custom Tank")]
-        [Description("If you want to override the tank. Leave empty if you don't know")]
-        public string SoloRestoCustomTank { get; set; }
-        #endregion
-
         #region GroupRestorationHeal Settings
         [Setting]
         [DefaultValue(80)]
@@ -450,7 +357,6 @@ namespace AIO.Settings
 
         public DruidLevelSettings()
         {
-            ChooseTalent = "DruidFeral";
             BuffIC = true;
             HealOOC = true;
             SoloFeralProwl = true;
@@ -480,16 +386,6 @@ namespace AIO.Settings
             SoloBalanceHealingTouch = 10;
             SoloBalanceRegrowth = 60;
             SoloBalanceRejuvenation = 30;
-            SoloRestorationRegrowth = 65;
-            SoloRestorationRejuvenation = 90;
-            SoloRestorationWildGrowth = 90;
-            SoloRestorationWildGrowthCount = 2;
-            SoloRestorationHealingTouch = 50;
-            SoloRestorationLifebloom = 95;
-            SoloRestorationNourish = 50;
-            SoloRestoCustomTank = "";
-            SoloRestorationRemoveCurse = true;
-            SoloRestorationRemovePoison = true;
             GroupRestorationSwiftmend = 60;
             GroupRestorationRegrowth = 80;
             GroupRestorationRejuvenation = 95;

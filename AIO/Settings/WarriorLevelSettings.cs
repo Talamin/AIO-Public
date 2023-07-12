@@ -93,15 +93,11 @@ namespace AIO.Settings
         [Description("Enemycount for Shout?")]
         public int ProtectionShockwaveCount { get; set; }
 
-        [DropdownList(new string[] { "WarriorProtection", "GroupWarriorProtection", "WarriorArms", "WarriorFury" })]
-        public override string ChooseTalent { get; set; }
-
-        [DropdownList(new string[] { nameof(Spec.Auto), nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury), nameof(Spec.Warrior_GroupFury) })]
+        [DropdownList(new string[] { nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury), nameof(Spec.Warrior_GroupFury) })]
         public override string ChooseRotation { get; set; }
 
         public WarriorLevelSettings()
         {
-            ChooseTalent = "WarriorFury";
             PullRanged = true;
             Hamstring = true;
             FuryIntercept = true;

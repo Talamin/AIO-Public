@@ -29,7 +29,7 @@ namespace AIO.Combat.Warlock
                 { Spec.Warlock_GroupAffliction, new GroupAffliction() },
                 { Spec.Warlock_SoloDestruction, new SoloDestruction() },
                 { Spec.Warlock_SoloDemonology, new SoloDemonology() },
-                { Spec.Default, new SoloAffliction() },
+                { Spec.Fallback, new SoloAffliction() },
             },
             new Buffs(),
             new PetAutoTarget("Torment"))

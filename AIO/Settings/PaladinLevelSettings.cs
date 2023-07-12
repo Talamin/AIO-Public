@@ -10,11 +10,7 @@ namespace AIO.Settings
     public class PaladinLevelSettings : BasePersistentSettings<PaladinLevelSettings>
     {
         #region Selectors
-
-        [DropdownList(new string[] { "PaladinRetribution", "PaladinHoly", "GroupPaladinHoly", "PaladinProtection", "GroupPaladinProtection" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("PaladinTriggerDropdown",new string[] { nameof(Spec.Auto), nameof(Spec.Paladin_SoloRetribution), nameof(Spec.Paladin_GroupHoly), nameof(Spec.Paladin_SoloProtection), nameof(Spec.Paladin_GroupProtection), nameof(Spec.Paladin_GroupRetribution) })]
+        [TriggerDropdown("PaladinTriggerDropdown",new string[] { nameof(Spec.Paladin_SoloRetribution), nameof(Spec.Paladin_GroupHoly), nameof(Spec.Paladin_SoloProtection), nameof(Spec.Paladin_GroupProtection), nameof(Spec.Paladin_GroupRetribution) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -556,7 +552,6 @@ namespace AIO.Settings
 
         public PaladinLevelSettings()
         {
-            ChooseTalent = "PaladinRetribution";
             Crusader = false;
             HealOOC = true;
             DivinePleaOOC = true;

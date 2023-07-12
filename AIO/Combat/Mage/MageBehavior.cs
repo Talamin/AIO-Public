@@ -27,7 +27,7 @@ namespace AIO.Combat.Mage
                 { Spec.Mage_SoloArcane, new SoloArcane() },
                 { Spec.Mage_SoloFire, new SoloFire() },
                 { Spec.Mage_GroupFire, new GroupFire() },
-                { Spec.Default, new SoloFrost() },
+                { Spec.Fallback, new SoloFrost() },
             },
             new Buffs(),
             new ConditionalCycleable(() => Settings.Current.Backpaddle,

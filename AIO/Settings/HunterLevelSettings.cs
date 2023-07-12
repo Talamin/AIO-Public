@@ -12,10 +12,7 @@ namespace AIO.Settings
 
         //Lists
         #region Selectors
-        [DropdownList(new string[] { "HunterBeastMastery", "HunterSurvival", "HunterMarksmanship" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("HunterTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Hunter_SoloBeastMastery), nameof(Spec.Hunter_GroupBeastMastery), nameof(Spec.Hunter_SoloSurvival), nameof(Spec.Hunter_SoloMarksmanship) })]
+        [TriggerDropdown("HunterTriggerDropdown", new string[] { nameof(Spec.Hunter_SoloBeastMastery), nameof(Spec.Hunter_GroupBeastMastery), nameof(Spec.Hunter_SoloSurvival), nameof(Spec.Hunter_SoloMarksmanship) })]
         public override string ChooseRotation { get; set; }
         #endregion
         #region General Settings for all specs
@@ -285,7 +282,6 @@ namespace AIO.Settings
 
         public HunterLevelSettings()
         {
-            ChooseTalent = "HunterBeastMastery";
             CombatRange = 29;
             UseMacro = false;
             PetHealth = 80;

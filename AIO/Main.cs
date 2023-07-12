@@ -206,6 +206,13 @@ public class Main : ICustomClass {
         //     Logging.Write(watch.ElapsedMilliseconds.ToString());
         // }
         // 
+        if (!Extension.DefaultRotations.ContainsKey(Me.WowClass))
+        {
+            Logging.WriteError($"ERROR: The default rotations dictionary (Helpers.Extension) doesn't contain an entry for {Me.WowClass}");
+            Products.DisposeProduct();
+            return;
+        }
+
         AIOWOTLKSettings.Load();
         AutoUpdater.CheckUpdate(version);
 

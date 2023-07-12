@@ -2,9 +2,8 @@
 {
     public enum Spec
     {
-        Auto,
         LowLevel,
-        Default,
+        Fallback,
         //DeathKnight
         DK_GroupBloodTank,
         DK_SoloBlood,
@@ -16,7 +15,6 @@
         Druid_GroupRestoration,
         Druid_SoloBalance,
         Druid_SoloFeral,
-        Druid_SoloRestoration,
         // Hunter
         Hunter_GroupBeastMastery,
         Hunter_SoloBeastMastery,

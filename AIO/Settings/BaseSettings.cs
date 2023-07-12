@@ -1,9 +1,12 @@
 ﻿using AIO.Framework;
+using AIO.Lists;
 using MarsSettingsGUI;
+using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
 namespace AIO.Settings
@@ -89,13 +92,6 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue("invalid")]
-        [Category("Talents")]
-        [DisplayName("Talent Tree")]
-        [Description("Choose which Talent Tree you want to learn")]
-        public abstract string ChooseTalent { get; set; }
-
-        [Setting]
-        [DefaultValue("Auto")]
         [Category("Rotation")]
         [DisplayName("Rotation")]
         [Description("Choose which spell rotation you want to execute")]
@@ -114,13 +110,21 @@ namespace AIO.Settings
             AssignTalents = true;
             TalentCodes = new List<string> { };
             UseDefaultTalents = true;
-            ChooseTalent = "invalid";
-            ChooseRotation = "Auto";
+
+            ChooseRotation = Extension.DefaultRotations[ObjectManager.Me.WowClass]; // Default rotation      
         }
 
         protected virtual void OnUpdate()
         {
-            TalentsManager.Set(AssignTalents, UseDefaultTalents, TalentCodes.ToArray(), ChooseTalent);
+            // Check if rotation is incorrect, restore default if so (avoids crash for old users)
+            if (string.IsNullOrEmpty(ChooseRotation) || !Enum.IsDefined(typeof(Spec), ChooseRotation))
+            {
+                string defaultRot = Extension.DefaultRotations[ObjectManager.Me.WowClass];
+                Logging.WriteError($"{ChooseRotation} is not a valid rotation. Assigning default rotation {defaultRot}");
+                ChooseRotation = defaultRot;
+            }
+
+            TalentsManager.Set(AssignTalents, UseDefaultTalents, TalentCodes.ToArray(), (Spec)Enum.Parse(typeof(Spec), ChooseRotation));
             RotationFramework.Setup(framelock: FrameLock, losCreditsPlayers: LoSCreditsPlayers, losCreditsNPCs: LoSCreditsNPCs, scanRange: ScanRange);
             RotationCombatUtil.freeMove = FreeMove;
             RotationFramework.UseSynthetic = UseSyntheticCombatEvents;

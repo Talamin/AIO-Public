@@ -29,7 +29,7 @@ namespace AIO.Combat.Paladin
                 { Spec.Paladin_GroupProtection, new GroupProtection() },
                 { Spec.Paladin_SoloRetribution, new SoloRetribution() },
                 { Spec.Paladin_GroupRetribution, new GroupRetribution() },
-                { Spec.Default, new SoloRetribution() },
+                { Spec.Fallback, new SoloRetribution() },
             },
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(Settings.Current)))

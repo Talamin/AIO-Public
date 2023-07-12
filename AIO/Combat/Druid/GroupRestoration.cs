@@ -46,7 +46,6 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Healing Touch"), 17f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindPartyMember, checkLoS:true),
         };
 
-
         private bool DoPreCalculations()
         {
             if (LimitExecutionSpeed(100))

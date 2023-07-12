@@ -10,11 +10,7 @@ namespace AIO.Settings
     public class RogueLevelSettings : BasePersistentSettings<RogueLevelSettings>
     {
         //Lists
-
-        [DropdownList(new string[] { "RogueCombat", "RogueAssassination", "RogueSubletly" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("RogueTriggerDropdown",new string[] { nameof(Spec.Auto), nameof(Spec.Rogue_SoloCombat), nameof(Spec.Rogue_GroupCombat) })]
+        [TriggerDropdown("RogueTriggerDropdown",new string[] { nameof(Spec.Rogue_SoloCombat), nameof(Spec.Rogue_GroupCombat) })]
         public override string ChooseRotation { get; set; }
 
         [Setting]
@@ -124,8 +120,6 @@ namespace AIO.Settings
 
         public RogueLevelSettings()
         {
-            
-            ChooseTalent = "RogueCombat";
             PullRanged = true;
 
             //SoloCombat

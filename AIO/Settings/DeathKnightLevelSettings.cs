@@ -2,19 +2,13 @@
 using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
-using System.Configuration;
 
 namespace AIO.Settings
 {
     [Serializable]
     public class DeathKnightLevelSettings : BasePersistentSettings<DeathKnightLevelSettings>
     {
-        //Lists
-
-        [DropdownList(new string[] { "DeathKnightBlood", "DeathKnightBloodTank", "DeathKnightFrost", "GroupDeathKnightFrost", "DeathKnightUnholy", "GroupDeathKnightUnholy" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.DK_SoloBlood), nameof(Spec.DK_GroupBloodTank), nameof(Spec.DK_SoloFrost), nameof(Spec.DK_SoloUnholy), "UnholyPVP" })]
+        [TriggerDropdown("DeathKnightTriggerDropdown", new string[] { nameof(Spec.DK_SoloBlood), nameof(Spec.DK_GroupBloodTank), nameof(Spec.DK_SoloFrost), nameof(Spec.DK_SoloUnholy), nameof(Spec.DK_PVPUnholy) })]
         public override string ChooseRotation { get; set; }
 
         //General
@@ -163,7 +157,6 @@ namespace AIO.Settings
 
         public DeathKnightLevelSettings()
         {
-            ChooseTalent = "DeathKnightBlood";
             RaiseDead = true;
             GlyphRaiseDead = false;
             Presence = "BloodPresence";

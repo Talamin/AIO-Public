@@ -10,10 +10,7 @@ namespace AIO.Settings
     public class MageLevelSettings : BasePersistentSettings<MageLevelSettings>
     {
         //Lists
-        [DropdownList(new string[] { "MageFrost", "MageFire", "MageArcane" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("MageTriggerDropdown", new string[] { nameof(Spec.Auto), nameof(Spec.Mage_SoloFrost), nameof(Spec.Mage_GroupFrost), nameof(Spec.Mage_SoloFire), nameof(Spec.Mage_GroupFire), nameof(Spec.Mage_SoloArcane) })]
+        [TriggerDropdown("MageTriggerDropdown", new string[] { nameof(Spec.Mage_SoloFrost), nameof(Spec.Mage_GroupFrost), nameof(Spec.Mage_SoloFire), nameof(Spec.Mage_GroupFire), nameof(Spec.Mage_SoloArcane) })]
         public override string ChooseRotation { get; set; }
 
         //General
@@ -236,7 +233,6 @@ namespace AIO.Settings
 
         public MageLevelSettings()
         {
-            ChooseTalent = "MageFrost";
             Backpaddle = true;
             BackpaddleRange = 20;
             Blink = true;

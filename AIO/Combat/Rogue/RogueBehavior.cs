@@ -25,7 +25,7 @@ namespace AIO.Combat.Rogue
                 { Spec.Rogue_SoloCombat, new SoloCombat() },
                 { Spec.Rogue_GroupCombat, new GroupCombat() },
                 //{"Assassination", new Combat() },
-                { Spec.Default, new SoloCombat() },
+                { Spec.Fallback, new SoloCombat() },
             })
         {
             SetDefaultRange();
