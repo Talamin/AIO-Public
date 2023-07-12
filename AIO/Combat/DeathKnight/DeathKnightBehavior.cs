@@ -1,5 +1,5 @@
 ﻿using AIO.Combat.Common;
-using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ namespace AIO.Combat.DeathKnight
 
         internal DeathKnightBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"SoloBlood", new SoloBlood() },
-                {"GroupBloodTank", new GroupBloodTank() },
-                {"SoloUnholy", new SoloUnholy() },
-                {"SoloFrost", new SoloFrost() },
-                {"UnholyPVP", new UnholyPVP() },
-                {"Default", new SoloBlood() },
+                { Spec.DK_SoloBlood, new SoloBlood() },
+                { Spec.DK_GroupBloodTank, new GroupBloodTank() },
+                { Spec.DK_SoloUnholy, new SoloUnholy() },
+                { Spec.DK_SoloFrost, new SoloFrost() },
+                { Spec.DK_PVPUnholy, new PVPUnholy() },
+                { Spec.Fallback, new SoloBlood() },
             }, new Buffs())
         { }
         private readonly Spell RaiseDead = new Spell("Raise Dead");
@@ -34,7 +34,7 @@ namespace AIO.Combat.DeathKnight
         {
             if (!Pet.IsAlive)
             {
-                if (RaiseDead.IsSpellUsable && RaiseDead.KnownSpell && !Me.IsMounted 
+                if (RaiseDead.IsSpellUsable && RaiseDead.KnownSpell && !Me.IsMounted
                     && Settings.Current.RaiseDead && (ItemsManager.HasItemById(37201) || Settings.Current.GlyphRaiseDead))
                 {
                     RaiseDead.Launch();

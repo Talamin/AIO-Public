@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration;
+using AIO.Lists;
 using MarsSettingsGUI;
 
 namespace AIO.Settings
@@ -10,7 +11,6 @@ namespace AIO.Settings
     {
         public PriestLevelSettings()
         {
-            ChooseTalent = "PriestShadow";
             UseWand = true;
             UseWandTresh = 20;
             UseAutoBuffInt = true;
@@ -284,10 +284,7 @@ namespace AIO.Settings
         [Description("Will remove harmful magic and diseases")]
         public bool HolyDeDeBuff { get; set; }
 
-        [DropdownList(new[] { "PriestShadow", "PriestDiscipline", "PriestHoly" })]
-        public override string ChooseTalent { get; set; }
-
-        [DropdownList(new[] { "Auto", "Shadow", "Discipline", "Holy" })]
+        [DropdownList(new[] { nameof(Spec.Priest_SoloShadow), nameof(Spec.Priest_GroupHoly) })]
         public override string ChooseRotation { get; set; }
     }
 }

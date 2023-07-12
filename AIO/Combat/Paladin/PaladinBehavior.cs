@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using wManager.Wow.Helpers;
@@ -8,6 +9,7 @@ using wManager.Wow.ObjectManager;
 namespace AIO.Combat.Paladin
 {
     using Settings = PaladinLevelSettings;
+
     internal class PaladinBehavior : BaseCombatClass
     {
         private static readonly string crusader = "Crusader Aura";
@@ -19,16 +21,15 @@ namespace AIO.Combat.Paladin
 
         internal PaladinBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"Holy", new Holy() },
-                {"GroupHolyHeal", new GroupHolyHeal() },
-                {"Protection", new Protection() },
-                {"GroupProtectionTank", new GroupProtectionTank() },
-                {"SoloRetribution", new SoloRetribution() },
-                {"GroupRetribution", new GroupRetribution() },
-                {"Default", new SoloRetribution() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Paladin_GroupHoly, new GroupHoly() },
+                { Spec.Paladin_SoloProtection, new SoloProtection() },
+                { Spec.Paladin_GroupProtection, new GroupProtection() },
+                { Spec.Paladin_SoloRetribution, new SoloRetribution() },
+                { Spec.Paladin_GroupRetribution, new GroupRetribution() },
+                { Spec.Fallback, new SoloRetribution() },
             },
             new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(Settings.Current)))
@@ -36,7 +37,8 @@ namespace AIO.Combat.Paladin
             //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
             Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupProtectionTank", new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_GroupProtection, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_SoloProtection || Specialisation == Spec.Paladin_SoloRetribution, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
         }
 
         public override void Initialize()
@@ -45,8 +47,7 @@ namespace AIO.Combat.Paladin
 
             switch (Specialisation)
             {
-                case "Holy":
-                case "GroupHolyHeal":
+                case Spec.Paladin_GroupHoly:
                     DefaultRange = 29.0f;
                     break;
                 default:

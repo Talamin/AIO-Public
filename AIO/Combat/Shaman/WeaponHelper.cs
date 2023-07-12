@@ -1,4 +1,5 @@
 ﻿using AIO.Combat.Common;
+using AIO.Lists;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,7 @@ namespace AIO.Combat.Shaman
     internal class WeaponHelper : ICycleable
     {
         private readonly BaseCombatClass CombatClass;
-        private string Spec => CombatClass.Specialisation;
+        private Spec Spec => CombatClass.Specialisation;
 
         internal WeaponHelper(BaseCombatClass combatClass) => CombatClass = combatClass;
 
@@ -59,7 +60,7 @@ namespace AIO.Combat.Shaman
         {
             switch (Spec)
             {
-                case "SoloEnhancement":
+                case Spec.Shaman_SoloEnhancement:
                     if (!HasMainHandEnchant)
                     {
                         if (WindfuryWeapon.KnownSpell)
@@ -83,7 +84,7 @@ namespace AIO.Combat.Shaman
                         }
                     }
                     break;
-                case "SoloRestoration":
+                case Spec.Shaman_GroupRestoration:
                     if (!HasMainHandEnchant)
                     {
                         if (EarthlivingWeapon.KnownSpell)
@@ -96,13 +97,13 @@ namespace AIO.Combat.Shaman
                         }
                     }
                     break;
-                case "Elemental":
+                case Spec.Shaman_SoloElemental:
                     if (!HasMainHandEnchant)
                     {
                         FlametongueWeapon.Launch();
                     }
                     break;
-                case "LowLevel":
+                case Spec.LowLevel:
                     if (!HasMainHandEnchant)
                     {
                         RockbiterWeapon.Launch();

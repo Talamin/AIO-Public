@@ -1,6 +1,7 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,22 +25,21 @@ namespace AIO.Combat.Druid
 
         internal DruidBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloFeral", new SoloFeral() },
-                {"SoloBalance", new SoloBalance() },
-                {"SoloRestoration", new SoloRestoration() },
-                {"GroupFeralTank", new GroupFeralTank()},
-                {"GroupRestorationHeal", new GroupRestorationHeal() },
-                {"Default", new SoloFeral() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Druid_SoloFeral, new SoloFeral() },
+                { Spec.Druid_SoloBalance, new SoloBalance() },
+                { Spec.Druid_GroupFeralTank, new GroupFeralTank()},
+                { Spec.Druid_GroupRestoration, new GroupRestoration() },
+                { Spec.Fallback, new SoloFeral() },
             },
             new Buffs(),
             new AutoPartyResurrect("Revive"),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.ChooseRotation == "GroupFeralTank", new RangedPull(new List<string> { "Faerie Fire (Feral)" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Druid_GroupFeralTank, new RangedPull(new List<string> { "Faerie Fire (Feral)" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }
 
         public override void Initialize()
@@ -47,11 +47,11 @@ namespace AIO.Combat.Druid
             base.Initialize();
             switch (Specialisation)
             {
-                case "SoloFeral":
-                case "LowLevel":
+                case Spec.Druid_SoloFeral:
+                case Spec.LowLevel:
                     DefaultRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
                     break;
-                case "GroupFeralTank":
+                case Spec.Druid_GroupFeralTank:
                     DefaultRange = 5.0f;
                     break;
                 default:

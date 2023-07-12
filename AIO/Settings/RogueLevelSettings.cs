@@ -1,4 +1,5 @@
-﻿using MarsSettingsGUI;
+﻿using AIO.Lists;
+using MarsSettingsGUI;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -9,11 +10,7 @@ namespace AIO.Settings
     public class RogueLevelSettings : BasePersistentSettings<RogueLevelSettings>
     {
         //Lists
-
-        [DropdownList(new string[] { "RogueCombat", "RogueAssassination", "RogueSubletly" })]
-        public override string ChooseTalent { get; set; }
-
-        [TriggerDropdown("RogueTriggerDropdown",new string[] { "Auto", "SoloCombat"})]
+        [TriggerDropdown("RogueTriggerDropdown",new string[] { nameof(Spec.Rogue_SoloCombat), nameof(Spec.Rogue_GroupCombat) })]
         public override string ChooseRotation { get; set; }
 
         [Setting]
@@ -36,42 +33,42 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Stealth")]
         [Description("Use Stealth?")]
         public bool SoloCombatStealth { get; set; }
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Evasion")]
         [Description("Enemycount for using Evasion?")]
         public int SoloCombatEvasion { get; set; }
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Blade Flurry")]
         [Description("Enemycount for using BladeFlurry?")]
         public int SoloCombatBladeFLurry { get; set; }
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Killing Spree")]
         [Description("Enemycount for using Killing Spree?")]
         public int SoloCombatKillingSpree { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Adrenaline Rush")]
         [Description("Enemycount for using Adrenaline Rush?")]
         public int SoloCombatAdrenalineRush { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "SoloCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_SoloCombat))]
         [DisplayName("Eviscarate")]
         [Description("Combopoints for using Eviscarate?")]
         public int SoloCombatEviscarate { get; set; }
@@ -80,7 +77,7 @@ namespace AIO.Settings
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Evasion")]
         [Description("Enemycount for using Evasion?")]
         public int GroupCombatEvasion { get; set; }
@@ -88,43 +85,41 @@ namespace AIO.Settings
         [DefaultValue(80)]
         [Percentage(true)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Evasion")]
         [Description("Treshhold of own Health for using Evasion?")]
         public int GroupCombatEvasionHealth { get; set; }
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Blade Flurry")]
         [Description("Enemycount for using BladeFlurry?")]
         public int GroupCombatBladeFLurry { get; set; }
 
         [DefaultValue(2)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Killing Spree")]
         [Description("Enemycount for using Killing Spree?")]
         public int GroupCombatKillingSpree { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Adrenaline Rush")]
         [Description("Enemycount for using Adrenaline Rush?")]
         public int GroupCombatAdrenalineRush { get; set; }
 
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("RogueTriggerDropdown", "GroupCombat")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupCombat))]
         [DisplayName("Eviscarate")]
         [Description("Combopoints for using Eviscarate?")]
         public int GroupCombatEviscarate { get; set; }
 
         public RogueLevelSettings()
         {
-            
-            ChooseTalent = "RogueCombat";
             PullRanged = true;
 
             //SoloCombat

@@ -1,14 +1,13 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
 using wManager.Wow.Class;
-using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
@@ -25,14 +24,14 @@ namespace AIO.Combat.Hunter
 
         internal HunterBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloBeastMastery", new SoloBeastMastery() },
-                {"GroupBeastMastery", new GroupBeastMastery() },
-                {"SoloMarksmanship", new SoloMarksmanship() },
-                {"SoloSurvival", new SoloSurvival() },
-                {"Default", new SoloBeastMastery() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Hunter_SoloBeastMastery, new SoloBeastMastery() },
+                { Spec.Hunter_GroupBeastMastery, new GroupBeastMastery() },
+                { Spec.Hunter_SoloMarksmanship, new SoloMarksmanship() },
+                { Spec.Hunter_SoloSurvival, new SoloSurvival() },
+                { Spec.Fallback, new SoloBeastMastery() },
             },
             new Buffs(),
             new PetAutoTarget("Growl"),
@@ -86,7 +85,7 @@ namespace AIO.Combat.Hunter
 
         protected override void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
-            if(ObjectManager.Pet.HealthPercent <= 40 && PetManager.GetPetSpellReady("Cower")
+            if (ObjectManager.Pet.HealthPercent <= 40 && PetManager.GetPetSpellReady("Cower")
                 && PetManager.GetPetSpellCooldown("Cower") <= 0 && ObjectManager.Pet.InCombat)
             {
                 Logging.WriteDebug("Petspell: Cower");
@@ -113,9 +112,9 @@ namespace AIO.Combat.Hunter
             //    PetManager.PetSpellCast("Thunderstomp");
             //}
 
-            if (PetManager.GetPetSpellReady("Bite") 
-                && PetManager.GetPetSpellCooldown("Bite") <= 0 
-                && ObjectManager.Pet.Focus >= 40 
+            if (PetManager.GetPetSpellReady("Bite")
+                && PetManager.GetPetSpellCooldown("Bite") <= 0
+                && ObjectManager.Pet.Focus >= 40
                 && ObjectManager.Pet.Position.DistanceTo(ObjectManager.Target.Position) <= 7)
             {
                 //Logging.WriteDebug("Petspell: Bite");

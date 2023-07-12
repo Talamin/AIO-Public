@@ -1,4 +1,5 @@
 ﻿using AIO.Combat.Common;
+using AIO.Lists;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ internal class TalentsManager : ICycleable
         return _currentRank > 0;
     }
 
-    public static void Set(bool assignTalents, bool useDefaultTalents, string[] customTalentsCodes, string specialisation = null)
+    public static void Set(bool assignTalents, bool useDefaultTalents, string[] customTalentsCodes, Spec specialisation)
     {
         if (!assignTalents)
         {
@@ -32,7 +33,7 @@ internal class TalentsManager : ICycleable
         if (useDefaultTalents)
         {
             SetTalentCodes(specialisation);
-            Main.Log("Your are using the "+ specialisation +" default talents build:");
+            Main.Log($"Your are using the {specialisation} default talents build:");
         }
         else
         {
@@ -50,12 +51,13 @@ internal class TalentsManager : ICycleable
         }
     }
 
-    private static void SetTalentCodes(string specialisation = null)
+    private static void SetTalentCodes(Spec specialisation)
     {
         switch (specialisation)
         {
             // FURY WARRIOR
-            case "WarriorFury":
+            case Spec.Warrior_SoloFury:
+            case Spec.Warrior_GroupFury:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000000305020030000000000000000000000000000000000000000000000",
@@ -69,7 +71,7 @@ internal class TalentsManager : ICycleable
                     "3500200023300000000000000000000305022030504310053120500351000000000000000000000000000"
                 };
                 break;
-
+            /*
             // Prot WARRIOR
             case "WarriorProtection":
                 Codes = new string[]
@@ -85,8 +87,9 @@ internal class TalentsManager : ICycleable
                     "0502000000000000000000000000000305000000000000000000000000053351225000212521330113321"
                 };
                 break;
+            */
             // Prot WARRIOR
-            case "GroupWarriorProtection":
+            case Spec.Warrior_GroupProtection:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000000000000000000000000000000000053350225000012521032113321",
@@ -95,7 +98,7 @@ internal class TalentsManager : ICycleable
                 };
                 break;
             // Arms WARRIOR
-            case "WarriorArms":
+            case Spec.Warrior_SoloArms:
                 Codes = new string[]
                 {
                     "3022032123330100202000000000000000000000000000000000000000000000000000000000000000000",
@@ -107,7 +110,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // BLOOD DEATHKNIGHT
-            case "DeathKnightBlood":
+            case Spec.DK_SoloBlood:
                 Codes = new string[]
                 {
                     "2305020530003303231023101351000000000000000000000000000002302203050030000000000000000000",
@@ -115,7 +118,7 @@ internal class TalentsManager : ICycleable
                 };
                 break;
             // BLOOD DEATHKNIGHT TANK
-            case "DeathKnightBloodTank":
+            case Spec.DK_GroupBloodTank:
                 Codes = new string[]
                 {
                     "0055121533303300201020130300305050500002330100000000000000100000000000000000000000000000",
@@ -123,7 +126,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // Frost DEATHKNIGHT
-            case "DeathKnightFrost":
+            case Spec.DK_SoloFrost:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000320023503422030123000331013510000000000000000000000000000000",
@@ -131,6 +134,7 @@ internal class TalentsManager : ICycleable
                     "0100000000000000000000000000320023503422030123000331013512302003050030000000000000000000"
                 };
                 break;
+                /*
             // Group Frost DEATHKNIGHT
             case "GroupDeathKnightFrost":
                 Codes = new string[]
@@ -139,8 +143,10 @@ internal class TalentsManager : ICycleable
                     "2305000500000000000000000000320053503522030123000331013510000000000000000000000000000000"                    
                 };
                 break;
+                */
             // Unholy DEATHKNIGHT
-            case "DeathKnightUnholy":
+            case Spec.DK_SoloUnholy:
+            case Spec.DK_PVPUnholy:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000000000000000000000000000000002302003320032102000000000000000",
@@ -152,16 +158,18 @@ internal class TalentsManager : ICycleable
                     "2305020500000000000000000000000000000000000000000000000002302003350032152000150003133151"
                 };
                 break;
-            // Group Unholy DEATHKNIGHT
-            case "GroupDeathKnightUnholy":
-                Codes = new string[]
-                {
-                    "0000000000000000000000000000000000000000000000000000000002300303050032152000150013133051",
-                    "0000000000000000000000000000320043500002000000000000000002300303050032152000150013133051"
-                };
-                break;
+            /*
+        // Group Unholy DEATHKNIGHT
+        case "GroupDeathKnightUnholy":
+            Codes = new string[]
+            {
+                "0000000000000000000000000000000000000000000000000000000002300303050032152000150013133051",
+                "0000000000000000000000000000320043500002000000000000000002300303050032152000150013133051"
+            };
+            break;
+            */
             // AFFLICTION WARLOCK
-            case "WarlockAffliction":
+            case Spec.Warlock_SoloAffliction:
                 Codes = new string[]
                 {
                     "033002200100000000000000000000000000000000000000000000000000000000000000000000000",
@@ -176,14 +184,14 @@ internal class TalentsManager : ICycleable
                 };
                 break;
             // AFFLICTION WARLOCK
-            case "GroupWarlockAffliction":
+            case Spec.Warlock_GroupAffliction:
                 Codes = new string[]
                 {
                     "235000203002351025350033115100000000000000000000000000055000005100000000000000000"
                 };
                 break;
             // DEMONOLOGY WARLOCK
-            case "WarlockDemonology":
+            case Spec.Warlock_SoloDemonology:
                 Codes = new string[]
                 {
                     "000000000000000000000000000000320330113520253013300100000000000000000000000000000",
@@ -193,7 +201,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // DESTRUCTION WARLOCK
-            case "WarlockDestruction":
+            case Spec.Warlock_SoloDestruction:
                 Codes = new string[]
                 {
                     "000000000000000000000000000000000000000000000000000000005000000000000000000000000",
@@ -204,7 +212,8 @@ internal class TalentsManager : ICycleable
                 break;
 
             // BM HUNTER
-            case "HunterBeastMastery":
+            case Spec.Hunter_SoloBeastMastery:
+            case Spec.Hunter_GroupBeastMastery:
                 Codes = new string[]
                 {
                     "050002000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -216,7 +225,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // MS HUNTER
-            case "HunterMarksmanship":
+            case Spec.Hunter_SoloMarksmanship:
                 Codes = new string[]
                 {
                     "000000000000000000000000000320050312300000000000000000000000000000000000000000000",
@@ -232,7 +241,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // SURVIVAL HUNTER
-            case "HunterSurvival":
+            case Spec.Hunter_SoloSurvival:
                 Codes = new string[]
                 {
                     "000000000000000000000000000000000000000000000000000005000032500033330523134301331",
@@ -242,7 +251,8 @@ internal class TalentsManager : ICycleable
 
 
             // COMBAT ROGUE
-            case "RogueCombat":
+            case Spec.Rogue_SoloCombat:
+            case Spec.Rogue_GroupCombat:
                 Codes = new string[]
                 {
                     "00000000000000000000000000002303201000000000000000000000000000000000000000000000000",
@@ -259,7 +269,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // ASSA ROGUE
-            case "RogueAssassination":
+            case Spec.Rogue_SoloAssassination:
                 Codes = new string[]
                 {
                     //"00532300535010052010333105100000000000000000000000000000000000000000000000000000000",
@@ -277,22 +287,22 @@ internal class TalentsManager : ICycleable
                     "32500010504000000000000000002523521000150102231005212510000000000000000000000000000"
                 };
                 break;
+            /*
+        // SUB ROGUE
+        case "RogueSublety":
+            Codes = new string[]
+            {
+                "00000000000000000000000000000000000000000000000000000005020232010322120150135031251",
+                "00530310000000000000000000000000000000000000000000000005020232010322120150135031251",
+                "00532310000000000000000000000000000000000000000000000005020232010322120150135031251",
+                "00532310000000000000000000000000000000000000000000000005020232010322120350135231251",
+                "00532310000000000000000000000000000000000000000000000005020232020322120350135231251"
 
-            // SUB ROGUE
-            case "RogueSublety":
-                Codes = new string[]
-                {
-                    "00000000000000000000000000000000000000000000000000000005020232010322120150135031251",
-                    "00530310000000000000000000000000000000000000000000000005020232010322120150135031251",
-                    "00532310000000000000000000000000000000000000000000000005020232010322120150135031251",
-                    "00532310000000000000000000000000000000000000000000000005020232010322120350135231251",
-                    "00532310000000000000000000000000000000000000000000000005020232020322120350135231251"
-
-                };
-                break;
-
+            };
+            break;
+            */
             // ENHANCEMENT SHAMAN
-            case "ShamanEnhancement":
+            case Spec.Shaman_SoloEnhancement:
                 Codes = new string[]
                 {
                     "00000000000000000000000003020500010000000000000000000000000000000000000000000000",
@@ -312,7 +322,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // ELE SHAMAN
-            case "ShamanElemental":
+            case Spec.Shaman_SoloElemental:
                 Codes = new string[]
                 {
                     "35300015032133513223013510000000000000000000000000000000000000000000000000000000",
@@ -322,7 +332,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // RESTO SHAMAN
-            case "ShamanRestoration":
+            case Spec.Shaman_GroupRestoration:
                 Codes = new string[]
                 {
                     "00000000000000000000000000000000000000000000000000000050005301300000000000000000",
@@ -335,7 +345,8 @@ internal class TalentsManager : ICycleable
                 break;
 
             // FERAL DRUID
-            case "DruidFeral":
+            case Spec.Druid_SoloFeral:
+            case Spec.Druid_GroupFeralTank:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000500200000000000000000000000000000000000000000000000000000",
@@ -356,7 +367,7 @@ internal class TalentsManager : ICycleable
 
 
             // BALANCE DRUID
-            case "DruidBalance":
+            case Spec.Druid_SoloBalance:
                 Codes = new string[]
                 {
                     "5002000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -372,25 +383,8 @@ internal class TalentsManager : ICycleable
                 };
                 break;
 
-
-            // RESTO DRUID
-            case "DruidRestoration":
-                Codes = new string[]
-                {
-                    "0000000000000000000000000000000000000000000000000000000000230033310030000000000000000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312030000000000000000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312031400530000000000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312031500531000000000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312031500531003000000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312031500531053013000",
-                    "0000000000000000000000000000000000000000000000000000000000230033312031500531053313051",
-                    "0532000100000000000000000000000000000000000000000000000000230033312031500531053313051",
-                    "0532000100000000000000000000000000000000000000000000000000230033312031502531253313051"
-                };
-                break;
-
             // Groupo RESTO DRUID
-            case "GroupDruidRestoration":
+            case Spec.Druid_GroupRestoration:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000000000000000000000000000000000230033310030000000000000000",
@@ -402,7 +396,8 @@ internal class TalentsManager : ICycleable
                 break;
 
             // FROST MAGE
-            case "MageFrost":
+            case Spec.Mage_SoloFrost:
+            case Spec.Mage_GroupFrost:
                 Codes = new string[]
                 {
                     "00000000000000000000000000000000000000000000000000000000000503020010000000000000000000",
@@ -421,7 +416,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // ARCANE MAGE
-            case "MageArcane":
+            case Spec.Mage_SoloArcane:
                 Codes = new string[]
                 {
                     "23500503110023015032310250532100000000000000000000000000000000000000000000000000000000",
@@ -431,7 +426,8 @@ internal class TalentsManager : ICycleable
                 break;
 
             // FIRE MAGE
-            case "MageFire":
+            case Spec.Mage_SoloFire:
+            case Spec.Mage_GroupFire:
                 Codes = new string[]
                 {
                     "00000000000000000000000000000000550300023000000000000000000000000000000000000000000000",
@@ -447,7 +443,8 @@ internal class TalentsManager : ICycleable
 
 
             // RETRIBUTION PALADIN
-            case "PaladinRetribution":
+            case Spec.Paladin_SoloRetribution:
+            case Spec.Paladin_GroupRetribution:
                 Codes = new string[]
                 {
                     "000000000000000000000000000000000000000000000000000005230041003231000000000000",
@@ -462,7 +459,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // PROTECTION PALADIN
-            case "PaladinProtection":
+            case Spec.Paladin_SoloProtection:
                 Codes = new string[]
                 {
                     "000000000000000000000000000500513120310000000000000000000000000000000000000000",
@@ -477,7 +474,7 @@ internal class TalentsManager : ICycleable
                 };
                 break;
             // Group PROTECTION PALADIN
-            case "GroupPaladinProtection":
+            case Spec.Paladin_GroupProtection:
                 Codes = new string[]
                 {
                     "000000000000000000000000000500513520013231133331230100000000000000000000000000",
@@ -485,6 +482,7 @@ internal class TalentsManager : ICycleable
                 };
                 break;
             // HOLY PALADIN
+            /*
             case "PaladinHoly":
                 Codes = new string[]
                 {
@@ -493,14 +491,15 @@ internal class TalentsManager : ICycleable
                     "503501510200130531005152215000000000000000000000000005032050000000000000000000"
                 };
                 break;
-            case "GroupPaladinHoly":
+            */
+            case Spec.Paladin_GroupHoly:
                 Codes = new string[]
                 {
                     "503501520200130531005152205032010420300000000000000000000000000000000000000000",                    
                 };
-                break;                
+                break;
             // SHADOW PRIEST
-            case "PriestShadow":
+            case Spec.Priest_SoloShadow:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000000000000000000000000000000300000000000000000000000000",
@@ -518,7 +517,7 @@ internal class TalentsManager : ICycleable
                 break;
 
             // HOLY PRIEST
-            case "PriestHoly":
+            case Spec.Priest_GroupHoly:
                 Codes = new string[]
                 {
                     "0000000000000000000000000000032050030000000000000000000000000000000000000000000000",
@@ -529,7 +528,7 @@ internal class TalentsManager : ICycleable
                     "0503203100000000000000000000235050032302152530000331351000000000000000000000000000"
                 };
                 break;
-
+                /*
             // DISCI PRIEST
             case "PriestDiscipline":
                 Codes = new string[]
@@ -538,8 +537,13 @@ internal class TalentsManager : ICycleable
                     "0503203130300512331323231251005501030000000000000000000000000000000000000000000000"
                 };
                 break;
-
+                */
             default:
+                Logging.WriteError($"WARNING: No talent code for {specialisation}");
+                Codes = new string[]
+                {
+                    ""
+                };
                 break;
         }
     }

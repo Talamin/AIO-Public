@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -18,13 +19,13 @@ namespace AIO.Combat.Rogue
 
         internal RogueBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloCombat", new SoloCombat() },
-                {"GroupCombat", new GroupCombat() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Rogue_SoloCombat, new SoloCombat() },
+                { Spec.Rogue_GroupCombat, new GroupCombat() },
                 //{"Assassination", new Combat() },
-                {"Default", new SoloCombat() },
+                { Spec.Fallback, new SoloCombat() },
             })
         {
             SetDefaultRange();

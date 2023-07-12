@@ -14,12 +14,12 @@ using static AIO.Constants;
 namespace AIO.Combat.Druid
 {
     using Settings = DruidLevelSettings;
-    internal class GroupRestorationHeal : BaseRotation
+    internal class GroupRestoration : BaseRotation
     {
         private static WoWUnit _tank;
         private List<WoWPlayer> _hurtPartyMembers = new List<WoWPlayer>(0);
         private Stopwatch watch = Stopwatch.StartNew();
-        public GroupRestorationHeal() : base(runInCombat: true, runOutsideCombat: false, useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
+        public GroupRestoration() : base(runInCombat: true, runOutsideCombat: false, useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             //Pre Calculations
@@ -45,7 +45,6 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Healing Touch"), 16f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindTank, checkLoS:true),
             new RotationStep(new RotationSpell("Healing Touch"), 17f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindPartyMember, checkLoS:true),
         };
-
 
         private bool DoPreCalculations()
         {

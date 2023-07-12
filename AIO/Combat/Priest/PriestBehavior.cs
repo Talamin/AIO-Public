@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 
@@ -12,17 +13,17 @@ namespace AIO.Combat.Priest
 
         internal PriestBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"Holy", new Holy() },
-                {"Shadow", new Shadow() },
-                {"Default", new Shadow() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Priest_GroupHoly, new GroupHoly() },
+                { Spec.Priest_SoloShadow, new SoloShadow() },
+                { Spec.Fallback, new SoloShadow() },
             } , 
             new AutoPartyResurrect("Resurrection"),
             new Buffs())
         {
-            Addons.Add(new ConditionalCycleable(() => Specialisation == "Holy" || Specialisation == "Shadow", new SlowLuaCaching()));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Priest_GroupHoly || Specialisation == Spec.Priest_SoloShadow, new SlowLuaCaching()));
         }
     }
 }

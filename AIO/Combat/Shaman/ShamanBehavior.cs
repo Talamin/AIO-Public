@@ -1,6 +1,7 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
@@ -22,13 +23,13 @@ namespace AIO.Combat.Shaman
 
         internal ShamanBehavior() : base(
             Settings.Current,
-            new Dictionary<string, BaseRotation>
+            new Dictionary<Spec, BaseRotation>
             {
-                {"LowLevel", new LowLevel() },
-                {"SoloElemental", new SoloElemental() },
-                {"SoloRestoration", new SoloRestoration() },
-                {"SoloEnhancement", new SoloEnhancement() },
-                {"Default", new SoloEnhancement() },
+                { Spec.LowLevel, new LowLevel() },
+                { Spec.Shaman_SoloElemental, new SoloElemental() },
+                { Spec.Shaman_GroupRestoration, new GroupRestoration() },
+                { Spec.Shaman_SoloEnhancement, new SoloEnhancement() },
+                { Spec.Fallback, new SoloEnhancement() },
             }, new AutoPartyResurrect("Ancestral Spirit"),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
         {
@@ -44,13 +45,13 @@ namespace AIO.Combat.Shaman
 
             switch (Specialisation)
             {
-                case "SoloEnhancement":
+                case Spec.Shaman_SoloEnhancement:
                     CombatRange = 5.0f;
                     break;
-                case "SoloElemental":
+                case Spec.Shaman_SoloElemental:
                     CombatRange = 24.0f;
                     break;
-                case "LowLevel":
+                case Spec.LowLevel:
                     CombatRange = 25.0f;
                     break;
                 default:
