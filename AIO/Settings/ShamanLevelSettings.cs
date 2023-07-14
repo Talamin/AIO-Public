@@ -248,7 +248,7 @@ namespace AIO.Settings
         public ShamanLevelSettings()
         {
             HealOOC = true;
-            UseGhostWolf = true;
+            UseGhostWolf = false;
             SoloEnhancementEnemyHPSkipHealing = 10;
             SoloEnhancementUseFireNova = 5;
             CureToxin = "None";
