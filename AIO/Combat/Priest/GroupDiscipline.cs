@@ -24,11 +24,11 @@ namespace AIO.Combat.Priest
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Power Word: Shield"), 2f, (action,tank)  => !tank.CHaveBuff("Power Word: Shield") && tank.InCombat, RotationCombatUtil.FindTank, checkLoS: true),
-            new RotationStep(new RotationSpell("Power Word: Shield"), 2.1f, (action,me)  => !me.CHaveBuff("Power Word: Shield") && me.CHealthPercent() < 100, RotationCombatUtil.FindTank, checkLoS: true),
+            new RotationStep(new RotationSpell("Power Word: Shield"), 2.1f, (action,me)  => !me.CHaveBuff("Power Word: Shield") && me.CHealthPercent() < 100, RotationCombatUtil.FindMe, checkLoS: true),
             new RotationStep(new RotationSpell("Power Word: Shield"), 2.2f, (s,t) => t.CHaveBuff("Power Word: Shield") && t.CHealthPercent() <= 80, RotationCombatUtil.FindPartyMember, checkLoS: true),
             //Heal Over Time
             new RotationStep(new RotationSpell("Renew"), 3f, (action,tank)  => !tank.CHaveMyBuff("Renew") && tank.CHealthPercent() <= 99, RotationCombatUtil.FindTank, checkLoS: true),
-            new RotationStep(new RotationSpell("Renew"), 3.1f, (action,me)  => !me.CHaveMyBuff("Renew") && me.CHealthPercent() <= 99, RotationCombatUtil.FindTank, checkLoS: true),
+            new RotationStep(new RotationSpell("Renew"), 3.1f, (action,me)  => !me.CHaveMyBuff("Renew") && me.CHealthPercent() <= 99, RotationCombatUtil.FindMe, checkLoS: true),
             new RotationStep(new RotationSpell("Renew"), 3.2f, (s,t) => t.CHaveMyBuff("Renew") && t.CHealthPercent() <= 99, RotationCombatUtil.FindPartyMember, checkLoS: true),
             //Prayer of Mending
             new RotationStep(new RotationSpell("Prayer of Mending"), 3.5f, (action,tank) => 
