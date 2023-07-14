@@ -45,6 +45,13 @@ namespace AIO.Settings
         public bool RebirthAuto { get; set; }
 
         [Setting]
+        [DefaultValue(true)]
+        [Category("General")]
+        [DisplayName("Revive")]
+        [Description("Use Revive on dead targets?")]
+        public bool ReviveAuto { get; set; }
+
+        [Setting]
         [DefaultValue(40)]
         [Category("General")]
         [VisibleWhenDropdownValue("DruidTriggerDropdown", "General")]
@@ -383,6 +390,7 @@ namespace AIO.Settings
             SoloBalanceUseStarfall = true;
             SoloBalanceAOETargets = 4;
             RebirthAuto = true;
+            ReviveAuto = true;
             SoloBalanceHealingTouch = 10;
             SoloBalanceRegrowth = 60;
             SoloBalanceRejuvenation = 30;

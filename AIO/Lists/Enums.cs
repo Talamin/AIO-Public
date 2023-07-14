@@ -33,6 +33,7 @@
         Paladin_SoloProtection,
         Paladin_SoloRetribution,
         // Priest
+        Priest_GroupDiscipline,
         Priest_GroupHoly,
         Priest_SoloShadow,
         // Rogue

@@ -498,6 +498,12 @@ internal class TalentsManager : ICycleable
                     "503501520200130531005152205032010420300000000000000000000000000000000000000000",                    
                 };
                 break;
+            case Spec.Priest_GroupDiscipline:
+                Codes = new string[]
+                {
+                    "0503203130300512331323231251205310030000000000000000000000000000000000000000000000",
+                };
+                break;
             // SHADOW PRIEST
             case Spec.Priest_SoloShadow:
                 Codes = new string[]

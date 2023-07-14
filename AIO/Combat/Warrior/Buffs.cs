@@ -18,7 +18,7 @@ namespace AIO.Combat.Warrior
         }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new RotationBuff("Vigilance"), 1f, RotationCombatUtil.Always, RotationCombatUtil.FindHeal),
+            new RotationStep(new RotationBuff("Vigilance"), 1f,(s,t) => !t.HaveBuff("Vigilance"), RotationCombatUtil.FindHeal),
             new RotationStep(new RotationBuff("Battle Shout"), 2f, (s,t) => !t.HaveBuff("Greater Blessing of Might"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Defensive Stance"), 3f, (s,t) => Spec == Spec.Warrior_GroupProtection, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Battle Stance"), 4f, (s,t) => Spec == Spec.Warrior_SoloArms || (Spec == Spec.Warrior_SoloFury && !KnowStance), RotationCombatUtil.FindMe),
