@@ -35,7 +35,7 @@ namespace AIO.Combat.Druid
                 { Spec.Fallback, new SoloFeral() },
             },
             new Buffs(),
-            new AutoPartyResurrect("Revive"),
+            new AutoPartyResurrect("Revive", true, Settings.Current.ReviveAuto),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {
             Addons.Add(new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()));

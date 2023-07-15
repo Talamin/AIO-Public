@@ -17,6 +17,7 @@ namespace AIO.Combat.Priest
             {
                 { Spec.LowLevel, new LowLevel() },
                 { Spec.Priest_GroupHoly, new GroupHoly() },
+                { Spec.Priest_GroupDiscipline, new GroupDiscipline() },
                 { Spec.Priest_SoloShadow, new SoloShadow() },
                 { Spec.Fallback, new SoloShadow() },
             } , 

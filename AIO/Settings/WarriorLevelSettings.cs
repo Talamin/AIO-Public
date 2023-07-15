@@ -9,6 +9,13 @@ namespace AIO.Settings
     [Serializable]
     public class WarriorLevelSettings : BasePersistentSettings<WarriorLevelSettings>
     {
+
+        #region Lists
+        [TriggerDropdown("WarriorTriggerDropdown", new string[] { nameof(Spec.Warrior_GroupFury), nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury) })]
+        public override string ChooseRotation { get; set; }
+        #endregion
+
+        #region General
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
@@ -18,98 +25,127 @@ namespace AIO.Settings
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Fury")]
-        [DisplayName("Intercept")]
-        [Description("Should we use Intercept?")]
-        public bool FuryIntercept { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Protection")]
-        [DisplayName("Intercept")]
-        [Description("Should we use Intercept?")]
-        public bool ProtectionIntercept { get; set; }
-
-        [Setting]
-        [DefaultValue(65)]
-        [Category("Protection")]
-        [DisplayName("Enraged Regeneration")]
-        [Description("Treshhold for Warrior HP, when to use ER")]
-        public int ProtectionEnragedRegeneration { get; set; }
-
-        [Setting]
-        [DefaultValue(2)]
-        [Category("Protection")]
-        [DisplayName("Shield Block")]
-        [Description("Enemycount to use Block Wall")]
-        public int ProtectionShieldBlock { get; set; }
-
-        [Setting]
-        [DefaultValue(3)]
-        [Category("Protection")]
-        [DisplayName("Shield Wall")]
-        [Description("Enemycount to use Shield Wall")]
-        public int ProtectionShieldWall { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Protection")]
-        [DisplayName("Taunt")]
-        [Description("Should we use Taunt in  Group?")]
-        public bool ProtectionTauntGroup { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Fight")]
+        [Category("General")]
         [DisplayName("Ranged Pull")]
         [Description("Should we use ranged pull when we have ranged weapon?")]
         public bool PullRanged { get; set; }
 
-        [Setting]
-        [DefaultValue(3)]
-        [Category("Protection")]
-        [DisplayName("Cleave Count")]
-        [Description("Enemycount to use Cleave")]
-        public int ProtectionCleaveCount { get; set; }
+        #endregion
+
+        #region GroupProtection
 
         [Setting]
-        [DefaultValue(30)]
-        [Category("Protection")]
-        [DisplayName("Cleave Count")]
-        [Description("Ragecount to use Cleave")]
-        public int ProtectionCleaveRageCount { get; set; }
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Intercept")]
+        [Description("Should we use Intercept?")]
+        public bool GroupProtectionIntercept { get; set; }
 
         [Setting]
-        [DefaultValue(1)]
-        [Category("Protection")]
-        [DisplayName("Demoralizing Shout")]
-        [Description("Enemycount for Shout?")]
-        public int ProtectionDemoralizingCount { get; set; }
+        [DefaultValue(65)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Enraged Regeneration")]
+        [Description("Treshhold for Warrior HP, when to use ER")]
+        public int GroupProtectionEnragedRegeneration { get; set; }
 
         [Setting]
         [DefaultValue(2)]
-        [Category("Protection")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Shield Block")]
+        [Description("Enemycount to use Block Wall")]
+        public int GroupProtectionShieldBlock { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Shield Wall")]
+        [Description("Enemycount to use Shield Wall")]
+        public int GroupProtectionShieldWall { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Taunt")]
+        [Description("Should we use Taunt in  Group?")]
+        public bool GroupProtectionTauntGroup { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Cleave Count")]
+        [Description("Enemycount to use Cleave")]
+        public int GroupProtectionCleaveCount { get; set; }
+
+        [Setting]
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Cleave Count")]
+        [Description("Ragecount to use Cleave")]
+        public int GroupProtectionCleaveRageCount { get; set; }
+
+        [Setting]
+        [DefaultValue(1)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
+        [DisplayName("Demoralizing Shout")]
+        [Description("Enemycount for Shout?")]
+        public int GroupProtectionDemoralizingCount { get; set; }
+
+        [Setting]
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupProtection))]
         [DisplayName("Shockwave")]
         [Description("Enemycount for Shout?")]
-        public int ProtectionShockwaveCount { get; set; }
+        public int GroupProtectionShockwaveCount { get; set; }
 
-        [DropdownList(new string[] { nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury), nameof(Spec.Warrior_GroupFury) })]
-        public override string ChooseRotation { get; set; }
+        #endregion
+
+        #region SoloFury
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloFury))]
+        [DisplayName("Intercept")]
+        [Description("Should we use Intercept?")]
+        public bool SoloFuryIntercept { get; set; }
+        #endregion
+
+        #region GroupFury
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupFury))]
+        [DisplayName("Intercept")]
+        [Description("Should we use Intercept?")]
+        public bool GroupFuryIntercept { get; set; }
+        #endregion
 
         public WarriorLevelSettings()
         {
             PullRanged = true;
             Hamstring = true;
-            FuryIntercept = true;
-            ProtectionIntercept = true;
-            ProtectionShieldBlock = 2;
-            ProtectionShieldWall = 3;
-            ProtectionCleaveCount = 3;
-            ProtectionCleaveRageCount = 30;
-            ProtectionDemoralizingCount = 1;
-            ProtectionTauntGroup = true;
-            ProtectionShockwaveCount = 2;
-            ProtectionEnragedRegeneration = 65;
+            //GroupFury
+            GroupFuryIntercept = true;
+            //SoloFury
+            SoloFuryIntercept = true;
+            //GroupProtection
+            GroupProtectionIntercept = true;
+            GroupProtectionShieldBlock = 2;
+            GroupProtectionShieldWall = 3;
+            GroupProtectionCleaveCount = 3;
+            GroupProtectionCleaveRageCount = 30;
+            GroupProtectionDemoralizingCount = 1;
+            GroupProtectionTauntGroup = true;
+            GroupProtectionShockwaveCount = 2;
+            GroupProtectionEnragedRegeneration = 65;
         }
     }
 }

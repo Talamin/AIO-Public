@@ -309,6 +309,7 @@
     <Compile Include="Combat\Paladin\GroupRetribution.cs" />
     <Compile Include="Combat\Paladin\SoloRetribution.cs" />
     <Compile Include="Combat\Priest\Buffs.cs" />
+    <Compile Include="Combat\Priest\GroupDiscipline.cs" />
     <Compile Include="Combat\Priest\GroupHoly.cs" />
     <Compile Include="Combat\Priest\LowLevel.cs" />
     <Compile Include="Combat\Priest\PriestBehavior.cs" />
