@@ -24,7 +24,8 @@ namespace AIO.Combat.Warrior
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Charge"), 1.5f, (s,t) => Settings.Current.GroupFuryCharge && t.CGetDistance() > 7, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Charge"), 1.5f, (s,t) => Settings.Current.GroupFuryCharge && t.CGetDistance() > 7 && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Intercept"), 1.5f, (s,t) => Settings.Current.GroupFuryIntercept && t.CGetDistance() > 7 && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Pummel"), 2f, (s,t) => t.CIsCast(), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Whirlwind"), 2.3f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Slam"), 2.5f, (s,t) => Me.CHaveBuff("Slam!"), RotationCombatUtil.BotTargetFast),
