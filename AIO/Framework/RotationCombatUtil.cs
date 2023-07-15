@@ -29,7 +29,8 @@ namespace AIO.Framework {
             "Hurricane",
             "Flamestrike",
             "Distract",
-            "Force of Nature"
+            "Force of Nature",
+            "Shadowfury"
         };
 
         public static bool freeMove = false;
