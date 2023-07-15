@@ -39,7 +39,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Thunder Clap"), 14f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Whirlwind"), 15f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Cleave"), 16f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Enraged Regeneration"), 17f, (s,t) => Me.HealthPercent < 40 && (Me.HaveBuff("Berserker Rage") || ), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Enraged Regeneration"), 17f, (s,t) => Me.HealthPercent < 40 && (Me.HaveBuff("Berserker Rage") || Me.HaveBuff("Bloodrage")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heroic Strike"), 18f, (s,t) => Me.CRage() > 40, RotationCombatUtil.BotTarget),
         };
         private bool DoPreCalculations()
