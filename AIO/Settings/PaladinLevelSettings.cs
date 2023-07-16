@@ -246,6 +246,14 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", nameof(Spec.Paladin_GroupRetribution))]
+        [DisplayName("Purify")]
+        [Description("Allow Purify on GroupMember?")]
+        public bool GroupRetributionPurifyMember { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
         [DisplayName("Sacred Shield")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", nameof(Spec.Paladin_GroupRetribution))]
         [Description("Allow the Use of Sacredshield")]
@@ -594,6 +602,7 @@ namespace AIO.Settings
             GroupRetributionHammerofJustice = true;
             GroupRetributionHOR = true;
             GroupRetributionPurify = true;
+            GroupRetributionPurifyMember = true;
             GroupRetributionSShield = true;
             GroupRetributionLayOnHands = true;
             GroupRetributionJudgementofWisdomSpam = false;
