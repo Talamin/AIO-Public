@@ -247,7 +247,7 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", nameof(Spec.Paladin_GroupRetribution))]
-        [DisplayName("Purify")]
+        [DisplayName("Purify for Group")]
         [Description("Allow Purify on GroupMember?")]
         public bool GroupRetributionPurifyMember { get; set; }
 
