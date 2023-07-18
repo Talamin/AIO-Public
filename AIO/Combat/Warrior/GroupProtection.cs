@@ -32,13 +32,9 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Enraged Regeneration"), 2.151f, RotationCombatUtil.Always, _ => Me.CHealthPercent() <= Settings.Current.GroupProtectionEnragedRegeneration && Me.CHaveBuff("Bloodrage") && Me.CBuffTimeLeft("Bloodrage") <= 2000, RotationCombatUtil.FindMe, checkRange: false),
 
             new RotationStep(new RotationSpell("Intercept"), 2.16f, (s,t) => Settings.Current.GroupProtectionIntercept && t.CGetDistance() > 8
-            && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Intercept"), 2.161f, (s,t) => Settings.Current.GroupProtectionIntercept && t.CGetDistance() > 8
-            && t.CIsTargetingMeOrMyPetOrPartyMember() && !t.CIsTargetingMe(), RotationCombatUtil.BotTargetFast, checkLoS: true),
+                && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7) && t.CIsTargetingMeOrMyPetOrPartyMember() && !t.CIsTargetingMe(), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Charge"), 2.17f, (s,t) => Settings.Current.GroupProtectionIntercept && t.CGetDistance() > 8
-            && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Charge"), 2.171f, (s,t) => Settings.Current.GroupProtectionIntercept && t.CGetDistance() > 8
-            && t.CIsTargetingMeOrMyPetOrPartyMember() && !t.CIsTargetingMe(), RotationCombatUtil.BotTargetFast, checkLoS: true),
+                && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7)&& t.CIsTargetingMeOrMyPetOrPartyMember() && !t.CIsTargetingMe(), RotationCombatUtil.BotTargetFast, checkLoS: true),
 
             new RotationStep(new RotationSpell("Thunder Clap"), 2.18f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(unit => unit.CGetDistance() < 8 && !unit.CHaveMyBuff("Thunder Clap")), RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Shield Bash"), 2.19f, (s,t) => t.CCanInterruptCasting(), RotationCombatUtil.BotTargetFast),
