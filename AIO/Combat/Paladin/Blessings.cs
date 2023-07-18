@@ -40,6 +40,8 @@ namespace AIO.Combat.Paladin
         private bool HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
         private bool HaveShaman = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Shaman) != 0;
 
+        private bool SeenManaSpringTotem = false;
+
         internal Blessings(BaseCombatClass combatClass) : base(runInCombat: true, runOutsideCombat: true) => CombatClass = combatClass;
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
@@ -75,6 +77,7 @@ namespace AIO.Combat.Paladin
             KnowKings = SpellManager.KnowSpell(Kings);
             HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
             HaveShaman = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Shaman) != 0;
+            
             if (Me.IsInGroup)
             {
                 if ((String.IsNullOrEmpty(RotationFramework.TankName) || String.IsNullOrEmpty(RotationFramework.HealName)))
@@ -85,7 +88,13 @@ namespace AIO.Combat.Paladin
                 }
                 foreach (WoWPlayer player in RotationFramework.PartyMembers)
                 {
-                    //if (!PlayerBuff.ContainsKey(player.Name) || String.IsNullOrEmpty(PlayerBuff[player.Name]))
+                    if (HaveShaman && !SeenManaSpringTotem)
+                    {
+                        if (player.CHaveBuff(ManaSpring) || player.CHaveBuff(ManaSpring2))
+                        {
+                            SeenManaSpringTotem = true;
+                        }
+                     }   
                     PlayerBuff[player.Name] = GetBuff(player);
                 }
             }
@@ -152,7 +161,7 @@ namespace AIO.Combat.Paladin
             if (KnowKings && (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings))) return Kings;
             if (!player.CHaveBuff(BattleShout) && !HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary))) return Sanctuary;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !SeenManaSpringTotem) return Wisdom;
             else
                 return "";
         }
@@ -160,7 +169,7 @@ namespace AIO.Combat.Paladin
         private string GetCasterBuff(WoWUnit player)
         {
             if (KnowKings && (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings))) return Kings;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !SeenManaSpringTotem) return Wisdom;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary))) return Sanctuary;
             if (!player.CHaveBuff(BattleShout) && !HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
             else
@@ -169,7 +178,7 @@ namespace AIO.Combat.Paladin
 
         private string GetHealerBuff(WoWUnit player)
         {
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !SeenManaSpringTotem) return Wisdom;
             if (KnowKings && (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings))) return Kings;
             if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary))) return Sanctuary;
             if (!player.CHaveBuff(BattleShout) && !HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
@@ -179,10 +188,10 @@ namespace AIO.Combat.Paladin
 
         private string GetTankBuff(WoWUnit player)
         {
-            if (KnowSanctuary && (!player.CHaveBuff(Sanctuary) || !player.CHaveBuff(ManaSpring) || !player.CHaveBuff(ManaSpring2))) return Sanctuary;
+            if (KnowSanctuary && !player.CHaveBuff(Sanctuary) || player.CHaveMyBuff(Sanctuary)) return Sanctuary;
             if (KnowKings && (!player.CHaveBuff(Kings) || player.CHaveMyBuff(Kings))) return Kings;
             if (!player.CHaveBuff(BattleShout) && !HaveWarrior && (!player.CHaveBuff(Might) || player.CHaveMyBuff(Might))) return Might;
-            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !player.CHaveBuff(ManaSpring) && !player.CHaveBuff(ManaSpring2)) return Wisdom;
+            if ((!player.CHaveBuff(Wisdom) || player.CHaveMyBuff(Wisdom)) && !SeenManaSpringTotem) return Wisdom;
             else
                 return "";
         }
