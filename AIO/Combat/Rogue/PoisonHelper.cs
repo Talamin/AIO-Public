@@ -57,12 +57,12 @@ namespace AIO.Combat.Rogue
             return hasWeapon");
 
 
-        private static IEnumerable<uint> MP => DeadlyPoisonDictionary
+        private static IEnumerable<uint> MP => InstantPoisonDictionary
             .Where(i => i.Key <= Me.Level && ItemsManager.HasItemById(i.Value))
             .OrderByDescending(i => i.Key)
             .Select(i => i.Value);
 
-        private static IEnumerable<uint> OP => InstantPoisonDictionary
+        private static IEnumerable<uint> OP => DeadlyPoisonDictionary
             .Where(i => i.Key <= Me.Level && ItemsManager.HasItemById(i.Value))
             .OrderByDescending(i => i.Key)
             .Select(i => i.Value);
