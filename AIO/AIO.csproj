@@ -323,6 +323,7 @@
     <Compile Include="Combat\Shaman\Buffs.cs" />
     <Compile Include="Combat\Shaman\SoloElemental.cs" />
     <Compile Include="Combat\Shaman\HealOOC.cs" />
+    <Compile Include="Combat\Shaman\GroupEnhancement.cs" />
     <Compile Include="Combat\Shaman\WeaponHelper.cs" />
     <Compile Include="Combat\Shaman\SoloEnhancement.cs" />
     <Compile Include="Combat\Shaman\LowLevel.cs" />
