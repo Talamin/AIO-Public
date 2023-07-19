@@ -61,6 +61,7 @@ namespace AIO.Combat.Shaman
             switch (Spec)
             {
                 case Spec.Shaman_SoloEnhancement:
+                case Spec.Shaman_GroupEnhancement:
                     if (!HasMainHandEnchant)
                     {
                         if (WindfuryWeapon.KnownSpell)

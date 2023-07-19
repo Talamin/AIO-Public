@@ -300,7 +300,8 @@ namespace AIO.Settings
         [Category("Aura")]
         [DisplayName("Combat Aura")]
         [Description("Set Combat Aura")]
-        [DropdownList(new string[] { "Devotion Aura", "Retribution Aura", "Concentration Aura" })]
+        [DropdownList(new string[] { "Devotion Aura", "Retribution Aura", "Concentration Aura", "Frost Resistance Aura", "Shadow Resistance Aura", "Fire Resistance Aura" })]        
+
         public string Aura { get; set; }
         #endregion
 

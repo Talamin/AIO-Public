@@ -10,7 +10,7 @@ namespace AIO.Settings
     public class ShamanLevelSettings : BasePersistentSettings<ShamanLevelSettings>
     {
         #region Selectors
-        [TriggerDropdown("ShamanTriggerDropdown", new string[] { nameof(Spec.Shaman_SoloEnhancement), nameof(Spec.Shaman_GroupRestoration), nameof(Spec.Shaman_SoloElemental) })]
+        [TriggerDropdown("ShamanTriggerDropdown", new string[] { nameof(Spec.Shaman_GroupEnhancement), nameof(Spec.Shaman_SoloEnhancement), nameof(Spec.Shaman_GroupRestoration), nameof(Spec.Shaman_SoloElemental) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -116,6 +116,42 @@ namespace AIO.Settings
         [Description("Use Feral Spirit on which  Targets? ")]
         [DropdownList(new string[] { "+2 and Elite", "+3 and Elite", "only Elite", "None" })]
         public string SoloEnhancementFeralSpirit { get; set; }
+        #endregion
+        #region GroupEnhancement
+        [Setting]
+        [DefaultValue(5)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
+        [DisplayName("Fire  Nova")]
+        [Description("Use Fire Nova?")]
+        public int GroupEnhancementUseFireNova { get; set; }
+
+        [Setting]
+        [DefaultValue(0)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
+        [DisplayName("Shamanistic Rage Mana")]
+        [Description("Set the Treshhold to use Shamanistic Rage?")]
+        [Percentage(true)]
+        public int GroupEnhancementShamanisticRageMana { get; set; }
+
+        [Setting]
+        [DefaultValue(0)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
+        [DisplayName("Conserve Mana")]
+        [Description("Set the Treshhold to stop using Earth Shock / Fire nova?")]
+        [Percentage(true)]
+        public int GroupEnhancementConserveMana { get; set; }
+        
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
+        [DisplayName("Feral Spirit")]
+        [Description("Use Feral Spirit on which Targets? ")]
+        [DropdownList(new string[] { "+2 and Elite", "+3 and Elite", "only Elite", "None" })]
+        public string GroupEnhancementFeralSpirit { get; set; }
         #endregion
         #region Restoration
         [Setting]
@@ -259,6 +295,10 @@ namespace AIO.Settings
             SoloEnhancementManaSavedForHeals = 0;
             SoloEnhancementHealthForHeals = 50;
             SoloEnhancementFeralSpirit = "+2 and Elite";
+            GroupEnhancementUseFireNova = 5;
+            GroupEnhancementShamanisticRageMana = 60;
+            GroupEnhancementConserveMana = 30;
+            GroupEnhancementFeralSpirit = "+2 and Elite";
             RestorationEarthshieldTank = 99;
             RestorationChainHealGroup = 85;
             RestorationChainHealCountGroup = 2;
