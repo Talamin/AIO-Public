@@ -42,7 +42,8 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Challenging Shout"), 3.1f, RotationCombatUtil.Always, _ => Me.CIsInGroup() && EnemiesAttackingGroup.ContainsAtLeast(o => o.CGetDistance() <= 10 && !o.CIsTargetingMe(), 2), RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Heroic Strike"), 3.2f, RotationCombatUtil.Always, _ => Me.CHaveBuff("Glyph of Revenge") && !RotationCombatUtil.IsCurrentSpell("Heroic Strike"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Mocking Blow"), 3.21f, (s,t) => Me.CRage() >= 10 && !t.CIsTargetingMe() && t.CGetDistance() <= 7, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Taunt"), 4f, (s,t) => !t.CIsTargetingMe(), _ => Settings.Current.GroupProtectionTauntGroup, FindEnemyAttackingGroup),
+            new RotationStep(new RotationSpell("Taunt"), 4f, (s,t) => Settings.Current.GroupProtectionTauntGroup, TauntUnitPrio),
+            new RotationStep(new RotationSpell("Taunt"), 4.1f, (s,t) => !t.CIsTargetingMe(), _ => Settings.Current.GroupProtectionTauntGroup, FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Mocking Blow"), 4.15f, (s,t) => !t.CIsTargetingMe() && t.CGetDistance() <= 8, FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Shield Slam"), 5.1f, RotationCombatUtil.Always, _ => Me.CHaveBuff("Sword and Board"), RotationCombatUtil.BotTargetFast),
             // new RotationStep(new RotationSpell("Piercing Howl"), 6f, RotationCombatUtil.Always, _ => Me.CHealthPercent() < 40 && EnemiesAttackingGroup.ContainsAtLeast(o => o.CGetDistance() <=10 && !o.CHaveBuff("Piercing Howl"), 3), RotationCombatUtil.FindMe, checkRange: false),
@@ -84,5 +85,22 @@ namespace AIO.Combat.Warrior
 
         public WoWUnit FindEnemyAttackingGroup(Func<WoWUnit, bool> predicate)
             => EnemiesAttackingGroup.FirstOrDefault(predicate);
+
+
+        public WoWUnit TauntUnitPrio(Func<WoWUnit, bool> predicate)
+        {
+            List<WoWUnit> enemiesToTaunt = new List<WoWUnit>();
+            foreach(WoWUnit unit in RotationFramework.PartyMembers)
+            {
+                foreach(WoWUnit attacker in EnemiesAttackingGroup)
+                {
+                    if (!attacker.CIsTargetingMe() && !enemiesToTaunt.Contains(attacker) && unit.CGetPosition().DistanceTo(attacker.CGetPosition()) > unit.CGetPosition().DistanceTo(Me.CGetPosition()))
+                    {
+                        enemiesToTaunt.AddSorted(attacker, a => unit.CGetPosition().DistanceTo(attacker.CGetPosition()));
+                    }
+                }
+            }
+            return enemiesToTaunt.FirstOrDefault();
+        }
     }
 }
