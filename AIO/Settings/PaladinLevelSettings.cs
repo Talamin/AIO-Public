@@ -246,6 +246,14 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
+        [VisibleWhenDropdownValue("PaladinTriggerDropdown", nameof(Spec.Paladin_GroupRetribution))]
+        [DisplayName("Purify for Group")]
+        [Description("Allow Purify on GroupMember?")]
+        public bool GroupRetributionPurifyMember { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
         [DisplayName("Sacred Shield")]
         [VisibleWhenDropdownValue("PaladinTriggerDropdown", nameof(Spec.Paladin_GroupRetribution))]
         [Description("Allow the Use of Sacredshield")]
@@ -292,7 +300,8 @@ namespace AIO.Settings
         [Category("Aura")]
         [DisplayName("Combat Aura")]
         [Description("Set Combat Aura")]
-        [DropdownList(new string[] { "Devotion Aura", "Retribution Aura", "Concentration Aura" })]
+        [DropdownList(new string[] { "Devotion Aura", "Retribution Aura", "Concentration Aura", "Frost Resistance Aura", "Shadow Resistance Aura", "Fire Resistance Aura" })]        
+
         public string Aura { get; set; }
         #endregion
 
@@ -594,6 +603,7 @@ namespace AIO.Settings
             GroupRetributionHammerofJustice = true;
             GroupRetributionHOR = true;
             GroupRetributionPurify = true;
+            GroupRetributionPurifyMember = true;
             GroupRetributionSShield = true;
             GroupRetributionLayOnHands = true;
             GroupRetributionJudgementofWisdomSpam = false;

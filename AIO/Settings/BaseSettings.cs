@@ -100,7 +100,7 @@ namespace AIO.Settings
         protected BaseSettings()
         {
             FrameLock = false;
-            ScanRange = 50;
+            ScanRange = 80;
             LoSCreditsPlayers = 5;
             LoSCreditsNPCs = 10;
             UseSyntheticCombatEvents = false;

@@ -3,6 +3,7 @@ using AIO.Framework;
 using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
+using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using static AIO.Constants;
 
@@ -39,6 +40,9 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationBuff("Retribution Aura"), 8f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Retribution Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Devotion Aura"), 9f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Devotion Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Concentration Aura"), 10f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Concentration Aura", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Fire Resistance Aura"), 11f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Fire Resistance Aura", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Shadow Resistance Aura"), 12f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Shadow Resistance Aura", RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Frost Resistance Aura"), 13f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Frost Resistance Aura", RotationCombatUtil.FindMe),
         };
 
         private bool ProtSpecs()

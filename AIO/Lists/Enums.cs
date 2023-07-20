@@ -43,6 +43,7 @@
         // Shaman
         Shaman_SoloElemental,
         Shaman_SoloEnhancement,
+        Shaman_GroupEnhancement,
         Shaman_GroupRestoration,
         // Warlock
         Warlock_GroupAffliction,

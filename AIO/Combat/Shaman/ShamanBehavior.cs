@@ -29,6 +29,7 @@ namespace AIO.Combat.Shaman
                 { Spec.Shaman_SoloElemental, new SoloElemental() },
                 { Spec.Shaman_GroupRestoration, new GroupRestoration() },
                 { Spec.Shaman_SoloEnhancement, new SoloEnhancement() },
+                { Spec.Shaman_GroupEnhancement, new GroupEnhancement() },
                 { Spec.Fallback, new SoloEnhancement() },
             }, new AutoPartyResurrect("Ancestral Spirit"),
             new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
@@ -46,6 +47,7 @@ namespace AIO.Combat.Shaman
             switch (Specialisation)
             {
                 case Spec.Shaman_SoloEnhancement:
+                case Spec.Shaman_GroupEnhancement:                    
                     CombatRange = 5.0f;
                     break;
                 case Spec.Shaman_SoloElemental:

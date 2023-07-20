@@ -124,8 +124,16 @@ namespace AIO.Settings
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupFury))]
         [DisplayName("Charge")]
-        [Description("Should we use Charge on mobs close to tank?")]
+        [Description("Should we use Charge on mobs close to party members?")]
+
         public bool GroupFuryCharge { get; set; }
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupFury))]
+        [DisplayName("Intercept")]
+        [Description("Should we use Intercept on mobs close to party members?")]
+        public bool GroupFuryIntercept { get; set; }
         #endregion
 
         public WarriorLevelSettings()
@@ -134,6 +142,7 @@ namespace AIO.Settings
             Hamstring = true;
             //GroupFury
             GroupFuryCharge = true;
+            GroupFuryIntercept = true;
             //SoloFury
             SoloFuryIntercept = true;
             //GroupProtection

@@ -27,6 +27,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => Settings.Current.DivineProtection && EnemiesAttackingGroup.ContainsAtLeast(enem=> enem.CIsTargetingMe(), 2), RotationCombatUtil.FindMe, checkLoS: false),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.CHaveBuff("Sacred Shield"), RotationCombatUtil.FindMe, checkLoS: false),
             new RotationStep(new RotationSpell("Purify"), 2f, (s,t) => Me.HasDebuffType("Disease") || Me.HasDebuffType("Poison") && Settings.Current.GroupRetributionPurify, RotationCombatUtil.FindMe, checkLoS: false),
+            new RotationStep(new RotationSpell("Purify"), 2.1f, (s,t) => t.HasDebuffType("Disease") || t.HasDebuffType("Poison") && Settings.Current.GroupRetributionPurifyMember, RotationCombatUtil.CFindPartyMember, checkLoS: true),
             new RotationStep(new RotationSpell("Divine Plea"), 3.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe, checkLoS: false),
 
             new RotationStep(new RotationSpell("Flash of Light"), 4f, (s,t) => Me.HaveBuff("The Art of War") && Me.HealthPercent <= 60 && Settings.Current.GroupRetributionHealInCombat , RotationCombatUtil.FindMe, checkLoS: false),
