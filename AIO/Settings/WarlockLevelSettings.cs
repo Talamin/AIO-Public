@@ -309,6 +309,13 @@ namespace AIO.Settings
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool GroupAfflictionUseCorruptionGroup { get; set; }
 
+        [DefaultValue(2)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
+        [DisplayName("Count to use Corruption on Multidot")]
+        [Description("Give back the Count when to use Corruption on Targets")]
+        public int GroupSeedAOECount { get; set; }
+
         [DefaultValue(4)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
@@ -363,6 +370,7 @@ namespace AIO.Settings
 
             //Rotation GroupAffliction
             GroupAfflictionUseSeedGroup = true;
+            GroupSeedAOECount = 2;
             GroupAfflictionUseCorruptionGroup = true;
             GroupAfflictionLifetap = 20;
             GroupAfflictionGlyphLifetap = false;

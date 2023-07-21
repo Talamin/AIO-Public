@@ -3,6 +3,7 @@ using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
 using AIO.Settings;
+using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,17 +25,14 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => !t.IsBoss && t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.CHaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),            
-            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.CHaveBuff("Life Tap") && Settings.Current.GlyphLifeTap && Me.HealthPercent > 30,RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Life Tap"), 4f, (s,t) => !Me.CHaveBuff("Life Tap") && Settings.Current.GlyphLifeTap && Me.CHealthPercent() > 30,RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Life Tap"), 4.1f, (s,t) => Me.CHealthPercent() > 30 && Me.ManaPercentage < Settings.Current.GroupAfflictionLifetap,RotationCombatUtil.FindMe),
 
             //AOE
-            new RotationStep(new RotationSpell("Seed of Corruption"), 4.4f, (s,t) =>  Settings.Current.GroupAfflictionUseSeedGroup 
-            &&  !t.CHaveMyBuff("Seed of Corruption") 
-            && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=15) >= Settings.Current.GroupAfflictionAOECount 
-            && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
+            new RotationStep(new RotationSpell("Seed of Corruption"), 4.4f, (s,t) =>  Settings.Current.GroupAfflictionUseSeedGroup, FindSeedOfCorruptionCluster),
 
-            new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Settings.Current.GroupAfflictionUseCorruptionGroup &&
-            !t.HaveMyBuff("Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) < Settings.Current.GroupAfflictionAOECount && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
+            new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Settings.Current.GroupAfflictionUseCorruptionGroup && Settings.Current.GroupAfflictionUseAOE
+            && EnemiesAttackingGroup.ContainsAtLeast(enem => enem.CIsTargetingMeOrMyPetOrPartyMember(), Settings.Current.GroupAfflictionAOECount), CorruptionUnit),
             
             new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"),RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.CHaveBuff("Health Funnel") && Pet.CHealthPercent() < Settings.Current.GroupAfflictionHealthfunnelPet && Me.CHealthPercent() > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
@@ -78,5 +76,41 @@ namespace AIO.Combat.Warlock
         }
 
         public WoWUnit FindEnemyAttackingGroup(Func<WoWUnit, bool> predicate) => EnemiesAttackingGroup.FirstOrDefault(predicate);
+
+        private static WoWUnit FindSeedOfCorruptionCluster(Func<WoWUnit, bool> predicate)
+        {
+            WoWUnit largestCenter = null;
+            int largestCount = Settings.Current.GroupSeedAOECount;
+            for (var i = 0; i < RotationFramework.Enemies.Length; i++)
+            {
+                WoWUnit originUnit = RotationFramework.Enemies[i];
+                if (!predicate(originUnit))
+                {
+                    continue;
+                }
+                Vector3 originPos = originUnit.CGetPosition();
+                int localCount = RotationFramework.Enemies.Count(enemy => !enemy.CHaveMyBuff("Seed of Corruption") && enemy.CIsAlive() && enemy.CGetPosition().DistanceTo(originPos) < 10 && enemy.CIsTargetingMeOrMyPetOrPartyMember());
+
+                if (localCount > largestCount)
+                {
+                    largestCenter = originUnit;
+                    largestCount = localCount;
+                }
+            }
+            return largestCenter;
+        }
+
+        public WoWUnit CorruptionUnit(Func<WoWUnit, bool> predicate)
+        {
+            List<WoWUnit> enemiesToCorrupt = new List<WoWUnit>();
+            foreach (WoWUnit attacker in EnemiesAttackingGroup)
+            {
+                if (!enemiesToCorrupt.Contains(attacker) && !attacker.CHaveMyBuff("Corruption"))
+                {
+                    enemiesToCorrupt.Add(attacker);
+                }
+            }
+            return enemiesToCorrupt.FirstOrDefault();
+        }
     }
 }
