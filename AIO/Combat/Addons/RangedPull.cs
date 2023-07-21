@@ -38,6 +38,7 @@ namespace AIO.Combat.Addons
             SetRange = setRange;
             _pullCondition = pullCondition;
         }
+
         public void Dispose()
         {
             FightEvents.OnFightStart -= OnFightStart;
@@ -75,8 +76,9 @@ namespace AIO.Combat.Addons
             var distanceToTarget = Me.Position.DistanceTo(Target.Position);
 
             // No pull spell known
-            if (ChosenPullSPell == null) 
+            if (ChosenPullSPell == null)
             {
+                SetDefaultRange();
                 return;
             }
 
