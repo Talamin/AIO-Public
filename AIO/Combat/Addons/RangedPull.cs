@@ -111,7 +111,13 @@ namespace AIO.Combat.Addons
             {
                 MovementManager.StopMove();
                 RotationCombatUtil.CastSpell(ChosenPullSPell, Target, true);
-                Thread.Sleep(2000);
+                Timer timer = new Timer(2000);
+                while (!Me.InCombatFlagOnly 
+                    && !timer.IsReady
+                    && Conditions.InGameAndConnectedAndAlive)
+                {
+                    Thread.Sleep(100);
+                }
             }
         }
 
