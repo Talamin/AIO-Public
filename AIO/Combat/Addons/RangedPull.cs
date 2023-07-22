@@ -76,8 +76,8 @@ namespace AIO.Combat.Addons
             var distanceToTarget = Me.Position.DistanceTo(Target.Position);
 
             // No pull spell known or usable, try fallback
-            if (ChosenPullSPell == null
-                || !ChosenPullSPell.IsSpellUsable)
+            if (!Me.InCombatFlagOnly 
+                && (ChosenPullSPell == null || !ChosenPullSPell.IsSpellUsable))
             {
                     SetDefaultRange();
                     return;
