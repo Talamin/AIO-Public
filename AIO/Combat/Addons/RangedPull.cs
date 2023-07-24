@@ -38,6 +38,7 @@ namespace AIO.Combat.Addons
             SetRange = setRange;
             _pullCondition = pullCondition;
         }
+
         public void Dispose()
         {
             FightEvents.OnFightStart -= OnFightStart;
@@ -56,7 +57,7 @@ namespace AIO.Combat.Addons
         private void FighStart()
         {
             Timeout = new Timer(7 * 1000);
-            List<RotationSpell> availableSpells = PullSpells.FindAll(spell => spell.KnownSpell && spell.IsSpellUsable);
+            List<RotationSpell> availableSpells = PullSpells.FindAll(spell => spell.KnownSpell);
             if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Thrown"))
             {
                 ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
@@ -74,10 +75,12 @@ namespace AIO.Combat.Addons
         {
             var distanceToTarget = Me.Position.DistanceTo(Target.Position);
 
-            // No pull spell known
-            if (ChosenPullSPell == null) 
+            // No pull spell known or usable, try fallback
+            if (!Me.InCombatFlagOnly 
+                && (ChosenPullSPell == null || !ChosenPullSPell.IsSpellUsable))
             {
-                return;
+                    SetDefaultRange();
+                    return;
             }
 
             if (Timeout.IsReady || Target.IsCast || Target.HasTarget && Target.Target != Me.Guid)
@@ -108,7 +111,13 @@ namespace AIO.Combat.Addons
             {
                 MovementManager.StopMove();
                 RotationCombatUtil.CastSpell(ChosenPullSPell, Target, true);
-                Thread.Sleep(2000);
+                Timer timer = new Timer(2000);
+                while (!Me.InCombatFlagOnly 
+                    && !timer.IsReady
+                    && Conditions.InGameAndConnectedAndAlive)
+                {
+                    Thread.Sleep(100);
+                }
             }
         }
 

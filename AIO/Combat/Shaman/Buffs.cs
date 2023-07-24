@@ -51,7 +51,7 @@ namespace AIO.Combat.Shaman
                 Target.GetDistance <= 15 &&
                 !Totems.HasAny("Searing Totem") &&
                 !Totems.HasAny("Magma Totem") &&
-                Settings.Current.UseSearingTotem &&
+                Settings.Current.RedeploySearingTotem &&
                 Me.ManaPercentage > 30, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Cleansing Totem"), 50f, (s,t) =>

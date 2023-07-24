@@ -23,6 +23,12 @@ namespace AIO.Combat.Shaman
         public static bool HasAny(params string[] totems) => totems.Any(t => NearbyPets.Any(o => o.Name.Contains(t)));
         public static bool HasAll(params string[] totems) => totems.All(t => t == null || NearbyPets.Any(o => o.Name.Contains(t)));
 
+        public static float DistanceToTotem(string totem)
+        {
+            WoWUnit totemUnit = NearbyPets.FirstOrDefault(t => t.Name.Contains(totem));
+            return totemUnit != null ? totemUnit.GetDistance : 0f;
+        }
+
         public static bool ShouldRecall() => DistantPets.Any();
 
         public static bool HasTemporary() => HasAny("Mana Tide Totem", "Earth Elemental Totem", "Tremor Totem", "Grounding Totem", "Earthbind Totem", "Stoneclaw Totem");
@@ -37,20 +43,40 @@ namespace AIO.Combat.Shaman
 
         private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => SetCall();
 
-        private readonly Spell StoneskinTotem = new Spell("Stoneskin Totem");
-        private readonly Spell StrengthOfEarthTotem = new Spell("Strength of Earth Totem");
+        private static readonly Spell StoneskinTotem = new Spell("Stoneskin Totem");
+        private static readonly Spell StrengthOfEarthTotem = new Spell("Strength of Earth Totem");
+        private static readonly Spell TremorTotem = new Spell("Tremor Totem");
 
-        private readonly Spell MagmaTotem = new Spell("Magma Totem");
-        private readonly Spell SearingTotem = new Spell("Searing Totem");
-        private readonly Spell FlametongueTotem = new Spell("Flametongue Totem");
-        private readonly Spell TotemOfWrath = new Spell("Totem of Wrath");
+        private static readonly Spell MagmaTotem = new Spell("Magma Totem");
+        private static readonly Spell SearingTotem = new Spell("Searing Totem");
+        private static readonly Spell FlametongueTotem = new Spell("Flametongue Totem");
+        private static readonly Spell TotemOfWrath = new Spell("Totem of Wrath");
+        private static readonly Spell FrostResistanceTotem = new Spell("Frost Resistance Totem");
 
-        private readonly Spell WrathOfAirTotem = new Spell("Wrath of Air Totem");
-        private readonly Spell WindfuryTotem = new Spell("Windfury Totem");
-        private readonly Spell NatureResistanceTotem = new Spell("Nature Resistance Totem");
+        private static readonly Spell WrathOfAirTotem = new Spell("Wrath of Air Totem");
+        private static readonly Spell WindfuryTotem = new Spell("Windfury Totem");
+        private static readonly Spell NatureResistanceTotem = new Spell("Nature Resistance Totem");
 
-        private readonly Spell ManaSpringTotem = new Spell("Mana Spring Totem");
-        private readonly Spell HealingStreamTotem = new Spell("Healing Stream Totem");
+        private static readonly Spell ManaSpringTotem = new Spell("Mana Spring Totem");
+        private static readonly Spell HealingStreamTotem = new Spell("Healing Stream Totem");
+        private static readonly Spell CleansingTotem = new Spell("Cleansing Totem");
+
+        private readonly Dictionary<string, Spell> totems = new Dictionary<string, Spell> {
+            {"Stoneskin Totem", StoneskinTotem},
+            {"Strength of Earth Totem", StrengthOfEarthTotem},
+            {"Tremor Totem", TremorTotem},             
+            {"Magma Totem", MagmaTotem},
+            {"Searing Totem", SearingTotem},
+            {"Flametongue Totem", FlametongueTotem},
+            {"Totem of Wrath", TotemOfWrath},
+            {"Frost Resistance Totem", FrostResistanceTotem},
+            {"Wrath of Air Totem", WrathOfAirTotem},
+            {"Windfury Totem", WindfuryTotem},
+            {"Nature Resistance Totem", NatureResistanceTotem},
+            {"Mana Spring Totem", ManaSpringTotem},
+            {"Healing Stream Totem", HealingStreamTotem},
+            {"Cleansing Totem", CleansingTotem}
+        };
 
         private void SetTotems(Spell earthTotem, Spell fireTotem, Spell airTotem, Spell waterTotem)
         {
@@ -105,20 +131,20 @@ namespace AIO.Combat.Shaman
                                 water = ManaSpringTotem;
                             }
 
-                            if (WindfuryTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            if (WindfuryTotem.KnownSpell)
                             {
                                 air = WindfuryTotem;
                             }
-                            else if (WrathOfAirTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            else if (WrathOfAirTotem.KnownSpell)
                             {
                                 air = WrathOfAirTotem;
                             }
-                            else if(NatureResistanceTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            else if (NatureResistanceTotem.KnownSpell)
                             {
                                 air = NatureResistanceTotem;
                             }
 
-                         
+
                             break;
                         }
                     case Spec.Shaman_GroupRestoration:
@@ -131,7 +157,7 @@ namespace AIO.Combat.Shaman
                             else if (StrengthOfEarthTotem.KnownSpell)
                             {
                                 earth = StrengthOfEarthTotem;
-                            }  
+                            }
 
                             if (TotemOfWrath.KnownSpell)
                             {
@@ -151,11 +177,11 @@ namespace AIO.Combat.Shaman
                                 water = HealingStreamTotem;
                             }
 
-                            if (WrathOfAirTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            if (WrathOfAirTotem.KnownSpell)
                             {
                                 air = WrathOfAirTotem;
                             }
-                            else if (WindfuryTotem.KnownSpell && Settings.Current.UseAirTotemInCotE)
+                            else if (WindfuryTotem.KnownSpell)
                             {
                                 air = WindfuryTotem;
                             }
@@ -163,7 +189,41 @@ namespace AIO.Combat.Shaman
                             break;
                         }
                 }
+                if (Settings.Current.GeneralTotemsEarthTotem == "None")
+                {
+                    earth = null;
+                }
+                else if (Settings.Current.GeneralTotemsEarthTotem != "Auto")
+                {
+                    earth = totems[Settings.Current.GeneralTotemsEarthTotem];
+                }
 
+                if (Settings.Current.GeneralTotemsFireTotem == "None")
+                {
+                    fire = null;
+                }
+                else if (Settings.Current.GeneralTotemsFireTotem != "Auto")
+                {
+                    fire = totems[Settings.Current.GeneralTotemsFireTotem];
+                }
+
+                if (Settings.Current.GeneralTotemsAirTotem == "None")
+                {
+                    air = null;
+                }
+                else if (Settings.Current.GeneralTotemsAirTotem != "Auto")
+                {
+                    air = totems[Settings.Current.GeneralTotemsAirTotem];
+                }
+
+                if (Settings.Current.GeneralTotemsWaterTotem == "None")
+                {
+                    water = null;
+                }
+                else if (Settings.Current.GeneralTotemsWaterTotem != "Auto")
+                {
+                    water = totems[Settings.Current.GeneralTotemsWaterTotem];
+                }
                 return (earth, fire, air, water);
             }
         }

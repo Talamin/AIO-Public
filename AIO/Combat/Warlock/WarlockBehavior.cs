@@ -197,11 +197,18 @@ namespace AIO.Combat.Warlock
 
        private void LifeTapOutOfCombat()
         {
-            while (!Fight.InFight && LifeTapOOC.KnownSpell && Me.ManaPercentage < 93 && Settings.Current.LifeTapOOC && Me.IsInParty && !Me.IsMounted && !Me.InCombat && !Me.HaveBuff("Drink") && !Me.HaveBuff("Food") && Me.IsAlive)
+            while (!Fight.InFight 
+                && LifeTapOOC.KnownSpell 
+                && Me.ManaPercentage < 93 
+                && Settings.Current.LifeTapOOC 
+                && Me.IsInParty 
+                && !Me.IsMounted 
+                && !Me.InCombat 
+                && !Me.HaveBuff("Drink") 
+                && !Me.HaveBuff("Food") && Me.IsAlive)
             {
                 LifeTapOOC.Launch();
-            }
-         
+            }         
         }
     }
 }

@@ -29,7 +29,7 @@ namespace AIO.Settings
         [Description("Valid targets for Cure Toxin")]
         [DropdownList(new string[] { "Group", "Me", "None" })]
         public string CureToxin { get; set; }
-        
+
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
@@ -43,7 +43,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(3)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]                
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]
         [DisplayName("Chain Lightning Count")]
         [Description("Required number of enemies to use Chain Lightning")]
         public int SoloElementalChainlightningTresshold { get; set; }
@@ -51,7 +51,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]        
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloElemental))]
         [DisplayName("Cure Toxin")]
         [Description("Use on Groupmembers??")]
         public bool SoloElementalCureToxin { get; set; }
@@ -76,10 +76,10 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(5)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]        
-        [DisplayName("Fire  Nova")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
+        [DisplayName("Fire Nova")]
         [Description("Use Fire Nova?")]
-        public int SoloEnhancementUseFireNova { get; set; }        
+        public int SoloEnhancementUseFireNova { get; set; }
 
         [Setting]
         [DefaultValue(10)]
@@ -109,7 +109,7 @@ namespace AIO.Settings
         public int SoloEnhancementManaSavedForHeals { get; set; }
 
         [Setting]
-        [DefaultValue(false)]
+        [DefaultValue("+2 and Elite")]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_SoloEnhancement))]
         [DisplayName("Feral Spirit")]
@@ -118,12 +118,21 @@ namespace AIO.Settings
         public string SoloEnhancementFeralSpirit { get; set; }
         #endregion
         #region GroupEnhancement
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
+        [DisplayName("Redeploy Magma")]
+        [Description("Redeploy Magma totem when out of range and there are this many nearby enemies?")]
+        public int GroupEnhancementRedeployMagma { get; set; }
+
         [Setting]
         [DefaultValue(5)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
-        [DisplayName("Fire  Nova")]
-        [Description("Use Fire Nova?")]
+        [DisplayName("Fire Nova")]
+        [Description("Use Fire Nova when there are this many nearby enemies?")]
         public int GroupEnhancementUseFireNova { get; set; }
 
         [Setting]
@@ -143,9 +152,9 @@ namespace AIO.Settings
         [Description("Set the Treshhold to stop using Earth Shock / Fire nova?")]
         [Percentage(true)]
         public int GroupEnhancementConserveMana { get; set; }
-        
+
         [Setting]
-        [DefaultValue(false)]
+        [DefaultValue("+2 and Elite")]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupEnhancement))]
         [DisplayName("Feral Spirit")]
@@ -157,7 +166,7 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(99)]
         [Category("Rotation")]
-        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]        
+        [VisibleWhenDropdownValue("ShamanTriggerDropdown", nameof(Spec.Shaman_GroupRestoration))]
         [DisplayName("Earthshield")]
         [Description("Set the Tank Treshhold for Earthshield?")]
         [Percentage(true)]
@@ -219,65 +228,75 @@ namespace AIO.Settings
         #endregion
         #endregion
 
-        #region Totem Settings for all specs
-
+        #region Totems
         [Setting]
         [DefaultValue(false)]
-        [Category("Totem")]
+        [Category("Totems")]
+        [DisplayName("Redeploy Fire Totems")]
+        [Description("Redeploy Fire Totem when out of range?")]
+        public bool RedeploySearingTotem { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Totems")]
+        [DisplayName("CotE")]
+        [Description("Use Call of the Elements?")]
+        public bool UseCotE { get; set; }
+
+        [Setting]
+        [DefaultValue("Auto")]
+        [Category("Totems")]
+        [DisplayName("Fire Totem")]
+        [Description("Which Fire Totem do you want to use? ")]
+        [DropdownList(new string[] { "Auto", "None", "Totem of Wrath", "Magma Totem", "Searing Totem", "Flametongue Totem", "Frost Resistance Totem" })]
+        public string GeneralTotemsFireTotem { get; set; }
+
+        [Setting]
+        [DefaultValue("Auto")]
+        [Category("Totems")]
+        [DisplayName("Air Totem")]
+        [Description("Which Air Totem do you want to use? ")]
+        [DropdownList(new string[] { "Auto", "None", "Windfury Totem", "Wrath of Air Totem", "Nature Resistance Totem" })]
+        public string GeneralTotemsAirTotem { get; set; }
+
+        [Setting]
+        [DefaultValue("Auto")]
+        [Category("Totems")]
+        [DisplayName("Water Totem")]
+        [Description("Which Water Totem do you want to use? ")]
+        [DropdownList(new string[] { "Auto", "None", "Mana Spring Totem", "Healing Stream Totem", "Cleansing Totem" })]
+        public string GeneralTotemsWaterTotem { get; set; }
+
+        [Setting]
+        [DefaultValue("Auto")]
+        [Category("Totems")]
+        [DisplayName("Earth Totem")]
+        [Description("Which Earth Totem do you want to use? ")]
+        [DropdownList(new string[] { "Auto", "None", "Strength of Earth Totem", "Stoneskin Totem", "Tremor Totem" })]
+        public string GeneralTotemsEarthTotem { get; set; }
+        #endregion
+
+        #region Totem Settings for special uses
+        [Setting]
+        [DefaultValue(false)]
+        [Category("SpecialTotems")]
         [DisplayName("Earthbind Totem")]
         [Description("Use Earthbind Totem?")]
         public bool UseEarthbindTotem { get; set; }
 
         [Setting]
-        [DefaultValue(false)]
-        [Category("Totem")]
-        [DisplayName("Searing Totem")]
-        [Description("Use Searing Totem?")]
-        public bool UseSearingTotem { get; set; }
-
-        [Setting]
         [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("Fire Nova")]
-        [Description("Use Fire Nova?")]
-        public bool UseFireNova { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
+        [Category("SpecialTotems")]
         [DisplayName("Cleansing Totem")]
         [Description("Use Cleansing Totem?")]
         public bool UseCleansingTotem { get; set; }
 
-
         [Setting]
         [DefaultValue(true)]
-        [Category("Totem")]
+        [Category("SpecialTotems")]
         [DisplayName("Grounding Totem")]
         [Description("Use Grounding Totem?")]
         public bool UseGroundingTotem { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("CotE")]
-        [Description("Use CotE?")]
-        public bool UseCotE { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("Totemic Recall")]
-        [Description("Use Totemic Recall?")]
-        public bool UseTotemicCall { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Totem")]
-        [DisplayName("Air Totem")]
-        [Description("Use Air Totem inside Call of the Elements?")]
-        public bool UseAirTotemInCotE { get; set; }
-
 
         #endregion
 
@@ -295,6 +314,7 @@ namespace AIO.Settings
             SoloEnhancementManaSavedForHeals = 0;
             SoloEnhancementHealthForHeals = 50;
             SoloEnhancementFeralSpirit = "+2 and Elite";
+            GroupEnhancementRedeployMagma = 3;
             GroupEnhancementUseFireNova = 5;
             GroupEnhancementShamanisticRageMana = 60;
             GroupEnhancementConserveMana = 30;
@@ -307,13 +327,14 @@ namespace AIO.Settings
             RestorationRiptideGroup = 75;
             NatureSwiftness = 25;
             UseEarthbindTotem = false;
-            UseSearingTotem = false;
-            UseFireNova = true;
+            RedeploySearingTotem = false;
             UseCleansingTotem = true;
             UseGroundingTotem = true;
             UseCotE = true;
-            UseTotemicCall = true;
-            UseAirTotemInCotE = true;
+            GeneralTotemsFireTotem = "Auto";
+            GeneralTotemsEarthTotem = "Auto";
+            GeneralTotemsWaterTotem = "Auto";
+            GeneralTotemsAirTotem = "Auto";
         }
     }
 }
