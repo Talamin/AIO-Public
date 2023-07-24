@@ -21,7 +21,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationBuff("Frost Armor"), 4f, RotationCombatUtil.Always, RotationCombatUtil.FindMe, Exclusive.MageArmor),
             new RotationStep(new RotationBuff("Arcane Intellect"), 5f, (s,t) => !t.HaveBuff("Fel Intelligence") && !t.HaveBuff("Arcane Brilliance"), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Arcane Intellect"), 6f, (s,t) => !t.HaveBuff("Fel Intelligence") && !t.HaveBuff("Arcane Brilliance"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Combustion"), 7f, RotationCombatUtil.Always, RotationCombatUtil.FindMe)
+            new RotationStep(new RotationBuff("Combustion"), 7f, (s,t) => !Me.HaveMyBuff("Combustion"), RotationCombatUtil.FindMe)
         };
     }
 }

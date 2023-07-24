@@ -44,7 +44,8 @@ namespace AIO.Lists
             "Diseased Shot",
             "Plague Cloud",
             "Ghoul Rot",
-            "Noxious Catalyst"
+            "Noxious Catalyst",
+            "Wandering Plague"
         };
         public static readonly List<string> ImportantCurse = new List<string> {
             "Veil of Shadow",
@@ -59,7 +60,8 @@ namespace AIO.Lists
             "Cursed Blood",
             "Curse of Tuten'kash",
             "Aural Shock",
-            "Curse of Impotence"
+            "Curse of Impotence",
+            "Call of the Grave"
         };
         public static readonly List<string> ImportantMagic = new List<string> {
             "Hammer of Justice",

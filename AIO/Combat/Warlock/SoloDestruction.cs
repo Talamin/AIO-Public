@@ -11,7 +11,7 @@ namespace AIO.Combat.Warlock
     internal class SoloDestruction : BaseRotation
     {
 
-        const int immolateTimeout = 600;
+        const int immolateTimeout = 1000;
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
@@ -25,7 +25,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Death Coil"), 3.8f, (s,t) => (Me.IsInGroup && BossList.isboss && t.HealthPercent > 20 && !t.IsStunned) || (Me.HealthPercent < 35 && !t.IsStunned), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Life"), 3.9f, (s,t) => !Me.IsInGroup && Me.HealthPercent < 75, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Corruption"), 4f, (s,t) => !t.HaveMyBuff("Corruption") && t.HealthPercent > 50 && t.IsElite, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Immolate"), 5f, (s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !t.HaveMyBuff("Immolate"), RotationCombatUtil.BotTarget, forcedTimerMS: immolateTimeout),
+            new RotationStep(new RotationSpell("Immolate"), 5f, (s,t) => !t.HaveMyBuff("Immolate") && t.HealthPercent > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget, forcedTimerMS: immolateTimeout),
             new RotationStep(new RotationSpell("Conflagrate"), 6f, (s,t) => (t.HaveBuff("Immolate") || t.HaveBuff("Shadowflame")) && t.HealthPercent > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Chaos Bolt"), 7f, (s,t) => t.HealthPercent > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Incinerate"), 8f, (s,t) => t.HealthPercent > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget),
