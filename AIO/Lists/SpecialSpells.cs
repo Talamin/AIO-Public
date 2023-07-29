@@ -62,7 +62,8 @@ namespace AIO.Lists
             "Aural Shock",
             "Curse of Impotence",
             "Call of the Grave",
-            "Curse of the Darkmaster"
+            "Curse of the Darkmaster",
+            "Piercing Shadow"
         };
         public static readonly List<string> ImportantMagic = new List<string> {
             "Hammer of Justice",
