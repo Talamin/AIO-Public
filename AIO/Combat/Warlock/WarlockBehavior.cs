@@ -131,7 +131,6 @@ namespace AIO.Combat.Warlock
             HealthstoneRefresh();
             SoulstoneRefresh();
             Consumables.UseSoulstone();
-           //LifeTapOutOfCombat();
         }
 
         private void HealthstoneRefresh()
@@ -209,23 +208,6 @@ namespace AIO.Combat.Warlock
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
         }
-        /*
-       private void LifeTapOutOfCombat()
-        {
-            while (!Fight.InFight 
-                && LifeTapOOC.KnownSpell 
-                && Me.ManaPercentage < 93 
-                && Settings.Current.LifeTapOOC 
-                && Me.IsInParty 
-                && !Me.IsMounted 
-                && !Me.InCombat 
-                && !Me.HaveBuff("Drink") 
-                && !Me.HaveBuff("Food") 
-                && Me.IsAlive)
-            {
-                LifeTapOOC.Launch();
-            }         
-        }*/
     }
 }
 
