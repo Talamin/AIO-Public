@@ -29,7 +29,8 @@ namespace AIO.Combat.Mage
                 { Spec.Mage_GroupFire, new GroupFire() },
                 { Spec.Fallback, new SoloFrost() },
             },
-            new Buffs(),
+            new OOCBuffs(),
+            new CombatBuffs(),
             new ConditionalCycleable(() => Settings.Current.Backpaddle,
                 new AutoBackpedal(
                     () => Target.GetDistance <= Settings.Current.BackpaddleRange && Target.HaveBuff("Frost Nova"),

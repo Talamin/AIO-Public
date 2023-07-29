@@ -18,14 +18,14 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(true)]
         [Category("Pet")]
-        [DisplayName("Cast Pet Infight?")]
-        [Description("Checks if Pet is dead and Cast Infight?")]
-        public bool PetInfight { get; set; }
+        [DisplayName("Summon pet in fight")]
+        [Description("Resummon your pet during fights")]
+        public bool ReSummonPetInfight { get; set; }
 
         [Setting]
         [DefaultValue(false)]
         [Category("Pet")]
-        [DisplayName("Pets for Warlock")]
+        [DisplayName("Pet")]
         [Description("Set your Pet")]
         [DropdownList(new string[] { "Felguard", "Voidwalker", "Imp", "Felhunter" })]
         public string Pet { get; set; }
@@ -267,9 +267,9 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
-        [DisplayName("Shadowbolt")]
-        [Description("should Shadowbolt ignore Wand Treshhold?")]
-        public bool GroupAfflictionShadowboltWand { get; set; }
+        [DisplayName("Shadowbolt over wand")]
+        [Description("Should Shadowbolt ignore Wand Treshhold")]
+        public bool GroupAfflictionShadowboltOverWand { get; set; }
 
         [DefaultValue(30)]
         [Category("Rotation")]
@@ -301,14 +301,26 @@ namespace AIO.Settings
         [DisplayName("Use Seed of Corruption")]
         [Description("Make use of SoC while in Group?")]
         public bool GroupAfflictionUseSeedGroup { get; set; }
-
+        /*
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Use Corruption on Multidot")]
         [Description("Make use of Corruption while in Group on multiple Enemies?")]
         public bool GroupAfflictionUseCorruptionGroup { get; set; }
-
+        */
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
+        [DisplayName("Spread Corruption")]
+        [Description("Cast Corruption on multiple Enemies")]
+        public bool GroupAfflictionSpreadCorruption { get; set; }
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
+        [DisplayName("Spread Curse of Agony")]
+        [Description("Cast Curse of Agony on multiple Enemies")]
+        public bool GroupAfflictionSpreadCurseOfAgony { get; set; }
         [DefaultValue(4)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
@@ -329,7 +341,7 @@ namespace AIO.Settings
         {
             //Pet
             Pet = "Voidwalker";
-            PetInfight = true;
+            ReSummonPetInfight = true;
             //General
             Healthstone = true;
             UseWandTresh = 20;
@@ -363,7 +375,9 @@ namespace AIO.Settings
 
             //Rotation GroupAffliction
             GroupAfflictionUseSeedGroup = true;
-            GroupAfflictionUseCorruptionGroup = true;
+            //GroupAfflictionUseCorruptionGroup = true;
+            GroupAfflictionSpreadCorruption = true;
+            GroupAfflictionSpreadCurseOfAgony = true;
             GroupAfflictionLifetap = 20;
             GroupAfflictionGlyphLifetap = false;
             GroupAfflictionDrainlife = 40;
@@ -371,7 +385,7 @@ namespace AIO.Settings
             GroupAfflictionHealthfunnelMe = 50;
             GroupAfflictionUseAOE = false;
             GroupAfflictionAOECount = 4;
-            GroupAfflictionShadowboltWand = true;
+            GroupAfflictionShadowboltOverWand = true;
             GroupAfflictionAfflCurse = "Agony";
 
             //Rotation SoloDestruction

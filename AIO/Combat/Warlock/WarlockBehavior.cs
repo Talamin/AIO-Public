@@ -31,7 +31,7 @@ namespace AIO.Combat.Warlock
                 { Spec.Warlock_SoloDemonology, new SoloDemonology() },
                 { Spec.Fallback, new SoloAffliction() },
             },
-            new Buffs(),
+            new OOCBuffs(),
             new PetAutoTarget("Torment"))
         { }
 
@@ -47,7 +47,7 @@ namespace AIO.Combat.Warlock
             {
                 Consumables.UseHealthstone();
             }
-            if (!Fight.InFight || Settings.Current.PetInfight)
+            if (Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
             }
@@ -131,7 +131,7 @@ namespace AIO.Combat.Warlock
             HealthstoneRefresh();
             SoulstoneRefresh();
             Consumables.UseSoulstone();
-            LifeTapOutOfCombat();
+           //LifeTapOutOfCombat();
         }
 
         private void HealthstoneRefresh()
@@ -149,7 +149,7 @@ namespace AIO.Combat.Warlock
                 ItemsHelper.DeleteItems(6265, 5);
             }
 
-            if (!Fight.InFight || Settings.Current.PetInfight)
+            if (!Fight.InFight || Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
             }
@@ -209,7 +209,7 @@ namespace AIO.Combat.Warlock
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
         }
-
+        /*
        private void LifeTapOutOfCombat()
         {
             while (!Fight.InFight 
@@ -220,11 +220,12 @@ namespace AIO.Combat.Warlock
                 && !Me.IsMounted 
                 && !Me.InCombat 
                 && !Me.HaveBuff("Drink") 
-                && !Me.HaveBuff("Food") && Me.IsAlive)
+                && !Me.HaveBuff("Food") 
+                && Me.IsAlive)
             {
                 LifeTapOOC.Launch();
             }         
-        }
+        }*/
     }
 }
 

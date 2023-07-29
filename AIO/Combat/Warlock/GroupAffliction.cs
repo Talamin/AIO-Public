@@ -16,11 +16,10 @@ namespace AIO.Combat.Warlock
     using Settings = WarlockLevelSettings;
     internal class GroupAffliction : BaseRotation
     {
-        private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
-            new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && t.CHealthPercent() < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => !t.IsBoss && t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.CHaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),            
@@ -29,16 +28,16 @@ namespace AIO.Combat.Warlock
 
             //AOE
             new RotationStep(new RotationSpell("Seed of Corruption"), 4.4f, (s,t) =>  Settings.Current.GroupAfflictionUseSeedGroup 
-            &&  !t.CHaveMyBuff("Seed of Corruption") 
-            && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=15) >= Settings.Current.GroupAfflictionAOECount 
-            && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
+                &&  !t.CHaveMyBuff("Seed of Corruption") 
+                && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=15) >= Settings.Current.GroupAfflictionAOECount 
+                && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
 
-            new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Settings.Current.GroupAfflictionUseCorruptionGroup &&
-            !t.HaveMyBuff("Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) < Settings.Current.GroupAfflictionAOECount && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
-            
-            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"),RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.CHaveBuff("Health Funnel") && Pet.CHealthPercent() < Settings.Current.GroupAfflictionHealthfunnelPet && Me.CHealthPercent() > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Haunt"), 7.5f, (s,t) => !t.CHaveMyBuff("Haunt"), RotationCombatUtil.BotTargetFast),
+            // DoT spread
+            new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Settings.Current.GroupAfflictionSpreadCorruption, FindEnemyWithoutMyCorruption),
+            new RotationStep(new RotationSpell("Curse of Agony"), 9f, (s,t) => Settings.Current.GroupAfflictionSpreadCurseOfAgony, FindEnemyWithoutMyCurseOfAgony),
             //Curses
             new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.CHaveMyBuff("Curse of Agony") && Settings.Current.GroupAfflictionAfflCurse == "Agony", RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Curse of Doom"), 10.1f, (s,t) => !t.CHaveMyBuff("Curse of Doom") && Settings.Current.GroupAfflictionAfflCurse == "Doom", RotationCombatUtil.BotTargetFast),
@@ -50,9 +49,9 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Corruption"), 11f, (s,t) => !t.CHaveMyBuff("Corruption"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => Me.HealthPercent < Settings.Current.GroupAfflictionDrainlife, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Unstable Affliction"), 13f, (s,t) => !t.CHaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.CHaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Shadow Bolt"), 16f ,(s,t) => t.CHealthPercent() > Settings.Current.UseWandTresh && !Settings.Current.GroupAfflictionShadowboltWand, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => Settings.Current.GroupAfflictionShadowboltWand, RotationCombatUtil.BotTargetFast)
+            //new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.CHaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 15f ,(s,t) => Settings.Current.GroupAfflictionShadowboltOverWand, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => t.CHealthPercent() > Settings.Current.UseWandTresh && !Settings.Current.GroupAfflictionShadowboltOverWand, RotationCombatUtil.BotTargetFast),
         };
 
         private bool DoPreCalculations()
@@ -62,8 +61,6 @@ namespace AIO.Combat.Warlock
                 return true;
             }
             Cache.Reset();
-            EnemiesAttackingGroup = RotationFramework.Enemies.Where(unit => unit.CIsTargetingMeOrMyPetOrPartyMember())
-                .ToArray();
             return false;
         }
 
@@ -77,6 +74,24 @@ namespace AIO.Combat.Warlock
             return true;
         }
 
-        public WoWUnit FindEnemyAttackingGroup(Func<WoWUnit, bool> predicate) => EnemiesAttackingGroup.FirstOrDefault(predicate);
+        private WoWUnit FindEnemyWithoutMyCorruption(Func<WoWUnit, bool> predicate)
+        {
+            return RotationFramework.Enemies
+                .FirstOrDefault(u => u.IsAttackable
+                    && u.IsTargetingMeOrMyPetOrPartyMember
+                    && u.GetDistance < 29
+                    && !u.CHaveMyBuff("Corruption")
+                    && !TraceLine.TraceLineGo(u.PositionWithoutType));
+        }
+
+        private WoWUnit FindEnemyWithoutMyCurseOfAgony(Func<WoWUnit, bool> predicate)
+        {
+            return RotationFramework.Enemies
+                .FirstOrDefault(u => u.IsAttackable
+                    && u.IsTargetingMeOrMyPetOrPartyMember
+                    && u.GetDistance < 29
+                    && !u.CHaveMyBuff("Curse of Agony")
+                    && !TraceLine.TraceLineGo(u.PositionWithoutType));
+        }
     }
 }

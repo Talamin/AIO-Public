@@ -15,14 +15,15 @@ namespace AIO.Settings
         public override string ChooseRotation { get; set; }
         #endregion
 
-        #region General settings       
+        #region General settings    
+        /*
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Buffing IC")]
         [Description("Should the Bot Buff while In Combat?")]
         public bool BuffIC { get; set; }
-
+        */
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
@@ -364,7 +365,7 @@ namespace AIO.Settings
 
         public DruidLevelSettings()
         {
-            BuffIC = true;
+            //BuffIC = true;
             HealOOC = true;
             SoloFeralProwl = true;
             SoloFeralForceFaerie = false;

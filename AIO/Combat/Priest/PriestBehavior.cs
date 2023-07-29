@@ -22,7 +22,8 @@ namespace AIO.Combat.Priest
                 { Spec.Fallback, new SoloShadow() },
             } , 
             new AutoPartyResurrect("Resurrection"),
-            new Buffs())
+            new OOCBuffs(),
+            new CombatBuffs())
         {
             Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Priest_GroupHoly || Specialisation == Spec.Priest_SoloShadow, new SlowLuaCaching()));
         }

@@ -197,7 +197,7 @@ internal class TalentsManager : ICycleable
                     "235002200102351023351033115100322030113020000000000000000000000000000000000000000"
                 };
                 break;
-            // AFFLICTION WARLOCK
+            // AFFLICTION WARLOCK GROUP
             case Spec.Warlock_GroupAffliction:
                 Codes = new string[]
                 {
