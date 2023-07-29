@@ -105,6 +105,7 @@ namespace AIO.Combat.Warlock
         }
 
         private readonly Spell CreateHealthStone = new Spell("Create Healthstone");
+        private readonly Spell CreateSoulstone = new Spell("Create Soulstone");
         private readonly Spell SummonImp = new Spell("Summon Imp");
         private readonly Spell SummonVoidWalker = new Spell("Summon Voidwalker");
         private readonly Spell SummonFelguard = new Spell("Summon Felguard");
@@ -128,6 +129,8 @@ namespace AIO.Combat.Warlock
             RefreshPet();
             SpellstoneHelper.Refresh();
             HealthstoneRefresh();
+            SoulstoneRefresh();
+            Consumables.UseSoulstone();
             LifeTapOutOfCombat();
         }
 
@@ -149,6 +152,18 @@ namespace AIO.Combat.Warlock
             if (!Fight.InFight || Settings.Current.PetInfight)
             {
                 RefreshPet();
+            }
+        }
+
+        private void SoulstoneRefresh()
+        {
+            if (!Consumables.HaveSoulstone())
+            {
+                if (CreateSoulstone.KnownSpell && CreateSoulstone.IsSpellUsable)
+                {
+                    CreateSoulstone.Launch();
+                    Usefuls.WaitIsCasting();
+                }
             }
         }
 
