@@ -110,7 +110,6 @@ namespace AIO.Combat.Warlock
         private readonly Spell SummonVoidWalker = new Spell("Summon Voidwalker");
         private readonly Spell SummonFelguard = new Spell("Summon Felguard");
         private readonly Spell SummonFelhunter = new Spell("Summon Felhunter");
-        private readonly Spell LifeTapOOC = new Spell("Life Tap");
 
         //protected override void OnMovementCalculation(Vector3 from, Vector3 to, string continentnamempq, CancelEventArgs cancelable)
         //{
