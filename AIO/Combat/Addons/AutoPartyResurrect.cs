@@ -18,7 +18,7 @@ namespace AIO.Combat.Addons
 {
     internal class AutoPartyResurrect : ICycleable
     {
-        private readonly Spell Ressurection;
+        private readonly Spell ResurectionSpell;
         private readonly bool Combat;
         private readonly bool Enabled;
         private bool _isCastingRes = false;
@@ -26,7 +26,7 @@ namespace AIO.Combat.Addons
 
         public AutoPartyResurrect(string ressurection, bool combat = false, bool enabled = true)
         {
-            Ressurection = new Spell(ressurection);
+            ResurectionSpell = new Spell(ressurection);
             Combat = combat;
             Enabled = enabled;
         }
@@ -60,7 +60,7 @@ namespace AIO.Combat.Addons
                 return;
             }
 
-            if (!Ressurection.KnownSpell)
+            if (!ResurectionSpell.KnownSpell)
             {
                 return;
             }
@@ -74,9 +74,9 @@ namespace AIO.Combat.Addons
                 .OrderBy(player => player.PositionWithoutType.DistanceTo(ObjectManager.Me.Position))
                 .FirstOrDefault();
 
-            if (playerToResurrect != null && playerToResurrect.GetDistance < Ressurection.MaxRange)
+            if (playerToResurrect != null && playerToResurrect.GetDistance < ResurectionSpell.MaxRange)
             {
-                if (!Ressurection.IsSpellUsable)
+                if (!ResurectionSpell.IsSpellUsable)
                 {
                     return;
                 }
@@ -85,10 +85,12 @@ namespace AIO.Combat.Addons
 
                 Logging.Write($"Resurrecting {playerToResurrect.Name}");
                 Interact.InteractGameObject(playerToResurrect.GetBaseAddress);
-                SpellManager.CastSpellByNameLUA(Ressurection.Name);
+                SpellManager.CastSpellByNameLUA(ResurectionSpell.Name);
                 Thread.Sleep(500);
-                while (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause && ObjectManager.Me.IsCast)
+                while (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause 
+                    && ObjectManager.Me.CastingTimeLeft > 0)
                 {
+                    Logging.Write($"waiting");
                     WoWPlayer player = ObjectManager.GetObjectWoWPlayer().FirstOrDefault(o => o.Name == playerToResurrect.Name);
                     Thread.Sleep(100);
                     if (player == null || !player.IsDead)
