@@ -47,7 +47,7 @@ namespace AIO.Combat.Warlock
             {
                 Consumables.UseHealthstone();
             }
-            if (!Fight.InFight || Settings.Current.PetInfight)
+            if (Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
             }
@@ -146,7 +146,7 @@ namespace AIO.Combat.Warlock
                 ItemsHelper.DeleteItems(6265, 5);
             }
 
-            if (!Fight.InFight || Settings.Current.PetInfight)
+            if (!Fight.InFight || Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
             }
