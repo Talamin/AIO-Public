@@ -90,7 +90,6 @@ namespace AIO.Combat.Addons
                 while (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause 
                     && ObjectManager.Me.CastingTimeLeft > 0)
                 {
-                    Logging.Write($"waiting");
                     WoWPlayer player = ObjectManager.GetObjectWoWPlayer().FirstOrDefault(o => o.Name == playerToResurrect.Name);
                     Thread.Sleep(100);
                     if (player == null || !player.IsDead)
