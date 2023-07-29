@@ -36,7 +36,7 @@ namespace AIO.Combat.Shaman
         {
             var totems = new Totems(this);
             Addons.Add(totems);
-            Addons.Add(new Buffs(this, totems));
+            Addons.Add(new CombatBuffs(this, totems));
             Addons.Add(new WeaponHelper(this));
         }
 

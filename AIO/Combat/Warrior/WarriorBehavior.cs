@@ -27,7 +27,7 @@ namespace AIO.Combat.Warrior
             })
         {
             SetDefaultRange();
-            Addons.Add(new Buffs(this));
+            Addons.Add(new CombatBuffs(this));
             Addons.Add(new ConditionalCycleable(() => Specialisation != Spec.Warrior_GroupProtection && Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
             Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Warrior_GroupProtection, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
         }

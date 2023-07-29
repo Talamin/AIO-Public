@@ -31,7 +31,7 @@ namespace AIO.Combat.Warlock
                 { Spec.Warlock_SoloDemonology, new SoloDemonology() },
                 { Spec.Fallback, new SoloAffliction() },
             },
-            new Buffs(),
+            new OOCBuffs(),
             new PetAutoTarget("Torment"))
         { }
 
@@ -128,7 +128,7 @@ namespace AIO.Combat.Warlock
             RefreshPet();
             SpellstoneHelper.Refresh();
             HealthstoneRefresh();
-            LifeTapOutOfCombat();
+            //LifeTapOutOfCombat();
         }
 
         private void HealthstoneRefresh()
@@ -194,7 +194,7 @@ namespace AIO.Combat.Warlock
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
         }
-
+        /*
        private void LifeTapOutOfCombat()
         {
             while (!Fight.InFight 
@@ -205,11 +205,12 @@ namespace AIO.Combat.Warlock
                 && !Me.IsMounted 
                 && !Me.InCombat 
                 && !Me.HaveBuff("Drink") 
-                && !Me.HaveBuff("Food") && Me.IsAlive)
+                && !Me.HaveBuff("Food") 
+                && Me.IsAlive)
             {
                 LifeTapOOC.Launch();
             }         
-        }
+        }*/
     }
 }
 

@@ -2,7 +2,6 @@
 using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
-using static AIO.Constants;
 
 namespace AIO.Combat.Shaman
 {

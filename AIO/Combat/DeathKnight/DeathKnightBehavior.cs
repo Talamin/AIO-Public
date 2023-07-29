@@ -26,7 +26,7 @@ namespace AIO.Combat.DeathKnight
                 { Spec.DK_SoloFrost, new SoloFrost() },
                 { Spec.DK_PVPUnholy, new PVPUnholy() },
                 { Spec.Fallback, new SoloBlood() },
-            }, new Buffs())
+            }, new CombatBuffs())
         { }
         private readonly Spell RaiseDead = new Spell("Raise Dead");
 

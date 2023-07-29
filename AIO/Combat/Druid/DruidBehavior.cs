@@ -34,7 +34,8 @@ namespace AIO.Combat.Druid
                 { Spec.Druid_GroupRestoration, new GroupRestoration() },
                 { Spec.Fallback, new SoloFeral() },
             },
-            new Buffs(),
+            new OOCBuffs(),
+            new CombatBuffs(),
             new AutoPartyResurrect("Revive", true, Settings.Current.ReviveAuto),
             new AutoPartyResurrect("Rebirth", true, Settings.Current.RebirthAuto))
         {

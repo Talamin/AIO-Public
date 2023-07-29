@@ -33,7 +33,8 @@ namespace AIO.Combat.Hunter
                 { Spec.Hunter_SoloSurvival, new SoloSurvival() },
                 { Spec.Fallback, new SoloBeastMastery() },
             },
-            new Buffs(),
+            new OOCBuffs(),
+            new CombatBuffs(),
             new PetAutoTarget("Growl"),
             new ConditionalCycleable(() => Settings.Current.Backpaddle,
                 new AutoBackpedal(

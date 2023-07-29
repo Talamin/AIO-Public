@@ -16,7 +16,6 @@ namespace AIO.Combat.Warlock
     using Settings = WarlockLevelSettings;
     internal class GroupAffliction : BaseRotation
     {
-        private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
@@ -62,8 +61,6 @@ namespace AIO.Combat.Warlock
                 return true;
             }
             Cache.Reset();
-            EnemiesAttackingGroup = RotationFramework.Enemies.Where(unit => unit.CIsTargetingMeOrMyPetOrPartyMember())
-                .ToArray();
             return false;
         }
 
