@@ -3,6 +3,7 @@ using AIO.Lists;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using wManager.Events;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
@@ -56,6 +57,13 @@ namespace AIO.Combat.Shaman
         private bool HasOffHandWeapon => Lua.LuaDoString<bool>(@"local hasWeapon = OffhandHasWeapon()
             return hasWeapon");
 
+        private void ApplyEnchant(Spell enchant)
+        {
+            enchant.Launch();
+            Thread.Sleep(100);
+            Lua.LuaDoString("StaticPopup1Button1:Click()");
+        }
+
         private void Enchant()
         {
             switch (Spec)
@@ -66,22 +74,23 @@ namespace AIO.Combat.Shaman
                     {
                         if (WindfuryWeapon.KnownSpell)
                         {
-                            WindfuryWeapon.Launch();
+                            ApplyEnchant(WindfuryWeapon);
+
                         }
                         else
                         {
-                            RockbiterWeapon.Launch();
+                            ApplyEnchant(RockbiterWeapon);
                         }
                     }
                     if (HasOffHandWeapon && !HasOffHandEnchant)
                     {
                         if (FlametongueWeapon.KnownSpell)
                         {
-                            FlametongueWeapon.Launch();
+                            ApplyEnchant(FlametongueWeapon);
                         }
                         else
                         {
-                            RockbiterWeapon.Launch();
+                            ApplyEnchant(RockbiterWeapon);
                         }
                     }
                     break;
@@ -90,31 +99,32 @@ namespace AIO.Combat.Shaman
                     {
                         if (EarthlivingWeapon.KnownSpell)
                         {
-                            EarthlivingWeapon.Launch();
+                            ApplyEnchant(EarthlivingWeapon);
                         }
                         else
                         {
-                            FlametongueWeapon.Launch();
+                            ApplyEnchant(FlametongueWeapon);
                         }
                     }
                     break;
                 case Spec.Shaman_SoloElemental:
                     if (!HasMainHandEnchant)
                     {
-                        FlametongueWeapon.Launch();
+                        ApplyEnchant(FlametongueWeapon);
                     }
                     break;
                 case Spec.LowLevel:
                     if (!HasMainHandEnchant)
                     {
-                        RockbiterWeapon.Launch();
+                        ApplyEnchant(RockbiterWeapon);
                     }
                     if (HasOffHandWeapon && !HasOffHandEnchant)
                     {
-                        RockbiterWeapon.Launch();
+                        ApplyEnchant(RockbiterWeapon);
                     }
                     break;
             }
+
         }
     }
 }

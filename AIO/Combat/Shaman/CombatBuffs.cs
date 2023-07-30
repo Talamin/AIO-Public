@@ -29,7 +29,7 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
 
             new RotationStep(new RotationSpell("Totemic Recall"), 10f, (s,t) => !Me.IsMounted && Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Call of the Elements"), 11f, (s,t) => !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && Totems.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Call of the Elements"), 11f, (s,t) => Fight.InFight && !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && Totems.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Mana Tide Totem"), 20f, (s,t) => !Me.IsMounted && Me.ManaPercentage <= 30, RotationCombatUtil.FindMe),
 

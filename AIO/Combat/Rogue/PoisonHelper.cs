@@ -1,5 +1,4 @@
-﻿
-using robotManager.Helpful;
+﻿using robotManager.Helpful;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -84,7 +83,7 @@ namespace AIO.Combat.Rogue
                         ItemsManager.UseItem(MHPoison);
                         Thread.Sleep(100 + Usefuls.Latency);
                         Lua.RunMacroText("/use 16");
-                        Usefuls.SelectGossipOption(1);
+                        Lua.LuaDoString("StaticPopup1Button1:Click()");
                         Usefuls.WaitIsCasting();
                     }
                 }
