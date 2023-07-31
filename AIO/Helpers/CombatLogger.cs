@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
-using robotManager.Helpful;
 using wManager.Wow.Class;
 using wManager.Wow.ObjectManager;
 
-namespace AIO.Helpers {
-    public static class CombatLogger {
+namespace AIO.Helpers
+{
+    public static class CombatLogger
+    {
         // Access Data
         private const byte Type = 1;
         private const byte ActiveGuid = 2;
@@ -20,25 +21,29 @@ namespace AIO.Helpers {
         private static readonly object Locker = new object();
         private static readonly Dictionary<uint, StatisticEntry> _statistics = new Dictionary<uint, StatisticEntry>();
 
-        public static void ParseCombatLog(string eventId, List<string> args) {
+        public static void ParseCombatLog(string eventId, List<string> args)
+        {
             if (!eventId.Equals("COMBAT_LOG_EVENT_UNFILTERED")
                 || args.Count < 5
                 || Convert.ToUInt64(args[ActiveGuid], 16) != ObjectManager.Me.Guid)
+            {
                 return;
+            }
 
             // for (var i = 0; i < args.Count; i++) {
             //     string arg = args[i];
             //     Logging.Write($"Index {i}: {arg}");
             // }
 
-            switch (args[Type]) {
+            switch (args[Type])
+            {
                 case "SPELL_HEAL":
                 case "SPELL_PERIODIC_HEAL":
                     LogData(Convert.ToUInt32(args[SpellId]), Convert.ToInt32(args[AmountHealed]));
                     break;
             }
         }
-        
+
         // public static void LogStatistics()
 
         public static double GetAverage(this Spell spell) => GetAverage(spell.Id);
@@ -48,20 +53,26 @@ namespace AIO.Helpers {
 
         public static StatisticEntry GetStatisticEntry(this Spell spell) => GetStatisticEntry(spell.Id);
 
-        public static StatisticEntry GetStatisticEntry(uint spellId) {
-            lock (Locker) {
+        public static StatisticEntry GetStatisticEntry(uint spellId)
+        {
+            lock (Locker)
+            {
                 return _statistics.TryGetValue(spellId, out StatisticEntry entry) ? entry : null;
             }
         }
 
-        public static Dictionary<uint, StatisticEntry> GetDictionary() {
-            lock (Locker) {
+        public static Dictionary<uint, StatisticEntry> GetDictionary()
+        {
+            lock (Locker)
+            {
                 return _statistics;
             }
         }
 
-        public static void ForceAverage(uint spellId, int average) {
-            lock (Locker) {
+        public static void ForceAverage(uint spellId, int average)
+        {
+            lock (Locker)
+            {
                 if (!_statistics.TryGetValue(spellId, out _))
                     _statistics.Add(spellId, new StatisticEntry(average));
                 else
@@ -70,8 +81,10 @@ namespace AIO.Helpers {
             }
         }
 
-        private static void LogData(uint spellId, int amount) {
-            lock (Locker) {
+        private static void LogData(uint spellId, int amount)
+        {
+            lock (Locker)
+            {
                 if (!_statistics.TryGetValue(spellId, out StatisticEntry entry))
                     _statistics.Add(spellId, new StatisticEntry(amount));
                 else

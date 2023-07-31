@@ -1,9 +1,11 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
+using AIO.Combat.Common;
 using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
+using wManager.Events;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -15,6 +17,7 @@ namespace AIO.Combat.DeathKnight
     internal class DeathKnightBehavior : BaseCombatClass
     {
         public override float Range => 5.0f;
+        private readonly Spell _raiseDeadSpell = new Spell("Raise Dead");
 
         internal DeathKnightBehavior() : base(
             Settings.Current,
@@ -26,23 +29,39 @@ namespace AIO.Combat.DeathKnight
                 { Spec.DK_SoloFrost, new SoloFrost() },
                 { Spec.DK_PVPUnholy, new PVPUnholy() },
                 { Spec.Fallback, new SoloBlood() },
-            }, new CombatBuffs())
-        { }
-        private readonly Spell RaiseDead = new Spell("Raise Dead");
+            })
+        {
+            Addons.Add(new Racials());
+            Addons.Add(new CombatBuffs());
+        }
 
-        protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
+        public override void Initialize()
+        {
+            FightEvents.OnFightStart += OnFightStart;
+            FightEvents.OnFightLoop += OnFightLoop;
+            base.Initialize();
+        }
+
+        public override void Dispose()
+        {
+            FightEvents.OnFightStart -= OnFightStart;
+            FightEvents.OnFightLoop -= OnFightLoop;
+            base.Dispose();
+        }
+
+        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
         {
             if (!Pet.IsAlive)
             {
-                if (RaiseDead.IsSpellUsable && RaiseDead.KnownSpell && !Me.IsMounted
+                if (_raiseDeadSpell.IsSpellUsable && _raiseDeadSpell.KnownSpell && !Me.IsMounted
                     && Settings.Current.RaiseDead && (ItemsManager.HasItemById(37201) || Settings.Current.GlyphRaiseDead))
                 {
-                    RaiseDead.Launch();
+                    _raiseDeadSpell.Launch();
                     Usefuls.WaitIsCasting();
                 }
             }
         }
-        protected override void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
+        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
             if (Pet.IsAlive)
             {
@@ -63,7 +82,6 @@ namespace AIO.Combat.DeathKnight
                     }
                 }
             }
-
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Framework;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
@@ -14,11 +14,14 @@ using Timer = robotManager.Helpful.Timer;
 
 namespace AIO.Combat.Addons
 {
-    internal class AutoBackpedal : ICycleable
+    internal class AutoBackpedal : IAddon
     {
         private readonly Func<bool> Should;
         private readonly IEnumerable<Vector3> Circle;
         private readonly Timer MoveTimer = new Timer();
+
+        public bool RunOutsideCombat => false;
+        public bool RunInCombat => true;
 
         public AutoBackpedal(Func<bool> should, float range)
         {
@@ -34,9 +37,9 @@ namespace AIO.Combat.Addons
                 }).ToList();
         }
 
-        public void Dispose() => FightEvents.OnFightLoop -= OnFightLoop;
-
+        public List<RotationStep> Rotation => new List<RotationStep>();
         public void Initialize() => FightEvents.OnFightLoop += OnFightLoop;
+        public void Dispose() => FightEvents.OnFightLoop -= OnFightLoop;
 
         private bool MoveToClosest()
         {
@@ -69,10 +72,6 @@ namespace AIO.Combat.Addons
             {
                 return;
             }
-            if (!Pet.IsAlive && Me.WowClass == WoWClass.Hunter)
-            {
-                return;
-            }
 
             switch (Me.WowClass)
             {
@@ -86,6 +85,11 @@ namespace AIO.Combat.Addons
                     }
                     break;
                 case WoWClass.Hunter:
+                    if (!Pet.IsAlive)
+                    {
+                        return;
+                    }
+
                     if (Me.IsInGroup)
                     {
                         if (MoveToClosest())
@@ -96,7 +100,7 @@ namespace AIO.Combat.Addons
                         }
                         break;
                     }
-                    if (!Me.IsInGroup)
+                    else
                     {
                         var types = Others.Random(0, 2);
                         switch (types)

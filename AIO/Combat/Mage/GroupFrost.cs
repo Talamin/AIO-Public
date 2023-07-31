@@ -45,9 +45,9 @@ namespace AIO.Combat.Mage
 
             new RotationStep(new RotationSpell("Cold Snap"), 9f, (s,t) => !Me.CHaveBuff("Ice Barrier") && Me.CHealthPercent() < 95, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Evocation"), 10f, (s,t) =>  Settings.Current.GlyphOfEvocation && t.CHealthPercent() < 20 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 2), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Mirror Image"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfEternalWater && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.isboss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Mirror Image"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Icy Veins"), 12f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Summon Water Elemental"), 13f, (s,t) => !Settings.Current.GlyphOfEternalWater && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Deep Freeze"), 14f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh , RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Ice Lance"), 15f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh && (Me.CBuffStack("Fingers of Frost") > 0 || t.CHaveMyBuff("Frost Nova")), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fireball"), 16f, (s,t) => Me.CManaPercentage() > Settings.Current.UseWandTresh  && !SpellManager.KnowSpell("Frostbolt"), RotationCombatUtil.BotTargetFast, checkLoS: true),

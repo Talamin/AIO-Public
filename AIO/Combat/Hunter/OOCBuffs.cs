@@ -1,4 +1,4 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
 using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
@@ -8,11 +8,12 @@ using static AIO.Constants;
 namespace AIO.Combat.Hunter
 {
     using Settings = HunterLevelSettings;
-    internal class OOCBuffs : BaseRotation
+    internal class OOCBuffs : IAddon
     {
-        internal OOCBuffs() : base(runInCombat: false, runOutsideCombat: true) { }
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => false;
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationBuff("Aspect of the Pack"), 2f, (s, t) =>
                 !Me.IsMounted
                 && Settings.Current.UseAspecofthePack
@@ -22,5 +23,8 @@ namespace AIO.Combat.Hunter
                 && t.ManaPercentage < Settings.Current.AspectOfTheHawkThreshold
                 && t.ManaPercentage > Settings.Current.AspectOfTheViperTheshold , RotationCombatUtil.FindMe, Exclusive.HunterAspect),
         };
+
+        public void Initialize() { }
+        public void Dispose() { }
     }
 }

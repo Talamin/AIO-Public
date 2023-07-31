@@ -1,4 +1,4 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
 using AIO.Framework;
 using System.Collections.Generic;
 using wManager.Wow.Helpers;
@@ -7,11 +7,12 @@ using static AIO.Constants;
 
 namespace AIO.Combat.Priest
 {
-    internal class OOCBuffs : BaseRotation
+    internal class OOCBuffs : IAddon
     {
-        internal OOCBuffs() : base(runInCombat: false, runOutsideCombat: true) { }
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => false;
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationBuff("Prayer of Fortitude"), 1f, (s,t) =>  CanPrayFort() && NeedsFort(s,t), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Prayer of Spirit"), 2f, (s,t) =>  CanPraySpirit() && NeedsSpirit(s,t), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Prayer of Shadow Protection"), 3f, (s,t) =>  CanPrayShadow() && NeedsShadow(s,t), RotationCombatUtil.FindPartyMember),
@@ -19,6 +20,9 @@ namespace AIO.Combat.Priest
             new RotationStep(new RotationBuff("Divine Spirit"), 5f, (s,t) =>  CanSpirit() && NeedsSpirit(s,t), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Shadow Protection"), 6f, (s,t) =>  CanShadow() && NeedsShadow(s,t), RotationCombatUtil.FindPartyMember),
         };
+
+        public void Initialize() { }
+        public void Dispose() { }
 
         private bool HasCandle() => ItemsManager.HasItemById(17029) || ItemsManager.HasItemById(17028); // Sacred Candle and Holy Candle
         private bool CanPrayFort() => !Me.IsMounted && SpellManager.KnowSpell("Prayer of Fortitude") && HasCandle();
@@ -32,6 +36,5 @@ namespace AIO.Combat.Priest
         private bool NeedsFort(IRotationAction action, WoWUnit target) => !target.HaveBuff("Power Word: Fortitude") && !target.HaveBuff("Prayer of Fortitude");
         private bool NeedsSpirit(IRotationAction action, WoWUnit target) => !target.HaveBuff("Divine Spirit") && !target.HaveBuff("Prayer of Spirit");
         private bool NeedsShadow(IRotationAction action, WoWUnit target) => !target.HaveBuff("Shadow Protection") && !target.HaveBuff("Prayer of Shadow Protection");
-
     }
 }

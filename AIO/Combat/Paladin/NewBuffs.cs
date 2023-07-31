@@ -1,23 +1,30 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
+using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
-using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using static AIO.Constants;
 
 namespace AIO.Combat.Paladin
 {
     using Settings = PaladinLevelSettings;
-    internal class NewBuffs : BaseRotation
+    internal class NewBuffs : IAddon
     {
         private readonly BaseCombatClass CombatClass;
         private Spec Spec => CombatClass.Specialisation;
 
-        internal NewBuffs(BaseCombatClass combatClass) : base(runInCombat: true, runOutsideCombat: true) => CombatClass = combatClass;
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => true;
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        internal NewBuffs(BaseCombatClass combatClass)
+        {
+            CombatClass = combatClass;
+        }
+
+        public List<RotationStep> Rotation => new List<RotationStep>
+        {
             new RotationStep(new RotationBuff("Seal of Command"), 1f, (s, t) => Spec == Spec.Paladin_SoloRetribution && Settings.Current.SoloSealret == "Seal of Command", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Vengeance"), 1.1f, (s, t) => Spec == Spec.Paladin_SoloRetribution && Settings.Current.SoloSealret == "Seal of Vengeance", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Seal of Righteousness"), 1.2f, (s, t) =>Spec == Spec.Paladin_SoloRetribution && Settings.Current.SoloSealret == "Seal of Righteousness", RotationCombatUtil.FindMe),
@@ -44,6 +51,9 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationBuff("Shadow Resistance Aura"), 12f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Shadow Resistance Aura", RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Frost Resistance Aura"), 13f, (s,t) =>!Me.IsOnTaxi && !Me.IsMounted && Settings.Current.Aura =="Frost Resistance Aura", RotationCombatUtil.FindMe),
         };
+
+        public void Initialize() { }
+        public void Dispose() { }
 
         private bool ProtSpecs()
         {

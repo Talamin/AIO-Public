@@ -1,4 +1,5 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
+using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Lists;
 using AIO.Settings;
@@ -14,8 +15,22 @@ using wManager.Wow.ObjectManager;
 namespace AIO.Combat.Shaman
 {
     using Settings = ShamanLevelSettings;
-    internal class Totems : ICycleable
+    internal class Totems : IAddon
     {
+        private readonly BaseCombatClass CombatClass;
+        private Spec Spec => CombatClass.Specialisation;
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => true;
+
+        internal Totems(BaseCombatClass combatClass)
+        {
+            CombatClass = combatClass;
+        }
+
+        public List<RotationStep> Rotation => new List<RotationStep>();
+        public void Initialize() => MovementEvents.OnMovementPulse += OnMovementPulse;
+        public void Dispose() => MovementEvents.OnMovementPulse -= OnMovementPulse;
+
         private static IEnumerable<WoWUnit> Pets => RotationFramework.AllUnits.Where(o => o.IsMyPet);
         private static IEnumerable<WoWUnit> NearbyPets => Pets.Where(o => o.GetDistance < 30);
         private static IEnumerable<WoWUnit> DistantPets => Pets.Where(o => o.GetDistance >= 30);
@@ -32,14 +47,6 @@ namespace AIO.Combat.Shaman
         public static bool ShouldRecall() => DistantPets.Any();
 
         public static bool HasTemporary() => HasAny("Mana Tide Totem", "Earth Elemental Totem", "Tremor Totem", "Grounding Totem", "Earthbind Totem", "Stoneclaw Totem");
-
-        private readonly BaseCombatClass CombatClass;
-        private Spec Spec => CombatClass.Specialisation;
-        internal Totems(BaseCombatClass combatClass) => CombatClass = combatClass;
-
-        public void Initialize() => MovementEvents.OnMovementPulse += OnMovementPulse;
-
-        public void Dispose() => MovementEvents.OnMovementPulse -= OnMovementPulse;
 
         private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => SetCall();
 

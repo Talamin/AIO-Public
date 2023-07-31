@@ -1,16 +1,20 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
 using AIO.Framework;
 using System.Collections.Generic;
 using static AIO.Constants;
 
 namespace AIO.Combat.Druid
 {
-    internal class CombatBuffs : BaseRotation
+    internal class CombatBuffs : IAddon
     {
-        internal CombatBuffs() : base(runInCombat: true, runOutsideCombat: true) { }
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => true;
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationBuff("Tree of Life"), 5f,(s,t) => !Me.IsMounted, RotationCombatUtil.FindMe),
         };
+
+        public void Initialize() { }
+        public void Dispose() { }
     }
 }

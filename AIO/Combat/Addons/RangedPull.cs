@@ -1,5 +1,4 @@
-﻿using AIO.Combat.Common;
-using AIO.Framework;
+﻿using AIO.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,14 +12,18 @@ using Timer = robotManager.Helpful.Timer;
 
 namespace AIO.Combat.Addons
 {
-    internal class RangedPull : ICycleable
+    internal class RangedPull : IAddon
     {
-        private readonly List<RotationSpell> PullSpells = new List<RotationSpell>();
-        private Timer Timeout = new Timer();
-        private RotationSpell ChosenPullSPell;
+        private readonly List<RotationSpell> _pullSpells = new List<RotationSpell>();
+        private Timer _timeout = new Timer();
+        private RotationSpell _chosenPullSPell;
+        private PullCondition _pullCondition;
         private Action SetDefaultRange;
         private Action<float> SetRange;
-        private PullCondition _pullCondition;
+
+        public bool RunOutsideCombat => false;
+        public bool RunInCombat => true;
+        public List<RotationStep> Rotation => new List<RotationStep>();
 
         public enum PullCondition
         {
@@ -32,17 +35,11 @@ namespace AIO.Combat.Addons
         {
             foreach (string pullSPell in pullSPells)
             {
-                PullSpells.Add(new RotationSpell(pullSPell));
+                _pullSpells.Add(new RotationSpell(pullSPell));
             }
             SetDefaultRange = setDefaultRange;
             SetRange = setRange;
             _pullCondition = pullCondition;
-        }
-
-        public void Dispose()
-        {
-            FightEvents.OnFightStart -= OnFightStart;
-            FightEvents.OnFightLoop -= OnFightLoop;
         }
 
         public void Initialize()
@@ -51,24 +48,30 @@ namespace AIO.Combat.Addons
             FightEvents.OnFightLoop += OnFightLoop;
         }
 
+        public void Dispose()
+        {
+            FightEvents.OnFightStart -= OnFightStart;
+            FightEvents.OnFightLoop -= OnFightLoop;
+        }
+
         private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable) => FighStart();
         private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable) => Run();
 
         private void FighStart()
         {
-            Timeout = new Timer(7 * 1000);
-            List<RotationSpell> availableSpells = PullSpells.FindAll(spell => spell.KnownSpell);
+            _timeout = new Timer(7 * 1000);
+            List<RotationSpell> availableSpells = _pullSpells.FindAll(spell => spell.KnownSpell);
             if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Thrown"))
             {
-                ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
+                _chosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
                 return;
             }
             if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns" || item.GetItemInfo.ItemSubType == "Crossbows"))
             {
-                ChosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Shoot");
+                _chosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Shoot");
                 return;
             }
-            ChosenPullSPell = availableSpells.FirstOrDefault();
+            _chosenPullSPell = availableSpells.FirstOrDefault();
         }
 
         private void Run()
@@ -76,14 +79,13 @@ namespace AIO.Combat.Addons
             var distanceToTarget = Me.Position.DistanceTo(Target.Position);
 
             // No pull spell known or usable, try fallback
-            if (!Me.InCombatFlagOnly 
-                && (ChosenPullSPell == null || !ChosenPullSPell.IsSpellUsable))
+            if (!Me.InCombatFlagOnly && (_chosenPullSPell == null || !_chosenPullSPell.IsSpellUsable))
             {
-                    SetDefaultRange();
-                    return;
+                SetDefaultRange();
+                return;
             }
 
-            if (Timeout.IsReady || Target.IsCast || Target.HasTarget && Target.Target != Me.Guid)
+            if (_timeout.IsReady || Target.IsCast || Target.HasTarget && Target.Target != Me.Guid)
             {
                 SetDefaultRange();
                 return;
@@ -103,16 +105,16 @@ namespace AIO.Combat.Addons
                 return;
             }
 
-            float pullRange = ChosenPullSPell.MaxRange - 5;
+            float pullRange = _chosenPullSPell.MaxRange - 5;
             SetRange(pullRange);
 
             if (distanceToTarget <= pullRange + 4
                 && distanceToTarget >= 10f)
             {
                 MovementManager.StopMove();
-                RotationCombatUtil.CastSpell(ChosenPullSPell, Target, true);
+                RotationCombatUtil.CastSpell(_chosenPullSPell, Target, true);
                 Timer timer = new Timer(2000);
-                while (!Me.InCombatFlagOnly 
+                while (!Me.InCombatFlagOnly
                     && !timer.IsReady
                     && Conditions.InGameAndConnectedAndAlive)
                 {

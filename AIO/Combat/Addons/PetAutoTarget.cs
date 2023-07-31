@@ -1,6 +1,6 @@
-﻿using AIO.Combat.Common;
-using AIO.Framework;
+﻿using AIO.Framework;
 using robotManager.Helpful;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using wManager.Events;
@@ -10,13 +10,17 @@ using static AIO.Constants;
 
 namespace AIO.Combat.Addons
 {
-    internal class PetAutoTarget : ICycleable
+    internal class PetAutoTarget : IAddon
     {
-        private readonly string Taunt;
+        private readonly string tauntSpellName;
+        public bool RunOutsideCombat => false;
+        public bool RunInCombat => true;
+
+        public List<RotationStep> Rotation => new List<RotationStep>();
 
         public PetAutoTarget(string taunt)
         {
-            Taunt = taunt;
+            tauntSpellName = taunt;
         }
 
         public void Initialize() => FightEvents.OnFightLoop += OnFightLoop;
@@ -25,14 +29,11 @@ namespace AIO.Combat.Addons
 
         private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
-            if (!Pet.IsAlive || !Pet.IsValid)
+            if (!Pet.IsAlive || !Pet.IsValid || Me.IsInGroup)
             {
                 return;
             }
-            if (Me.IsInGroup)
-            {
-                return;
-            }
+
             var validTargets = RotationFramework.Enemies.OrderBy(uu => uu.HealthPercent);
 
             var unitsAttackMe = validTargets.Where(u =>
@@ -66,7 +67,7 @@ namespace AIO.Combat.Addons
                 return;
             }
 
-            PetManager.PetSpellCast(Taunt);
+            PetManager.PetSpellCast(tauntSpellName);
         }
     }
 }

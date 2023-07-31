@@ -1,7 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Helpers;
-using AIO.Helpers.Caching;
 using AIO.Settings;
 using System.Collections.Generic;
 using static AIO.Constants;
@@ -12,7 +11,6 @@ namespace AIO.Combat.Paladin
 
     internal class GroupHoly : HealerRotation
     {
-        public GroupHoly() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             //Pre Calculations
             new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f, (action, me) => DoPreCalculations(), RotationCombatUtil.FindMe),
@@ -30,7 +28,5 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Flash of Light"), 10.1f, (s,t) => Me.IsInGroup && t.HealthPercent <= Settings.Current.GroupHolyFL, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Judgement of Light"), 11f, (s,t) => Me.IsInGroup && !t.HaveMyBuff("Judgement of Light"), RotationCombatUtil.BotTarget)
         };
-
-
     }
 }

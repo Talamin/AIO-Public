@@ -1,5 +1,6 @@
-﻿using AIO.Combat.Common;
+﻿/*using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Helpers.Caching;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,73 +29,99 @@ internal class RacialManager : ICycleable
 
     public static bool Enabled = true;
 
+    public void Initialize()
+    {
+        FightEvents.OnFightLoop += OnFightLoop;
+        MovementEvents.OnMovementPulse += OnMovementPulse;
+    }
+
+    public void Dispose()
+    {
+        FightEvents.OnFightLoop -= OnFightLoop;
+        MovementEvents.OnMovementPulse -= OnMovementPulse;
+    }
+
     private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
     {
-        if (!Enabled)
+        try
         {
-            return;
+            Logging.WriteError("OM test");
+            if (Me.CInCombat() || Me.InCombat)
+            {
+                Logging.WriteError("OK");
+            }
+
+            if (!Enabled)
+            {
+                return;
+            }
+
+            //Bloodfury
+            if (BloodFury.KnownSpell && BloodFury.IsSpellUsable && Me.InCombat)
+            {
+                if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2 || BossList.MyTargetIsBoss)
+                {
+                    RacialBloodFury();
+                }
+            }
+            //Berserking
+            if (Berserking.KnownSpell && Berserking.IsSpellUsable && Me.InCombat)
+            {
+                var range = Me.WowClass == WoWClass.Warrior || Me.WowClass == WoWClass.Rogue || Me.WowClass == WoWClass.DeathKnight ? 7 : 30;
+                if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= range) >= 2 || BossList.MyTargetIsBoss)
+                {
+                    RacialBerserking();
+                }
+            }
+            //WillofForsaken
+            if (WilloftheForsaken.KnownSpell)
+            {
+                RacialWillForsaken();
+            }
+            //EverymanforHimself
+            if (Everyman.KnownSpell)
+            {
+                RacialEveryManforHimself();
+            }
+            //Warstomp
+            if (WarStomp.KnownSpell && WarStomp.IsSpellUsable && Me.InCombat && !Me.HaveBuff("Cat Form") && !Me.HaveBuff("Bear Form") && !Me.HaveBuff("Dire Bear Form"))
+            {
+                if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2)
+                {
+                    RacialWarStomp();
+                }
+            }
+            //Escapeartist
+            if (EscapeArtist.KnownSpell)
+            {
+                RacialEscapeArtist();
+            }
+            //Stoneform
+            if (StoneForm.KnownSpell)
+            {
+                RacialStoneform();
+            }
+            if (ArcaneTorrent.KnownSpell && Target.GetDistance <= 8 && Target.IsCast)
+            {
+                RacialArcaneTorrent();
+            }
+            if (GiftoftheNaruu.KnownSpell && GiftoftheNaruu.IsSpellUsable && Me.InCombat)
+            {
+                if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2)
+                {
+                    RacialGiftofNaru();
+                }
+            }
+            if (Shadowmeld.KnownSpell && Me.HealthPercent < 5)
+            {
+                RacialShadowmeld();
+            }
+        }
+        catch (System.Exception e)
+        {
+            Logging.WriteError(e.ToString());
         }
 
-        //Bloodfury
-        if (BloodFury.KnownSpell && BloodFury.IsSpellUsable && Me.InCombat)
-        {
-            if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2 || BossList.isboss)
-            {
-                RacialBloodFury();
-            }
-        }
-        //Berserking
-        if (Berserking.KnownSpell && Berserking.IsSpellUsable && Me.InCombat)
-        {
-            var range = Me.WowClass == WoWClass.Warrior || Me.WowClass == WoWClass.Rogue || Me.WowClass == WoWClass.DeathKnight ? 7 : 30;
-            if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= range) >= 2 || BossList.isboss)
-            {
-                RacialBerserking();
-            }
-        }
-        //WillofForsaken
-        if (WilloftheForsaken.KnownSpell)
-        {
-            RacialWillForsaken();
-        }
-        //EverymanforHimself
-        if (Everyman.KnownSpell)
-        {
-            RacialEveryManforHimself();
-        }
-        //Warstomp
-        if (WarStomp.KnownSpell && WarStomp.IsSpellUsable && Me.InCombat && !Me.HaveBuff("Cat Form") && !Me.HaveBuff("Bear Form") && !Me.HaveBuff("Dire Bear Form"))
-        {
-            if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2)
-            {
-                RacialWarStomp();
-            }
-        }
-        //Escapeartist
-        if (EscapeArtist.KnownSpell)
-        {
-            RacialEscapeArtist();
-        }
-        //Stoneform
-        if (StoneForm.KnownSpell)
-        {
-            RacialStoneform();
-        }
-        if (ArcaneTorrent.KnownSpell && Target.GetDistance <= 8 && Target.IsCast)
-        {
-            RacialArcaneTorrent();
-        }
-        if (GiftoftheNaruu.KnownSpell && GiftoftheNaruu.IsSpellUsable && Me.InCombat)
-        {
-            if (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.GetDistance <= 7) >= 2)
-            {
-                RacialGiftofNaru();
-            }
-        }
-        if (Shadowmeld.KnownSpell && Me.HealthPercent < 5)
-        {
-            RacialShadowmeld();
-        }
     }
 
     private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
@@ -239,17 +266,4 @@ internal class RacialManager : ICycleable
             }
         }
     }
-
-    public void Initialize()
-    {
-        FightEvents.OnFightLoop += OnFightLoop;
-        MovementEvents.OnMovementPulse += OnMovementPulse;
-    }
-
-    public void Dispose()
-    {
-        FightEvents.OnFightLoop -= OnFightLoop;
-        MovementEvents.OnMovementPulse -= OnMovementPulse;
-    }
-}
-
+}*/

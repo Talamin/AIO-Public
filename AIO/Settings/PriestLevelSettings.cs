@@ -284,7 +284,7 @@ namespace AIO.Settings
         [Description("Will remove harmful magic and diseases")]
         public bool HolyDeDeBuff { get; set; }
 
-        [DropdownList(new[] { nameof(Spec.Priest_SoloShadow), nameof(Spec.Priest_GroupHoly) })]
+        [DropdownList(new[] { nameof(Spec.Priest_SoloShadow), nameof(Spec.Priest_GroupHoly), nameof(Spec.Priest_GroupDiscipline) })]
         public override string ChooseRotation { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Dragon's Breath"), 12f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && t.CGetDistance() < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && !t.CHaveMyBuff("Living Bomb"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fire Blast"), 14f, (s,t) => Settings.Current.GroupFireUseFireBlast && Me.ManaPercentage > Settings.Current.UseWandTresh && t.CHealthPercent() < 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.isboss), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.MyTargetIsBoss), RotationCombatUtil.BotTargetFast, checkLoS: true),
             
             //// Only cast Polymorph if Sheep is enabled in settings
             //new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 

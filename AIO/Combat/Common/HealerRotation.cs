@@ -1,13 +1,9 @@
 ﻿using AIO.Framework;
+using AIO.Helpers.Caching;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wManager.Wow.ObjectManager;
-using AIO.Helpers.Caching;
-using robotManager.Helpful;
 
 namespace AIO.Combat.Common
 {
@@ -23,8 +19,6 @@ namespace AIO.Combat.Common
         private readonly int MAX_CACHE_AGE = 100;
 
         private Stopwatch watch = Stopwatch.StartNew();
-
-        public HealerRotation(bool runInCombat = true, bool runOutsideCombat = false, bool useCombatSynthetics = false, bool completelySynthetic = false) : base(runInCombat, runOutsideCombat, useCombatSynthetics, completelySynthetic) { }
 
         public WoWUnit GetTank(Func<WoWUnit, bool> predicate)
         {

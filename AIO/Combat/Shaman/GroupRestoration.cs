@@ -13,7 +13,6 @@ namespace AIO.Combat.Shaman
     internal class GroupRestoration : BaseRotation
     {
         private static WoWUnit _tank => RotationCombatUtil.FindTank(unit => true);
-        public GroupRestoration() : base(useCombatSynthetics: Settings.Current.UseSyntheticCombatEvents) { }
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),

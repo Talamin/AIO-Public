@@ -1,15 +1,12 @@
-﻿using System;
-using AIO.Combat.Common;
+﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Helpers;
+using AIO.Helpers.Caching;
 using AIO.Settings;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using AIO.Helpers;
-using AIO.Helpers.Caching;
-using robotManager.Helpful;
-using wManager.Wow.Class;
-using wManager.Wow.Enums;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -20,7 +17,7 @@ namespace AIO.Combat.Warrior
     {
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
-        
+
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,
                 (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
@@ -52,8 +49,8 @@ namespace AIO.Combat.Warrior
             // new RotationStep(new RotationSpell("Thunder Clap"), 10.1f, RotationCombatUtil.Always, _ => Me.CIsInGroup() && EnemiesAttackingGroup.Any(unit => unit.CGetDistance() < 8 && !unit.CHaveMyBuff("Thunder Clap")), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Revenge"), 10.2f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Shield Slam"), 10.3f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
-            
-            new RotationStep(new RotationSpell("Devastate"), 10.4f, (s,t) => (Me.CRage() > 70 || t.CMyBuffStack("Sunder Armor") < 5) && BossList.isboss, RotationCombatUtil.BotTargetFast),
+
+            new RotationStep(new RotationSpell("Devastate"), 10.4f, (s,t) => (Me.CRage() > 70 || t.CMyBuffStack("Sunder Armor") < 5) && BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Devastate"), 10.5f, (s,t) => Me.CRage() > 70 || !t.CHaveMyBuff("Sunder Armor"), RotationCombatUtil.BotTargetFast),
 
             new RotationStep(new RotationSpell("Bloodrage"), 11f, (s,t) => Me.CRage() < 70, RotationCombatUtil.BotTargetFast),
@@ -67,7 +64,8 @@ namespace AIO.Combat.Warrior
         };
 
 
-        private bool DoPreCalculations() {
+        private bool DoPreCalculations()
+        {
             if (LimitExecutionSpeed(100)) return true;
             Cache.Reset();
             EnemiesAttackingGroup = RotationFramework.Enemies.Where(unit => unit.CIsTargetingMeOrMyPetOrPartyMember())
@@ -75,8 +73,10 @@ namespace AIO.Combat.Warrior
             return false;
         }
 
-        private bool LimitExecutionSpeed(int delay) {
-            if (watch.ElapsedMilliseconds > delay) {
+        private bool LimitExecutionSpeed(int delay)
+        {
+            if (watch.ElapsedMilliseconds > delay)
+            {
                 watch.Restart();
                 return false;
             }
@@ -90,9 +90,9 @@ namespace AIO.Combat.Warrior
         public WoWUnit TauntUnitPrio(Func<WoWUnit, bool> predicate)
         {
             List<WoWUnit> enemiesToTaunt = new List<WoWUnit>();
-            foreach(WoWUnit unit in RotationFramework.PartyMembers)
+            foreach (WoWUnit unit in RotationFramework.PartyMembers)
             {
-                foreach(WoWUnit attacker in EnemiesAttackingGroup)
+                foreach (WoWUnit attacker in EnemiesAttackingGroup)
                 {
                     if (!attacker.CIsTargetingMe() && !enemiesToTaunt.Contains(attacker) && unit.CGetPosition().DistanceTo(attacker.CGetPosition()) > unit.CGetPosition().DistanceTo(Me.CGetPosition()))
                     {

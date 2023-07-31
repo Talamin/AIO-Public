@@ -1,9 +1,9 @@
-﻿using AIO.Combat.Common;
+﻿using AIO.Combat.Addons;
+using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
 using AIO.Lists;
-using AIO.Settings;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
@@ -16,15 +16,15 @@ using static AIO.Constants;
 
 namespace AIO.Combat.Paladin
 {
-    using Settings = PaladinLevelSettings;
-    internal class Blessings : BaseRotation
+    internal class Blessings : IAddon
     {
         private readonly BaseCombatClass CombatClass;
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => false;
 
         private Stopwatch watch = Stopwatch.StartNew();
         private readonly int MAX_CACHE_AGE = 5000;
         private readonly Dictionary<string, string> PlayerBuff = new Dictionary<string, string>();
-
 
         private static readonly string Sanctuary = "Blessing of Sanctuary";
         private static readonly string Wisdom = "Blessing of Wisdom";
@@ -34,7 +34,6 @@ namespace AIO.Combat.Paladin
         private static readonly string ManaSpring2 = "Mana Spring";
         private static readonly string BattleShout = "Battle Shout";
 
-
         private bool KnowSanctuary = SpellManager.KnowSpell(Sanctuary);
         private bool KnowKings = SpellManager.KnowSpell(Kings);
         private bool HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
@@ -42,15 +41,21 @@ namespace AIO.Combat.Paladin
 
         private bool SeenManaSpringTotem = false;
 
-        internal Blessings(BaseCombatClass combatClass) : base(runInCombat: true, runOutsideCombat: true) => CombatClass = combatClass;
+        internal Blessings(BaseCombatClass combatClass)
+        {
+            CombatClass = combatClass;
+        }
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f, (action, me) => SetupBuffs(), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff(Sanctuary), 1f, NeedsBuff, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
             new RotationStep(new RotationBuff(Wisdom), 2f, NeedsBuff, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
             new RotationStep(new RotationBuff(Kings), 3f, NeedsBuff, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
             new RotationStep(new RotationBuff(Might), 5f, NeedsBuff, RotationCombatUtil.FindPartyMember, Exclusive.PaladinBlessing),
         };
+
+        public void Initialize() { }
+        public void Dispose() { }
 
         private bool NeedsBuff(IRotationAction action, WoWUnit player)
         {
@@ -77,7 +82,7 @@ namespace AIO.Combat.Paladin
             KnowKings = SpellManager.KnowSpell(Kings);
             HaveWarrior = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Warrior) != 0;
             HaveShaman = RotationFramework.PartyMembers.Count(o => o.WowClass == WoWClass.Shaman) != 0;
-            
+
             if (Me.IsInGroup)
             {
                 if ((String.IsNullOrEmpty(RotationFramework.TankName) || String.IsNullOrEmpty(RotationFramework.HealName)))
@@ -94,7 +99,7 @@ namespace AIO.Combat.Paladin
                         {
                             SeenManaSpringTotem = true;
                         }
-                     }   
+                    }
                     PlayerBuff[player.Name] = GetBuff(player);
                 }
             }

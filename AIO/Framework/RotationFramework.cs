@@ -1,11 +1,10 @@
 ﻿using AIO.Combat.Common;
+using AIO.Helpers.Caching;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Documents;
-using AIO.Helpers.Caching;
 using wManager.Events;
 using wManager.Wow;
 using wManager.Wow.Helpers;
@@ -15,11 +14,12 @@ using Math = System.Math;
 
 namespace AIO.Framework
 {
-    public class RotationFramework : ICycleable {
+    public class RotationFramework : ICycleable
+    {
         public static event EventHandler OnCacheUpdated;
         public static bool CacheDirectTransmission = false;
         public static bool UseSynthetic = false;
-        
+
         private static bool UseFramelock = true;
 
         private static int ScanRange = 50;
@@ -30,9 +30,7 @@ namespace AIO.Framework
         public static void Setup(bool framelock = true, int losCreditsPlayers = 5, int losCreditsNPCs = 10, int scanRange = 50)
         {
             UseFramelock = framelock;
-
             ScanRange = scanRange;
-
             LoSCreditsPlayers = losCreditsPlayers;
             LoSCreditsNPCs = losCreditsNPCs;
         }
@@ -41,9 +39,7 @@ namespace AIO.Framework
         {
             ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs += UpdatePartyMembers;
-            
             EventsLua.AttachEventLua("RAID_ROSTER_UPDATE", _ => LuaCache.UpdateRaidGroups());
-
             LuaCache.UpdateRaidGroups();
             UpdatePartyMembers("INSTANCE_BOOT_START", null);
         }
@@ -57,10 +53,14 @@ namespace AIO.Framework
         private readonly TimeSpan UpdateCacheMaxDelay = new TimeSpan(hours: 0, minutes: 0, seconds: 3);
         private readonly Timer UpdateTimer = new Timer();
 
-        private void OnObjectManagerPulsed() {
-            if (CacheDirectTransmission) {
+        private void OnObjectManagerPulsed()
+        {
+            if (CacheDirectTransmission)
+            {
                 Run(UpdateCache);
-            } else {
+            }
+            else
+            {
                 UpdateTimer.RunAdaptive(
                     () => Run(UpdateCache), UpdateCacheMaxDelay
                 );
@@ -73,6 +73,7 @@ namespace AIO.Framework
             {
                 return;
             }
+
             string tankName;
             string healName;
             bool IsTank = Lua.LuaDoString<bool>(@"
@@ -126,7 +127,8 @@ namespace AIO.Framework
             }
         }
 
-        private static void UpdateCache() {
+        private static void UpdateCache()
+        {
             List<WoWUnit> omUnits = ObjectManager.GetObjectWoWUnit();
             List<WoWPlayer> omPlayers = ObjectManager.GetObjectWoWPlayer();
 
@@ -187,7 +189,7 @@ namespace AIO.Framework
             }
 
             List<ulong> guidHomeAndInstance = Party.GetPartyGUIDHomeAndInstance();
-            
+
             var partyMembers = new List<WoWPlayer>(capacity: players.Count);
             for (var i = 0; i < players.Count; i++)
             {
@@ -204,7 +206,7 @@ namespace AIO.Framework
             AllUnits = allUnits.ToArray();
             PartyMembers = partyMembers.ToArray();
 
-            if(CacheDirectTransmission) OnCacheUpdated?.Invoke(null, EventArgs.Empty);
+            if (CacheDirectTransmission) OnCacheUpdated?.Invoke(null, EventArgs.Empty);
         }
 
         public static string HealName { get; private set; } = "";
@@ -214,6 +216,20 @@ namespace AIO.Framework
         public static WoWUnit[] Enemies { get; private set; } = new WoWUnit[0];
         public static WoWPlayer[] PlayerUnits { get; private set; } = new WoWPlayer[0];
         public static WoWPlayer[] PartyMembers { get; private set; } = new WoWPlayer[0];
+
+        public static void RunRotationNoLock(string caller, List<RotationStep> rotation)
+        {
+            try
+            {
+                var globalCd = GetGlobalCooldown();
+                var gcdEnabled = globalCd != 0;
+                RunRotation(rotation, gcdEnabled);
+            }
+            catch (Exception e)
+            {
+                Logging.WriteError($"{e.Message}\n{e.StackTrace}");
+            }
+        }
 
         public static void RunRotation(string caller, List<RotationStep> rotation, bool alreadyLocked = false)
         {
@@ -234,11 +250,12 @@ namespace AIO.Framework
 
         private static void Run(Action action, bool alreadyLocked = false)
         {
-            if (alreadyLocked) {
+            if (alreadyLocked)
+            {
                 action();
                 return;
             }
-            
+
             if (UseFramelock)
             {
                 RunInFrameLock(action);
@@ -259,11 +276,15 @@ namespace AIO.Framework
 
         private static void RunInFrameLock(Action action)
         {
-            lock(Memory.WowMemory.LockFrameLocker) {
-                try {
+            lock (Memory.WowMemory.LockFrameLocker)
+            {
+                try
+                {
                     Memory.WowMemory.LockFrame();
                     action();
-                } finally {
+                }
+                finally
+                {
                     Memory.WowMemory.UnlockFrame();
                 }
             }
@@ -272,9 +293,11 @@ namespace AIO.Framework
         private static Dictionary<ushort, List<long>> Stats = new Dictionary<ushort, List<long>>();
         //private static ushort _ticks = 0;
 
-        private static void PrintStats() {
+        private static void PrintStats()
+        {
             foreach (KeyValuePair<ushort, List<long>> stat
-                in Stats.Where(stat => stat.Value.Max() >= 1)) {
+                in Stats.Where(stat => stat.Value.Max() >= 1))
+            {
                 Logging.Write($"--- Step {stat.Key + 1} ---\n" +
                               $"Average: {Math.Round(stat.Value.Average(), 2)}ms\n" +
                               $"Min: {stat.Value.Min()}ms\n" +
@@ -289,30 +312,43 @@ namespace AIO.Framework
                           $"has the highest maximum.");
         }
 
-        private static void RunRotation(IReadOnlyList<RotationStep> rotation, bool gcdEnabled) {
-            // _ticks = (ushort) (_ticks > 10000 ? 0 : _ticks + 1);
-            // if(_ticks % 500 == 0) PrintStats();
-            
-            var exclusives = new Exclusives();
+        private static void RunRotation(IReadOnlyList<RotationStep> rotation, bool gcdEnabled)
+        {
+            try
+            {
+                // _ticks = (ushort) (_ticks > 10000 ? 0 : _ticks + 1);
+                // if(_ticks % 500 == 0) PrintStats();
 
-            // var watch = new Stopwatch();
+                var exclusives = new Exclusives();
 
-            for (ushort i = 0; i < rotation.Count; i++) {
-                RotationStep step = rotation[i];
-                // watch.Restart();
-                try {
-                    // Logging.Write("Executing step " + (i+1) + " - " + step);
-                    if (step.Execute(gcdEnabled, exclusives)) {
-                        break;
+                // var watch = new Stopwatch();
+
+                for (ushort i = 0; i < rotation.Count; i++)
+                {
+                    RotationStep step = rotation[i];
+                    // watch.Restart();
+                    try
+                    {
+                        // Logging.Write("Executing step " + (i+1) + " - " + step);
+                        if (step.Execute(gcdEnabled, exclusives))
+                        {
+                            break;
+                        }
                     }
-                } finally {
-                    // watch.Stop();
-                    // if(!Stats.ContainsKey(i)) {
-                    //     Stats.Add(i, new List<long> {watch.ElapsedMilliseconds});
-                    // } else {
-                    //     Stats[i].Add(watch.ElapsedMilliseconds);
-                    // }
+                    finally
+                    {
+                        // watch.Stop();
+                        // if(!Stats.ContainsKey(i)) {
+                        //     Stats.Add(i, new List<long> {watch.ElapsedMilliseconds});
+                        // } else {
+                        //     Stats[i].Add(watch.ElapsedMilliseconds);
+                        // }
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteError($"{e.Message} \n{e.StackTrace}", true);
             }
         }
 
@@ -385,24 +421,6 @@ namespace AIO.Framework
 
                 currentListObject = Memory.WowMemory.Memory.ReadPtr(currentListObject + 4);
             }
-        }
-
-        public static float GetItemCooldown(string itemName)
-        {
-            string luaString = $@"
-	        for bag=0,4 do
-	            for slot=1,36 do
-	                local name = GetContainerItemLink(bag,slot);
-	                if (name and name == ""{itemName}"") then
-	                    local start, duration, enabled = GetContainerItemCooldown(bag, slot);
-	                    if enabled then
-	                        return (duration - (GetTime() - start)) * 1000;
-	                    end
-	                end;
-	            end;
-	        end
-	        return 0;";
-            return Lua.LuaDoString<float>(luaString);
         }
     }
 }

@@ -20,12 +20,19 @@ namespace AIO.Combat.Priest
                 { Spec.Priest_GroupDiscipline, new GroupDiscipline() },
                 { Spec.Priest_SoloShadow, new SoloShadow() },
                 { Spec.Fallback, new SoloShadow() },
-            } , 
-            new AutoPartyResurrect("Resurrection"),
-            new OOCBuffs(),
-            new CombatBuffs())
+            })
         {
-            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Priest_GroupHoly || Specialisation == Spec.Priest_SoloShadow, new SlowLuaCaching()));
+            Addons.Add(new Racials());
+            Addons.Add(new AutoPartyResurrect("Resurrection"));
+            Addons.Add(new OOCBuffs());
+            Addons.Add(new CombatBuffs());
+
+            switch (Specialisation)
+            {
+                case Spec.Priest_GroupHoly:
+                    Addons.Add(new SlowLuaCaching());
+                    break;
+            }
         }
     }
 }

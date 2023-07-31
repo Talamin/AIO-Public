@@ -5,6 +5,7 @@ using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
+using wManager.Events;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -16,6 +17,7 @@ namespace AIO.Combat.Mage
     internal class MageBehavior : BaseCombatClass
     {
         public override float Range => 29.0f;
+        private readonly Spell _waterElementalSpell = new Spell("Summon Water Elemental");
 
         internal MageBehavior() : base(
             Settings.Current,
@@ -28,31 +30,47 @@ namespace AIO.Combat.Mage
                 { Spec.Mage_SoloFire, new SoloFire() },
                 { Spec.Mage_GroupFire, new GroupFire() },
                 { Spec.Fallback, new SoloFrost() },
-            },
-            new OOCBuffs(),
-            new CombatBuffs(),
-            new ConditionalCycleable(() => Settings.Current.Backpaddle,
-                new AutoBackpedal(
-                    () => Target.GetDistance <= Settings.Current.BackpaddleRange && Target.HaveBuff("Frost Nova"),
-                    Settings.Current.BackpaddleRange)))
-        { }
+            })
+        {
+            Addons.Add(new Racials());
+            Addons.Add(new OOCBuffs());
+            Addons.Add(new CombatBuffs());
+            if (Settings.Current.Backpaddle)
+            {
+                Addons.Add(new AutoBackpedal(() => Target.GetDistance <= Settings.Current.BackpaddleRange && Target.HaveBuff("Frost Nova"), Settings.Current.BackpaddleRange));
+            }
+        }
 
-        private readonly Spell WaterElemental = new Spell("Summon Water Elemental");
+        public override void Initialize()
+        {
+            FightEvents.OnFightStart += OnFightStart;
+            FightEvents.OnFightLoop += OnFightLoop;
+            MovementEvents.OnMovementPulse += OnMovementPulse;
+            base.Initialize();
+        }
 
-        protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
+        public override void Dispose()
+        {
+            FightEvents.OnFightStart -= OnFightStart;
+            FightEvents.OnFightLoop -= OnFightLoop;
+            MovementEvents.OnMovementPulse -= OnMovementPulse;
+            base.Dispose();
+        }
+
+        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
         {
             if (!Pet.IsAlive)
             {
-                if (WaterElemental.IsSpellUsable && WaterElemental.KnownSpell && !Me.IsMounted
+                if (_waterElementalSpell.IsSpellUsable && _waterElementalSpell.KnownSpell && !Me.IsMounted
                     && Settings.Current.GlyphOfEternalWater)
                 {
-                    WaterElemental.Launch();
+                    _waterElementalSpell.Launch();
                     Usefuls.WaitIsCasting();
                 }
             }
         }
 
-        protected override void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
+        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
             if (Pet.IsAlive)
             {
@@ -69,7 +87,7 @@ namespace AIO.Combat.Mage
             }
         }
 
-        protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
+        private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
             MageFoodManager.CheckIfEnoughFoodAndDrinks();
             MageFoodManager.CheckIfHaveManaStone();

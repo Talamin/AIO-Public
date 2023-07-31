@@ -1,5 +1,4 @@
-﻿using AIO.Combat.Common;
-using AIO.Events;
+﻿using AIO.Events;
 using AIO.Framework;
 using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
@@ -16,51 +15,43 @@ using static AIO.Constants;
 
 namespace AIO.Combat.Addons
 {
-    internal class AutoPartyResurrect : ICycleable
+    internal class AutoPartyResurrect : IAddon
     {
-        private readonly Spell ResurectionSpell;
-        private readonly bool Combat;
-        private readonly bool Enabled;
+        private readonly Spell _resurectionSpell;
         private bool _isCastingRes = false;
         private Dictionary<ulong, DateTime> _blacklist = new Dictionary<ulong, DateTime>();
+        private bool _runInCombat;
+        private bool _runOutsideCombat;
 
-        public AutoPartyResurrect(string ressurection, bool combat = false, bool enabled = true)
+        public bool RunOutsideCombat => _runOutsideCombat;
+        public bool RunInCombat => _runInCombat;
+
+        public List<RotationStep> Rotation => new List<RotationStep>();
+
+        public AutoPartyResurrect(string ressurection, bool runInCombat = false, bool runOutsideCombat = true)
         {
-            ResurectionSpell = new Spell(ressurection);
-            Combat = combat;
-            Enabled = enabled;
+            _resurectionSpell = new Spell(ressurection);
+            _runInCombat = runInCombat;
+            _runOutsideCombat = runOutsideCombat;
         }
 
         public void Dispose()
         {
-            FightEvents.OnFightLoop -= OnFightLoop;
-            SyntheticEvents.OnIdleStateAvailable -= OnIdleStateAvailable;
+            //SyntheticEvents.OnIdleStateAvailable -= OnIdleStateAvailable;
             MovementEvents.OnMovementPulse += OnMovementPulse;
             MovementEvents.OnMoveToPulse += OnMoveToPulse;
         }
 
         public void Initialize()
         {
-            FightEvents.OnFightLoop += OnFightLoop;
-            SyntheticEvents.OnIdleStateAvailable += OnIdleStateAvailable;
+            //SyntheticEvents.OnIdleStateAvailable += OnIdleStateAvailable;
         }
 
         private void Run()
         {
-            if (Me.InCombatFlagOnly != Combat)
-            {
-                return;
-            }
-            if (Enabled == false)
-            {
-                return;
-            }
-            if (!Me.IsInGroup)
-            {
-                return;
-            }
-
-            if (!ResurectionSpell.KnownSpell)
+            if (!Me.IsInGroup
+                || !_resurectionSpell.KnownSpell
+                || RotationFramework.PartyMembers.Count(player => player.IsDead) <= 0)
             {
                 return;
             }
@@ -74,9 +65,9 @@ namespace AIO.Combat.Addons
                 .OrderBy(player => player.PositionWithoutType.DistanceTo(ObjectManager.Me.Position))
                 .FirstOrDefault();
 
-            if (playerToResurrect != null && playerToResurrect.GetDistance < ResurectionSpell.MaxRange)
+            if (playerToResurrect != null && playerToResurrect.GetDistance < _resurectionSpell.MaxRange)
             {
-                if (!ResurectionSpell.IsSpellUsable)
+                if (!_resurectionSpell.IsSpellUsable)
                 {
                     return;
                 }
@@ -85,9 +76,9 @@ namespace AIO.Combat.Addons
 
                 Logging.Write($"Resurrecting {playerToResurrect.Name}");
                 Interact.InteractGameObject(playerToResurrect.GetBaseAddress);
-                SpellManager.CastSpellByNameLUA(ResurectionSpell.Name);
+                SpellManager.CastSpellByNameLUA(_resurectionSpell.Name);
                 Thread.Sleep(500);
-                while (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause 
+                while (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause
                     && ObjectManager.Me.CastingTimeLeft > 0)
                 {
                     WoWPlayer player = ObjectManager.GetObjectWoWPlayer().FirstOrDefault(o => o.Name == playerToResurrect.Name);
@@ -109,19 +100,12 @@ namespace AIO.Combat.Addons
 
         private void OnMovementPulse(List<Vector3> path, CancelEventArgs cancelable)
         {
-            if (_isCastingRes)
-            {
-                cancelable.Cancel = true;
-            }
+            cancelable.Cancel = _isCastingRes;
         }
         private void OnMoveToPulse(Vector3 point, CancelEventArgs cancelable)
         {
-            if (_isCastingRes)
-            {
-                cancelable.Cancel = true;
-            }
+            cancelable.Cancel = _isCastingRes;
         }
-        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable) => Run();
         private void OnIdleStateAvailable(Engine engine, State state, CancelEventArgs cancelable) => Run();
     }
 }

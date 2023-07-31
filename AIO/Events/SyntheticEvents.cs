@@ -1,4 +1,4 @@
-﻿using AIO.Combat.Common;
+﻿/*using AIO.Combat.Common;
 using robotManager.Events;
 using robotManager.FiniteStateMachine;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using static robotManager.Events.FiniteStateMachineEvents;
 using wManager.Wow.Helpers;
 
 namespace AIO.Events
-{
+{    
     internal class SyntheticEvents : ICycleable
     {
         private const string DefaultCombatState = "InFight";
@@ -70,5 +70,6 @@ namespace AIO.Events
         public static event FSMEngineStateCancelableHandler OnCombatStateRun;
 
         public static event FSMEngineStateCancelableHandler OnIdleStateAvailable;
-    }
+    }    
 }
+*/

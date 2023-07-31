@@ -19,7 +19,8 @@ namespace AIO.Combat.Paladin
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        protected override List<RotationStep> Rotation => new List<RotationStep> 
+        {
             new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Divine Plea"), 1.1f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe, checkLoS: false),
@@ -43,7 +44,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Divine Storm"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Crusader Strike"), 17f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Consecration"), 18f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Count(unit => unit.CGetDistance() <=8) >= Settings.Current.GroupRetributionConsecration, RotationCombatUtil.FindMe, checkRange: false),
-            new RotationStep(new RotationSpell("Exorcism"), 19f, (s,t) => (Me.CHaveBuff("The Art of War") && (t.CHealthPercent() > 10 || BossList.isboss)) || !TalentsManager.HaveTalent(3, 17), RotationCombatUtil.BotTargetFast, checkRange: true),
+            new RotationStep(new RotationSpell("Exorcism"), 19f, (s,t) => (Me.CHaveBuff("The Art of War") && (t.CHealthPercent() > 10 || BossList.MyTargetIsBoss)) || !TalentsManager.HaveTalent(3, 17), RotationCombatUtil.BotTargetFast, checkRange: true),
             new RotationStep(new RotationSpell("Holy Wrath"), 21f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast, checkRange: true),
         };
 

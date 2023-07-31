@@ -1,14 +1,16 @@
+using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using robotManager.Helpful;
 using wManager.Wow;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
-namespace AIO.Helpers.Caching {
-    public static class Cache {
+namespace AIO.Helpers.Caching
+{
+    public static class Cache
+    {
         private const byte CacheSize = 12;
         private static readonly Dictionary<uint, object[]> Units = new Dictionary<uint, object[]>();
         private static bool _frameTimeCached;
@@ -40,10 +42,12 @@ namespace AIO.Helpers.Caching {
         //     unit => 100f // 5 = GetDistance
         // };
 
-        private static object[] GetCUnit(WoWObject unit) {
+        private static object[] GetCUnit(WoWObject unit)
+        {
             uint uBaseAddress = unit.GetBaseAddress;
 
-            if (!Units.TryGetValue(uBaseAddress, out object[] cache)) {
+            if (!Units.TryGetValue(uBaseAddress, out object[] cache))
+            {
                 cache = new object[CacheSize];
                 Units.Add(uBaseAddress, cache);
             }
@@ -51,29 +55,36 @@ namespace AIO.Helpers.Caching {
             return cache;
         }
 
-        private static T GetProperty<T>(this WoWUnit unit, Entry entry) {
+        private static T GetProperty<T>(this WoWUnit unit, Entry entry)
+        {
             T propertyValue;
-            var entryIndex = (int) entry;
+            var entryIndex = (int)entry;
             object[] unitCache = GetCUnit(unit);
 
-            if (unitCache[entryIndex] != null) {
-                propertyValue = (T) unitCache[entryIndex];
-            } else {
-                propertyValue = (T) Access[entryIndex](unit);
+            if (unitCache[entryIndex] != null)
+            {
+                propertyValue = (T)unitCache[entryIndex];
+            }
+            else
+            {
+                propertyValue = (T)Access[entryIndex](unit); // here
                 unitCache[entryIndex] = propertyValue;
             }
 
             return propertyValue;
         }
 
-        public static void Reset() {
+        public static void Reset()
+        {
             Units.Clear();
             _frameTimeCached = false;
             _inGroupCached = false;
         }
 
-        public static long CGetFrameTime() {
-            if (!_frameTimeCached) {
+        public static long CGetFrameTime()
+        {
+            if (!_frameTimeCached)
+            {
                 _frameTime = Usefuls.FrameTime_GetCurTimeMs64();
                 _frameTimeCached = true;
             }
@@ -90,19 +101,19 @@ namespace AIO.Helpers.Caching {
         public static bool CInCombat(this WoWUnit unit) => unit.GetProperty<bool>(Entry.InCombat);
 
         public static long CHealth(this WoWUnit unit) => unit.GetProperty<long>(Entry.Health);
-        
+
         public static long CMaxHealth(this WoWUnit unit) => unit.GetProperty<long>(Entry.MaxHealth);
-        
+
         public static double CHealthPercent(this WoWUnit unit) => unit.CHealth() * 100.0 / unit.CMaxHealth();
 
         public static bool CIsAlive(this WoWUnit unit) => unit.GetProperty<bool>(Entry.IsAlive);
 
         public static float CGetDistance(this WoWUnit unit) => ObjectManager.Me.CGetPosition().DistanceTo(unit.CGetPosition());
-        
+
         public static Vector3 CGetPosition(this WoWUnit unit) => unit.GetProperty<Vector3>(Entry.PositionWithoutType);
 
         public static uint CRage(this WoWUnit unit) => unit.GetProperty<uint>(Entry.Rage);
-        
+
         public static string CName(this WoWUnit unit) => unit.GetProperty<string>(Entry.Name);
 
         public static bool CIsTargetingMe(this WoWUnit unit) => unit.GetProperty<bool>(Entry.IsTargetingMe);
@@ -118,13 +129,15 @@ namespace AIO.Helpers.Caching {
 
         public static bool CIsTargetingMeOrMyPetOrPartyMember(this WoWUnit unit) =>
             unit.GetProperty<bool>(Entry.IsTargetingMeOrMyPetOrPartyMember);
-        
-        public static bool CHaveMyBuff(this WoWUnit unit, string name) {
+
+        public static bool CHaveMyBuff(this WoWUnit unit, string name)
+        {
             List<uint> targetSpellIDs = SpellListManager.SpellIdByName(name);
             ulong myGuid = ObjectManager.Me.Guid;
 
             Aura[] auras = unit.CGetAuras();
-            for (var i = 0; i < auras.Length; i++) {
+            for (var i = 0; i < auras.Length; i++)
+            {
                 Aura aura = auras[i];
                 if (aura.Owner == myGuid && targetSpellIDs.Contains(aura.SpellId)) return true;
             }
@@ -132,20 +145,23 @@ namespace AIO.Helpers.Caching {
             return false;
         }
 
-        public static int CMyBuffStack(this WoWUnit unit, string name) {
+        public static int CMyBuffStack(this WoWUnit unit, string name)
+        {
             List<uint> targetSpellIDs = SpellListManager.SpellIdByName(name);
             ulong myGuid = ObjectManager.Me.Guid;
 
             Aura[] auras = unit.CGetAuras();
-            for (var i = 0; i < auras.Length; i++) {
+            for (var i = 0; i < auras.Length; i++)
+            {
                 Aura aura = auras[i];
                 if (aura.Owner == myGuid && targetSpellIDs.Contains(aura.SpellId)) return aura.Stack;
             }
 
             return 0;
         }
-        
-        public static long CBuffTimeLeft(this WoWUnit unit, string name) {
+
+        public static long CBuffTimeLeft(this WoWUnit unit, string name)
+        {
             Aura aura = unit.CGetAuraByName(name);
             if (aura == null) return 0;
 
@@ -153,14 +169,17 @@ namespace AIO.Helpers.Caching {
             return (timeLeft > 0) ? timeLeft : 0;
         }
 
-        public static long CMyBuffTimeLeft(this WoWUnit unit, string name) {
+        public static long CMyBuffTimeLeft(this WoWUnit unit, string name)
+        {
             List<uint> targetSpellIDs = SpellListManager.SpellIdByName(name);
             ulong myGuid = ObjectManager.Me.Guid;
 
             Aura[] auras = unit.CGetAuras();
-            for (var i = 0; i < auras.Length; i++) {
+            for (var i = 0; i < auras.Length; i++)
+            {
                 Aura aura = auras[i];
-                if (aura.Owner == myGuid && targetSpellIDs.Contains(aura.SpellId)) {
+                if (aura.Owner == myGuid && targetSpellIDs.Contains(aura.SpellId))
+                {
                     long timeLeft = aura.TimeEnd - CGetFrameTime();
 
                     return (timeLeft > 0) ? timeLeft : 0;
@@ -170,14 +189,15 @@ namespace AIO.Helpers.Caching {
             return 0;
         }
 
-        public static Aura CGetAuraByName(this WoWUnit unit, string name) {
+        public static Aura CGetAuraByName(this WoWUnit unit, string name)
+        {
             List<uint> targetSpellIDs = SpellListManager.SpellIdByName(name);
             Aura[] auras = unit.CGetAuras();
-            for (var i = 0; i < auras.Length; i++) {
+            for (var i = 0; i < auras.Length; i++)
+            {
                 Aura aura = auras[i];
                 if (targetSpellIDs.Contains(aura.SpellId)) return aura;
             }
-
             return null;
         }
 
@@ -185,8 +205,10 @@ namespace AIO.Helpers.Caching {
 
         public static bool CIsResting(this WoWUnit unit) => unit.CHaveBuff("Food") || unit.CHaveBuff("Drink");
 
-        public static bool CIsInGroup(this WoWLocalPlayer player) {
-            if (!_inGroupCached) {
+        public static bool CIsInGroup(this WoWLocalPlayer player)
+        {
+            if (!_inGroupCached)
+            {
                 _inGroup = player.IsInGroup;
                 _inGroupCached = true;
             }

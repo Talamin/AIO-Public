@@ -51,7 +51,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Divine Storm"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Crusader Strike"), 17f, (s,t) => true, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Consecration"), 18f, (s,t) => EnemiesAttackingGroup.Count(ene => ene.CGetDistance() <= 10) >= Settings.Current.SoloRetributionConsecration, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Exorcism"), 19f, (s,t) => (Me.HaveBuff("The Art of War") && (t.HealthPercent > 10 || BossList.isboss)) || !TalentsManager.HaveTalent(3, 17), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Exorcism"), 19f, (s,t) => (Me.HaveBuff("The Art of War") && (t.HealthPercent > 10 || BossList.MyTargetIsBoss)) || !TalentsManager.HaveTalent(3, 17), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Exorcism"), 20f, (s,t) => !TalentsManager.HaveTalent(3, 17), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Holy Wrath"), 21f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
         };

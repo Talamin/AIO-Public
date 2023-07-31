@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using wManager;
+using wManager.Events;
 using wManager.Wow.Bot.States;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
@@ -31,23 +32,24 @@ namespace AIO.Combat.Shaman
                 { Spec.Shaman_SoloEnhancement, new SoloEnhancement() },
                 { Spec.Shaman_GroupEnhancement, new GroupEnhancement() },
                 { Spec.Fallback, new SoloEnhancement() },
-            }, new AutoPartyResurrect("Ancestral Spirit"),
-            new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC()))
+            })
         {
+            Addons.Add(new Racials());
+            if (Settings.Current.HealOOC)
+                Addons.Add(new HealOOC());
             var totems = new Totems(this);
+            Addons.Add(new AutoPartyResurrect("Ancestral Spirit"));
             Addons.Add(totems);
             Addons.Add(new CombatBuffs(this, totems));
-            Addons.Add(new WeaponHelper(this));
+            Addons.Add(new WeaponEnchants(this));
         }
 
         public override void Initialize()
         {
-            base.Initialize();
-
             switch (Specialisation)
             {
                 case Spec.Shaman_SoloEnhancement:
-                case Spec.Shaman_GroupEnhancement:                    
+                case Spec.Shaman_GroupEnhancement:
                     CombatRange = 5.0f;
                     break;
                 case Spec.Shaman_SoloElemental:
@@ -60,15 +62,26 @@ namespace AIO.Combat.Shaman
                     CombatRange = 29.0f;
                     break;
             }
+
+            MovementEvents.OnMoveToPulse += OnMoveToPulse;
+            MovementEvents.OnMovementPulse += OnMovementPulse;
+            base.Initialize();
         }
 
-        protected override void OnMoveToPulse(Vector3 point, CancelEventArgs cancelable)
+        public override void Dispose()
+        {
+            MovementEvents.OnMoveToPulse -= OnMoveToPulse;
+            MovementEvents.OnMovementPulse -= OnMovementPulse;
+            base.Dispose();
+        }
+
+        private void OnMoveToPulse(Vector3 point, CancelEventArgs cancelable)
         {
             UseTotemicRecall(point);
-            UseGhostWolf(point); 
+            UseGhostWolf(point);
         }
-        
-        protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
+
+        private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
             var last = points.LastOrDefault();
             if (last == null)
@@ -87,22 +100,22 @@ namespace AIO.Combat.Shaman
             {
                 return;
             }
-            if(!TotemRecall.KnownSpell || !Me.IsAlive)
+            if (!TotemRecall.KnownSpell || !Me.IsAlive)
             {
                 return;
             }
-            if(!new Regeneration().NeedToRun &&
+            if (!new Regeneration().NeedToRun &&
                 Totems.HasAny("Stoneskin Totem",
-                "Strength of Earth Totem", 
+                "Strength of Earth Totem",
                 "Magma Totem",
-                "Searing Totem", 
-                "Flametongue Totem", 
-                "Totem of Wrath", 
+                "Searing Totem",
+                "Flametongue Totem",
+                "Totem of Wrath",
                 "Wrath of Air Totem",
                 "Windfury Totem",
                 "Mana Spring Totem",
                 "Healing Stream Totem") &&
-                !Me.InCombat)
+                !Me.InCombatFlagOnly)
             {
                 TotemRecall.Launch();
                 Usefuls.WaitIsCasting();
@@ -123,7 +136,7 @@ namespace AIO.Combat.Shaman
                 Settings.Current.UseGhostWolf &&
                 Me.IsAlive &&
                 GhostWolf.KnownSpell &&
-                !Me.InCombat)
+                !Me.InCombatFlagOnly)
             {
                 GhostWolf.Launch();
                 Usefuls.WaitIsCasting();

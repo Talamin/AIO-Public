@@ -3,6 +3,7 @@ using AIO.Combat.Common;
 using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
+using wManager.Events;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -12,7 +13,7 @@ namespace AIO.Combat.Paladin
 
     internal class PaladinBehavior : BaseCombatClass
     {
-        private static readonly string crusader = "Crusader Aura";
+        private static readonly string _crusaderAuraName = "Crusader Aura";
         private float CombatRange;
         private float DefaultRange;
         public override float Range => CombatRange;
@@ -30,21 +31,33 @@ namespace AIO.Combat.Paladin
                 { Spec.Paladin_SoloRetribution, new SoloRetribution() },
                 { Spec.Paladin_GroupRetribution, new GroupRetribution() },
                 { Spec.Fallback, new SoloRetribution() },
-            },
-            new ConditionalCycleable(() => Settings.Current.Resurrect, new AutoPartyResurrect("Redemption")),
-            new ConditionalCycleable(() => Settings.Current.HealOOC, new HealOOC(Settings.Current)))
+            })
         {
-            //Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Buffs(this)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new Blessings(this)));
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.Buffing, new NewBuffs(this)));
-            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_GroupProtection, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS)));
-            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Paladin_SoloProtection || Specialisation == Spec.Paladin_SoloRetribution, new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
+            Addons.Add(new Racials());
+            if (Settings.Current.Resurrect)
+                Addons.Add(new AutoPartyResurrect("Redemption"));
+            if (Settings.Current.HealOOC)
+                Addons.Add(new HealOOC(Settings.Current));
+            if (Settings.Current.Buffing)
+            {
+                Addons.Add(new Blessings(this));
+                Addons.Add(new NewBuffs(this));
+            }
+
+            switch (Specialisation)
+            {
+                case Spec.Paladin_GroupProtection:
+                    Addons.Add(new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
+                    break;
+                case Spec.Paladin_SoloProtection:
+                case Spec.Paladin_SoloRetribution:
+                    Addons.Add(new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
+                    break;
+            }
         }
 
         public override void Initialize()
         {
-            base.Initialize();
-
             switch (Specialisation)
             {
                 case Spec.Paladin_GroupHoly:
@@ -55,15 +68,23 @@ namespace AIO.Combat.Paladin
                     break;
             }
             SetRange(DefaultRange);
+            ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulse;
+            base.Initialize();
         }
 
-        protected override void OnObjectManagerPulse()
+        public override void Dispose()
+        {
+            ObjectManagerEvents.OnObjectManagerPulsed -= OnObjectManagerPulse;
+            base.Dispose();
+        }
+
+        private void OnObjectManagerPulse()
         {
             if (!Settings.Current.Crusader)
                 return;
-            if (SpellManager.KnowSpell(crusader) && ObjectManager.Me.IsMounted && !ObjectManager.Me.HaveBuff(crusader))
+            if (ObjectManager.Me.IsMounted && SpellManager.KnowSpell(_crusaderAuraName) && !ObjectManager.Me.HaveBuff(_crusaderAuraName))
             {
-                SpellManager.CastSpellByNameLUA(crusader);
+                SpellManager.CastSpellByNameLUA(_crusaderAuraName);
             }
         }
     }

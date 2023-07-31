@@ -16,7 +16,7 @@ namespace AIO.Combat.Warrior
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Pummel"), 2f, (s,t) => t.IsCasting(), RotationCombatUtil.FindEnemyCasting),
-            new RotationStep(new RotationSpell("Hamstring"), 3f, (s,t) => !t.HaveBuff("Hamstring") && t.HealthPercent < 40 && t.CreatureTypeTarget=="Humanoid" && !BossList.isboss && Settings.Current.Hamstring, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Hamstring"), 3f, (s,t) => !t.HaveBuff("Hamstring") && t.HealthPercent < 40 && t.CreatureTypeTarget=="Humanoid" && !BossList.MyTargetIsBoss && Settings.Current.Hamstring, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Piercing Howl"), 4f, (s,t) => t.HealthPercent < 40 && RotationFramework.Enemies.Count(o => o.GetDistance <=10) >=3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Bloodrage"), 5f, (s,t) => t.GetDistance < 7, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Slam"), 6f, (s,t) => Me.HaveBuff("Slam!"), RotationCombatUtil.BotTarget),

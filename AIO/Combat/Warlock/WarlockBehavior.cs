@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using wManager.Events;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -20,6 +21,12 @@ namespace AIO.Combat.Warlock
     {
         public override float Range => 29.0f;
 
+        private readonly Spell _createHealthStoneSpell = new Spell("Create Healthstone");
+        private readonly Spell _summonImpSpell = new Spell("Summon Imp");
+        private readonly Spell _summonVoidWalkerSpell = new Spell("Summon Voidwalker");
+        private readonly Spell _summonFelguardSpell = new Spell("Summon Felguard");
+        private readonly Spell _summonFelhunterSpell = new Spell("Summon Felhunter");
+
         internal WarlockBehavior() : base(
             Settings.Current,
             new Dictionary<Spec, BaseRotation>
@@ -30,31 +37,54 @@ namespace AIO.Combat.Warlock
                 { Spec.Warlock_SoloDestruction, new SoloDestruction() },
                 { Spec.Warlock_SoloDemonology, new SoloDemonology() },
                 { Spec.Fallback, new SoloAffliction() },
-            },
-            new OOCBuffs(),
-            new PetAutoTarget("Torment"))
-        { }
+            })
+        {
+            Addons.Add(new Racials());
+            Addons.Add(new OOCBuffs());
+            Addons.Add(new PetAutoTarget("Torment"));
+        }
 
-        protected override void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
+        public override void Initialize()
+        {
+            FightEvents.OnFightStart += OnFightStart;
+            FightEvents.OnFightLoop += OnFightLoop;
+            FightEvents.OnFightEnd += OnFightEnd;
+            MovementEvents.OnMovementPulse += OnMovementPulse;
+            base.Initialize();
+        }
+
+        public override void Dispose()
+        {
+            FightEvents.OnFightStart -= OnFightStart;
+            FightEvents.OnFightLoop -= OnFightLoop;
+            FightEvents.OnFightEnd -= OnFightEnd;
+            MovementEvents.OnMovementPulse -= OnMovementPulse;
+            base.Dispose();
+        }
+
+        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
         {
             RefreshPet();
-
             Lua.LuaDoString("PetDefensiveMode();");
         }
-        protected override void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
+
+        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
             if (Me.HealthPercent < 20 && Me.IsAlive)
             {
                 Consumables.UseHealthstone();
             }
+
             if (Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
             }
+
             if (RotationFramework.Enemies.Count(o => o.Position.DistanceTo(Pet.Position) <= 8) > 1 && PetManager.CurrentWarlockPet == "Voidwalker")
             {
                 PetManager.PetSpellCast("Suffering");
             }
+
             var Devour = RotationFramework.PartyMembers.Where(u => u.IsAlive && u.HaveImportantMagic()).FirstOrDefault();
             if (PetManager.CurrentWarlockPet == "Felhunter" && Devour != null)
             {
@@ -66,6 +96,7 @@ namespace AIO.Combat.Warlock
                     Lua.LuaDoString("ClearFocus();");
                 }
             }
+
             var Interrupt = RotationFramework.Enemies.Where(u => u.IsCast && u.IsTargetingMeOrMyPetOrPartyMember).FirstOrDefault();
             if (PetManager.CurrentWarlockPet == "Felhunter" && Interrupt != null)
             {
@@ -84,32 +115,28 @@ namespace AIO.Combat.Warlock
                 }
             }
         }
-        protected override void OnFightEnd(ulong guid)
+        private void OnFightEnd(ulong guid)
         {
             if (Pet.IsAlive && Pet.HealthPercent < 80 && !Pet.HaveBuff("Consume Shadows") && PetManager.CurrentWarlockPet == "Voidwalker")
             {
                 PetManager.PetSpellCast("Consume Shadows");
             }
+
             if (!Me.IsInGroup && !Pet.InCombat)
             {
                 Lua.LuaDoString("PetDefensiveMode();");
             }
+
             if (Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.IsTargetingPartyMember) <= 0 && !Pet.InCombat)
             {
                 Lua.LuaDoString("PetDefensiveMode();");
             }
+
             if (ItemsHelper.CountItemStacks("Soul Shard") >= 5)
             {
                 ItemsHelper.DeleteItems(6265, 5);
             }
         }
-
-        private readonly Spell CreateHealthStone = new Spell("Create Healthstone");
-        private readonly Spell SummonImp = new Spell("Summon Imp");
-        private readonly Spell SummonVoidWalker = new Spell("Summon Voidwalker");
-        private readonly Spell SummonFelguard = new Spell("Summon Felguard");
-        private readonly Spell SummonFelhunter = new Spell("Summon Felhunter");
-        private readonly Spell LifeTapOOC = new Spell("Life Tap");
 
         //protected override void OnMovementCalculation(Vector3 from, Vector3 to, string continentnamempq, CancelEventArgs cancelable)
         //{
@@ -123,24 +150,24 @@ namespace AIO.Combat.Warlock
         //    RefreshPet();
         //}
 
-        protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
+        private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
             RefreshPet();
             SpellstoneHelper.Refresh();
             HealthstoneRefresh();
-            //LifeTapOutOfCombat();
         }
 
         private void HealthstoneRefresh()
         {
             if (!Consumables.HaveHealthstone())
             {
-                if (CreateHealthStone.KnownSpell && CreateHealthStone.IsSpellUsable)
+                if (_createHealthStoneSpell.KnownSpell && _createHealthStoneSpell.IsSpellUsable)
                 {
-                    CreateHealthStone.Launch();
+                    _createHealthStoneSpell.Launch();
                     Usefuls.WaitIsCasting();
                 }
             }
+
             if (ItemsHelper.CountItemStacks("Soul Shard") >= 5)
             {
                 ItemsHelper.DeleteItems(6265, 5);
@@ -157,36 +184,41 @@ namespace AIO.Combat.Warlock
             if ((!Pet.IsAlive || (Pet.IsAlive && PetManager.CurrentWarlockPet != Settings.Current.Pet)) &&
                 !Me.IsMounted)
             {
-                if (Settings.Current.Pet == "Felhunter" && SummonFelhunter.KnownSpell && SummonFelhunter.IsSpellUsable)
+                if (Settings.Current.Pet == "Felhunter" && _summonFelhunterSpell.KnownSpell && _summonFelhunterSpell.IsSpellUsable)
                 {
-                    SummonFelhunter.Launch();
+                    _summonFelhunterSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
-                if (Settings.Current.Pet == "Voidwalker" && SummonVoidWalker.KnownSpell && SummonVoidWalker.IsSpellUsable)
+
+                if (Settings.Current.Pet == "Voidwalker" && _summonVoidWalkerSpell.KnownSpell && _summonVoidWalkerSpell.IsSpellUsable)
                 {
-                    SummonVoidWalker.Launch();
+                    _summonVoidWalkerSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
-                if (Settings.Current.Pet == "Felguard" && SummonFelguard.KnownSpell && SummonFelguard.IsSpellUsable)
+
+                if (Settings.Current.Pet == "Felguard" && _summonFelguardSpell.KnownSpell && _summonFelguardSpell.IsSpellUsable)
                 {
-                    SummonFelguard.Launch();
+                    _summonFelguardSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
-                if (PetManager.CurrentWarlockPet != "Imp" && SummonImp.KnownSpell && SummonImp.IsSpellUsable)
+
+                if (PetManager.CurrentWarlockPet != "Imp" && _summonImpSpell.KnownSpell && _summonImpSpell.IsSpellUsable)
                 {
-                    SummonImp.Launch();
+                    _summonImpSpell.Launch();
                     Usefuls.WaitIsCasting();
                 }
             }
+
             if (Pet.IsAlive && PetManager.CurrentWarlockPet == "Imp")
             {
                 PetManager.TogglePetSpellAuto("Blood Pact", true);
                 Thread.Sleep(50);
                 PetManager.TogglePetSpellAuto("Firebolt", true);
             }
+
             if (Pet.IsAlive && PetManager.CurrentWarlockPet == "Felhunter")
             {
                 PetManager.TogglePetSpellAuto("Fel Intelligence", true);
@@ -194,23 +226,6 @@ namespace AIO.Combat.Warlock
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
         }
-        /*
-       private void LifeTapOutOfCombat()
-        {
-            while (!Fight.InFight 
-                && LifeTapOOC.KnownSpell 
-                && Me.ManaPercentage < 93 
-                && Settings.Current.LifeTapOOC 
-                && Me.IsInParty 
-                && !Me.IsMounted 
-                && !Me.InCombat 
-                && !Me.HaveBuff("Drink") 
-                && !Me.HaveBuff("Food") 
-                && Me.IsAlive)
-            {
-                LifeTapOOC.Launch();
-            }         
-        }*/
     }
 }
 

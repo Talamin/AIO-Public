@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AIO.Combat.Common;
+﻿using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
 using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
-namespace AIO.Combat.Priest {
+namespace AIO.Combat.Priest
+{
     using Settings = PriestLevelSettings;
 
-    internal class GroupHoly : BaseRotation {
+    internal class GroupHoly : BaseRotation
+    {
         private const bool IsDebug = true;
         private static readonly LinkedList<WoWUnit> CastingOnMeOrGroup = new LinkedList<WoWUnit>();
         private static readonly LinkedList<WoWUnit> EnemiesTargetingMe = new LinkedList<WoWUnit>();
@@ -29,11 +31,11 @@ namespace AIO.Combat.Priest {
         private static bool _isSpirit;
         private static WoWUnit _tank;
 
-        // private const float Default = 1f;
+        //private const float Default = 1f;
 
 
-        public GroupHoly() : base(IsDebug, IsDebug,
-            Settings.Current.UseSyntheticCombatEvents) {
+        public GroupHoly()
+        {
             Logging.Write("Loading FlXWare's Heal Rotation ...");
             _slowHealSpell = FindCorrectSlowHealSpell();
             _fastHealSpell = FindCorrectFastHealSpell();
@@ -59,18 +61,21 @@ namespace AIO.Combat.Priest {
                 FindTank, forceCast: true),
 
             // Cast Guardian Spirit on me if I'm about to die (Interrupts)
-            new RotationStep(new RotationSpell("Guardian Spirit"), 1.1f, RotationCombatUtil.Always,
+            new RotationStep(new RotationSpell("Guardian Spirit"), 1.1f,
+                RotationCombatUtil.Always,
                 action => !_isSpirit && Me.InCombat && Me.HealthPercent < Settings.Current.HolyGuardianSpiritTresh &&
                           !Me.CHaveBuff("Guardian Spirit"),
                 RotationCombatUtil.FindMe,
                 forceCast: true, checkRange: false),
-
+            
             // Cast Fear Ward on myself if enemy is casting a fear inducing spell on me (Interrupts)
-            new RotationStep(new RotationSpell("Fear Ward"), 1.2f, RotationCombatUtil.Always,
+            new RotationStep(new RotationSpell("Fear Ward"), 1.2f,
+                RotationCombatUtil.Always,
                 action => !_isSpirit && Settings.Current.HolyProtectAgainstFear &&
                           Me.BuffTimeLeft("Fear Ward") < 3000 &&
                           anyoneCastingFearSpellOnMe(CastingOnMeOrGroup),
-                RotationCombatUtil.FindMe, null, true, false),
+                RotationCombatUtil.FindMe,
+                forceCast: true, checkRange: false),
 
             // Abort
             new RotationStep(new DebugSpell("Abort"), 1.21f, (action, me) => HandleAbort(),
@@ -382,9 +387,11 @@ namespace AIO.Combat.Priest {
         private static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
             _tank != null && predicate(_tank) ? _tank : null;
 
-        private static bool DoPreCalculations() {
+        private static bool DoPreCalculations()
+        {
             Reset();
-            for (var i = 0; i < RotationFramework.Enemies.Length; i++) {
+            for (var i = 0; i < RotationFramework.Enemies.Length; i++)
+            {
                 WoWUnit enemy = RotationFramework.Enemies[i];
                 if (enemy.IsTargetingMe) EnemiesTargetingMe.AddLast(enemy);
                 if (enemy.IsCast && enemy.IsTargetingMeOrMyPetOrPartyMember) CastingOnMeOrGroup.AddLast(enemy);
@@ -414,13 +421,15 @@ namespace AIO.Combat.Priest {
 
         private static bool HandleAbort() => CancelableSpell.Check();
 
-        private static bool ShouldCastPrayerOfHealing() {
+        private static bool ShouldCastPrayerOfHealing()
+        {
             return RotationCombatUtil.CCountAlivePartyMembers(partyMember =>
                 partyMember.HealthPercent < Settings.Current.HolyPrayerOfHealingTresh &&
                 partyMember.GetDistance < 36) > 2;
         }
 
-        private static void Reset() {
+        private static void Reset()
+        {
             Cache.Reset();
             CastingOnMeOrGroup.Clear();
             EnemiesTargetingMe.Clear();
@@ -461,7 +470,8 @@ namespace AIO.Combat.Priest {
                 partyMember.GetDistance < 48 &&
                 partyMember.HealthPercent < Settings.Current.HolyDivineHymnTresh) > 2;
 
-        private static CancelableSpell FindCorrectSlowHealSpell() {
+        private static CancelableSpell FindCorrectSlowHealSpell()
+        {
             if (SpellManager.KnowSpell("Greater Heal"))
                 return new CancelableSpell("Greater Heal",
                     unit => unit.HealthPercent > Settings.Current.HolyBigSingleTargetHeal + 15);

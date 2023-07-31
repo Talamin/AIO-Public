@@ -38,8 +38,8 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Dragon's Breath"), 12f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  t.GetDistance < 7 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 15) > 1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  !t.HaveMyBuff("Living Bomb"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Fire Blast"), 14f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  t.HealthPercent < 10, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  (t.HealthPercent > 55 || BossList.isboss), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Scorch"), 16f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  (t.HealthPercent < 35 || BossList.isboss) , RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  (t.HealthPercent > 55 || BossList.MyTargetIsBoss), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Scorch"), 16f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh &&  (t.HealthPercent < 35 || BossList.MyTargetIsBoss) , RotationCombatUtil.BotTarget),
         };
     }
 }

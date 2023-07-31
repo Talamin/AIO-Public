@@ -11,6 +11,8 @@ using AIO.Combat.Warlock;
 using AIO.Combat.Warrior;
 using AIO.Events;
 using AIO.Framework;
+using AIO.Helpers;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using robotManager.Products;
@@ -19,26 +21,27 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using AIO.Helpers;
-using AIO.Lists;
+using WholesomeWOTLKAIO;
 using wManager;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
-using WholesomeWOTLKAIO;
-using MarsSettingsGUI;
 
-public class Main : ICustomClass {
+public class Main : ICustomClass
+{
     private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;
     public float Range => CombatClass?.Range ?? 5.0f;
 
     private CancellationTokenSource TokenRelativePositionFix;
     private CancellationTokenSource TokenKeyboardHook;
 
-    private static BaseSettings CombatSettings {
-        get {
-            switch (Me.WowClass) {
+    private static BaseSettings CombatSettings
+    {
+        get
+        {
+            switch (Me.WowClass)
+            {
                 case WoWClass.Hunter:
                     return HunterLevelSettings.Current;
                 case WoWClass.Paladin:
@@ -66,9 +69,12 @@ public class Main : ICustomClass {
         }
     }
 
-    private static BaseCombatClass LazyCombatClass {
-        get {
-            switch (Me.WowClass) {
+    private static BaseCombatClass LazyCombatClass
+    {
+        get
+        {
+            switch (Me.WowClass)
+            {
                 case WoWClass.Hunter:
                     return new HunterBehavior();
                 case WoWClass.Paladin:
@@ -102,19 +108,22 @@ public class Main : ICustomClass {
     private readonly List<ICycleable> Components;
 
     public Main() => Components = new List<ICycleable> {
-        new SyntheticEvents(),
+        //new SyntheticEvents(),
         new RotationFramework(),
-        new RacialManager(),
+        //new RacialManager(),
         new TalentsManager(),
         new DeferredCycleable(() => CombatClass)
     };
 
-    private void ForceStepBackward(string name, List<string> ps) {
-        if (name != "UI_ERROR_MESSAGE") {
+    private void ForceStepBackward(string name, List<string> ps)
+    {
+        if (name != "UI_ERROR_MESSAGE")
+        {
             return;
         }
 
-        switch (ps[0]) {
+        switch (ps[0])
+        {
             case "Target needs to be in front of you.":
             case "Target too close":
                 break;
@@ -142,8 +151,10 @@ public class Main : ICustomClass {
         }
     }
 
-    private void ForceBindItem(string name, List<string> ps) {
-        switch (name) {
+    private void ForceBindItem(string name, List<string> ps)
+    {
+        switch (name)
+        {
             case "AUTOEQUIP_BIND_CONFIRM":
             case "EQUIP_BIND_CONFIRM":
             case "LOOT_BIND_CONFIRM":
@@ -155,16 +166,20 @@ public class Main : ICustomClass {
         }
     }
 
-    private static void FixRelativePositionLag() {
-        foreach (WoWUnit unit in ObjectManager.GetObjectWoWUnit()) {
+    private static void FixRelativePositionLag()
+    {
+        foreach (WoWUnit unit in ObjectManager.GetObjectWoWUnit())
+        {
             ulong transportGuid = unit.TransportGuid;
             if (transportGuid == 0) continue;
             var transportObject = ObjectManager.GetObjectByGuid(transportGuid);
-            if (LaggyTransports.Entries.Contains(transportObject.Entry)) {
-            // if(transportObject != null && transportObject.IsValid
-            //                            && transportObject.FlagsInt == 40 // Transport & DoesNotDespawn
-            //                            && transportObject.GOType == WoWGameObjectType.MoTransport){
-                if (!WoWUnit.ForceRelativePosition) {
+            if (LaggyTransports.Entries.Contains(transportObject.Entry))
+            {
+                // if(transportObject != null && transportObject.IsValid
+                //                            && transportObject.FlagsInt == 40 // Transport & DoesNotDespawn
+                //                            && transportObject.GOType == WoWGameObjectType.MoTransport){
+                if (!WoWUnit.ForceRelativePosition)
+                {
                     Logging.WriteDebug($"Forcing relative positions because {unit.Name} is on {transportObject.Name}.");
                     WoWUnit.ForceRelativePosition = true;
                 }
@@ -173,15 +188,17 @@ public class Main : ICustomClass {
             }
         }
 
-        if (WoWUnit.ForceRelativePosition) {
+        if (WoWUnit.ForceRelativePosition)
+        {
             Logging.WriteDebug("Not forcing relative positions anymore.");
             WoWUnit.ForceRelativePosition = false;
         }
     }
 
-    
 
-    public void Initialize() {
+
+    public void Initialize()
+    {
         // Logging.Write("Started!");
         // Radar3D.OnDrawEvent += DrawArea;
         // Radar3D.Pulse();
@@ -216,9 +233,9 @@ public class Main : ICustomClass {
         AIOWOTLKSettings.Load();
         AutoUpdater.CheckUpdate(version);
 
-        Log("Started " + version + " of FightClass");
         Log("Started " + version + " Discovering class and finding rotation...");
-        if (Others.ParseInt(Information.Version.Replace(".", "").Substring(0, 3)) == 172) {
+        if (Others.ParseInt(Information.Version.Replace(".", "").Substring(0, 3)) == 172)
+        {
             Log($"AIO couldn't load (v {Information.Version})");
             return;
         }
@@ -231,16 +248,20 @@ public class Main : ICustomClass {
         wManagerSetting.CurrentSetting.UseLuaToMove = true;
 
         TokenRelativePositionFix = new CancellationTokenSource();
-        Task.Factory.StartNew(() => {
-            while (!TokenRelativePositionFix.IsCancellationRequested) {
+        Task.Factory.StartNew(() =>
+        {
+            while (!TokenRelativePositionFix.IsCancellationRequested)
+            {
                 FixRelativePositionLag();
                 Thread.Sleep(5000);
             }
         }, TokenRelativePositionFix.Token);
-        
+
         TokenKeyboardHook = new CancellationTokenSource();
-        Task.Factory.StartNew(() => {
-            while (!TokenKeyboardHook.IsCancellationRequested) {
+        Task.Factory.StartNew(() =>
+        {
+            while (!TokenKeyboardHook.IsCancellationRequested)
+            {
                 Hotkeys.CheckKeyPress();
                 Thread.Sleep(1000);
             }
@@ -251,9 +272,10 @@ public class Main : ICustomClass {
         Components.ForEach(c => c?.Initialize());
     }
 
-    
 
-    public void Dispose() {
+
+    public void Dispose()
+    {
         // Radar3D.OnDrawEvent -= DrawArea;
         EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceBindItem;
         EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceStepBackward;
@@ -262,7 +284,7 @@ public class Main : ICustomClass {
 
         TokenRelativePositionFix?.Cancel();
         TokenKeyboardHook?.Cancel();
-        
+
         Hotkeys.DisableRangeCircles();
 
         Components.ForEach(c => c?.Dispose());
@@ -273,19 +295,23 @@ public class Main : ICustomClass {
     private static string wowClass => Me.WowClass.ToString();
     private static bool _debug => false;
 
-    public static void LogFight(string message) {
+    public static void LogFight(string message)
+    {
         Logging.Write($"[WOTLK - {wowClass}]: {message}", Logging.LogType.Fight, Color.ForestGreen);
     }
 
-    public static void LogError(string message) {
+    public static void LogError(string message)
+    {
         Logging.Write($"[WOTLK - {wowClass}]: {message}", Logging.LogType.Error, Color.DarkRed);
     }
 
-    public static void Log(string message) {
+    public static void Log(string message)
+    {
         Logging.Write($"[WOTLK - {wowClass}]: {message}");
     }
 
-    public static void LogDebug(string message) {
+    public static void LogDebug(string message)
+    {
         if (_debug)
             Logging.WriteDebug($"[WOTLK - {wowClass}]: {message}");
     }

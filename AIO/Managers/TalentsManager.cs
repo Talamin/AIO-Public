@@ -16,6 +16,9 @@ internal class TalentsManager : ICycleable
     private static string[] Codes = null;
     private readonly Timer AssignTimer = new Timer();
 
+    public void Initialize() => MovementEvents.OnMovementPulse += OnMovementPulse;
+    public void Dispose() => MovementEvents.OnMovementPulse -= OnMovementPulse;
+
     public static bool HaveTalent(int tree, int talentNumber)
     {
         int _currentRank = Lua.LuaDoString<int>("_, _, _, _, currentRank, _, _, _ = GetTalentInfo(" + tree + ", " + talentNumber + "); return currentRank;");
@@ -734,8 +737,4 @@ internal class TalentsManager : ICycleable
             }
         }
     }
-
-    public void Initialize() => MovementEvents.OnMovementPulse += OnMovementPulse;
-
-    public void Dispose() => MovementEvents.OnMovementPulse -= OnMovementPulse;
 }

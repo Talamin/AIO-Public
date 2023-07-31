@@ -1,12 +1,10 @@
-﻿using AIO.Lists;
+﻿using AIO.Helpers.Caching;
+using AIO.Lists;
+using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
-using AIO.Helpers.Caching;
-using AIO.Settings;
-using robotManager.Helpful;
 using wManager;
 using wManager.Wow;
 using wManager.Wow.Class;
@@ -16,8 +14,10 @@ using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 using Math = System.Math;
 
-namespace AIO.Framework {
-    public static class RotationCombatUtil {
+namespace AIO.Framework
+{
+    public static class RotationCombatUtil
+    {
         private static readonly List<string> AreaSpells = new List<string> {
             "Death and Decay",
             "Mass Dispel",
@@ -36,7 +36,8 @@ namespace AIO.Framework {
         public static bool freeMove = false;
 
         public static WoWUnit GetBestAoETarget(Func<WoWUnit, bool> predicate, float range, float size,
-            IEnumerable<WoWUnit> units, int minimum = 0) {
+            IEnumerable<WoWUnit> units, int minimum = 0)
+        {
             // As this is still a C language, we can use fixed memory addresses with direct memory access -> Performance
             WoWUnit[] unitArray = units as WoWUnit[] ?? units.ToArray();
             return unitArray.Where(target => target.GetDistance < range)
@@ -58,10 +59,12 @@ namespace AIO.Framework {
             Lua.LuaDoString<bool>(
                 $"if IsCurrentSpell('{spellName}') == 1 then return true else return false end");
 
-        public static int CCountAlivePartyMembers(Func<WoWUnit, bool> predicate) {
+        public static int CCountAlivePartyMembers(Func<WoWUnit, bool> predicate)
+        {
             var count = 0;
 
-            for (var i = 0; i < RotationFramework.PartyMembers.Length; i++) {
+            for (var i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
                 WoWPlayer partyMember = RotationFramework.PartyMembers[i];
                 if (partyMember.CIsAlive() && predicate(partyMember))
                     count++;
@@ -69,11 +72,13 @@ namespace AIO.Framework {
 
             return count;
         }
-        
-        public static bool CHurtPartyMembersAtLeast(Func<WoWPlayer, bool> predicate, byte amount) {
+
+        public static bool CHurtPartyMembersAtLeast(Func<WoWPlayer, bool> predicate, byte amount)
+        {
             var count = 0;
 
-            for (byte i = 0; i < RotationFramework.PartyMembers.Length; i++) {
+            for (byte i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
                 WoWPlayer partyMember = RotationFramework.PartyMembers[i];
                 if (partyMember.CHealthPercent() > 99) break;
                 if (partyMember.CIsAlive() && predicate(partyMember))
@@ -83,11 +88,13 @@ namespace AIO.Framework {
 
             return false;
         }
-        
-        public static ushort CCountHurtPartyMembers(Func<WoWPlayer, bool> predicate) {
+
+        public static ushort CCountHurtPartyMembers(Func<WoWPlayer, bool> predicate)
+        {
             ushort count = 0;
 
-            for (ushort i = 0; i < RotationFramework.PartyMembers.Length; i++) {
+            for (ushort i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
                 WoWPlayer partyMember = RotationFramework.PartyMembers[i];
                 if (partyMember.CHealthPercent() > 99) break;
                 if (partyMember.CIsAlive() && predicate(partyMember))
@@ -97,19 +104,22 @@ namespace AIO.Framework {
             return count;
         }
 
-        public static bool CAnyPartyMemberAlive() {
+        public static bool CAnyPartyMemberAlive()
+        {
             for (var i = 0; i < RotationFramework.PartyMembers.Length; i++)
                 if (RotationFramework.PartyMembers[i].CIsAlive())
                     return true;
             return false;
         }
 
-        public static int CountAliveGroupMembers(Func<WoWUnit, bool> predicate) {
+        public static int CountAliveGroupMembers(Func<WoWUnit, bool> predicate)
+        {
             var count = 0;
 
             List<WoWPlayer> party = Party.GetParty();
 
-            for (var i = 0; i < party.Count; i++) {
+            for (var i = 0; i < party.Count; i++)
+            {
                 WoWPlayer partyMember = party[i];
                 if (partyMember.IsAlive && predicate(partyMember))
                     count++;
@@ -117,13 +127,15 @@ namespace AIO.Framework {
 
             return count;
         }
-        
-        public static int CCountHurtGroupMembers(Func<WoWUnit, bool> predicate) {
+
+        public static int CCountHurtGroupMembers(Func<WoWUnit, bool> predicate)
+        {
             var count = 0;
 
             List<WoWPlayer> party = Party.GetParty();
 
-            for (var i = 0; i < party.Count; i++) {
+            for (var i = 0; i < party.Count; i++)
+            {
                 WoWPlayer partyMember = party[i];
                 if (partyMember.CHealthPercent() > 99) break;
                 if (partyMember.CIsAlive() && predicate(partyMember))
@@ -147,8 +159,10 @@ namespace AIO.Framework {
         public static WoWUnit CFindExplicitHurtPartyMember(Func<WoWUnit, bool> predicate) =>
             CFindHurtPartyMember(partyMember => !partyMember.IsLocalPlayer && predicate(partyMember));
 
-        public static WoWUnit CFindHurtPartyMember(Func<WoWUnit, bool> predicate) {
-            for (ushort i = 0; i < RotationFramework.PartyMembers.Length; i++) {
+        public static WoWUnit CFindHurtPartyMember(Func<WoWUnit, bool> predicate)
+        {
+            for (ushort i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
                 WoWPlayer partyMember = RotationFramework.PartyMembers[i];
                 if (partyMember.CHealthPercent() > 99) break;
                 if (predicate(partyMember)) return partyMember;
@@ -161,8 +175,10 @@ namespace AIO.Framework {
             RotationFramework.PartyMembers.FirstOrDefault(partyMember =>
                 partyMember.IsAlive && predicate(partyMember));
 
-        public static WoWUnit CFindPartyMember(Func<WoWUnit, bool> predicate) {
-            for (var i = 0; i < RotationFramework.PartyMembers.Length; i++) {
+        public static WoWUnit CFindPartyMember(Func<WoWUnit, bool> predicate)
+        {
+            for (var i = 0; i < RotationFramework.PartyMembers.Length; i++)
+            {
                 WoWPlayer partyMember = RotationFramework.PartyMembers[i];
                 if (partyMember.CIsAlive() && predicate(partyMember)) return partyMember;
             }
@@ -183,7 +199,7 @@ namespace AIO.Framework {
 
         public static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>
             FindPartyMember(u => u.Name == RotationFramework.TankName && predicate(u));
-        
+
         public static WoWUnit CFindTank(Func<WoWUnit, bool> predicate) =>
            CFindPartyMember(u => u.Name == RotationFramework.TankName && predicate(u));
 
@@ -217,9 +233,11 @@ namespace AIO.Framework {
         public static WoWUnit FindEnemyTargetingMe(Func<WoWUnit, bool> predicate) =>
             FindEnemyTargetingMe(RotationFramework.Enemies, predicate);
 
-        public static WoWUnit CFindInRange(this WoWUnit[] units, Func<WoWUnit, bool> predicate, float distance, int count = 0) {
+        public static WoWUnit CFindInRange(this WoWUnit[] units, Func<WoWUnit, bool> predicate, float distance, int count = 0)
+        {
             int length = count == 0 ? units.Length : Math.Min(count, units.Length);
-            for (var i = 0; i < length; i++) {
+            for (var i = 0; i < length; i++)
+            {
                 WoWUnit unit = units[i];
                 if (unit.CGetDistance() > distance) return null;
                 if (predicate(unit)) return unit;
@@ -227,7 +245,7 @@ namespace AIO.Framework {
 
             return null;
         }
-        
+
         public static WoWUnit FindEnemyAttackingGroup(Func<WoWUnit, bool> predicate) => RotationFramework.Enemies
             .FirstOrDefault(u => u.IsAttackable &&
                                  !u.IsTargetingMe &&
@@ -258,7 +276,7 @@ namespace AIO.Framework {
 
         public static WoWUnit BotTarget(Func<WoWUnit, bool> predicate) =>
             !TraceLine.TraceLineGo(Target?.Position) && predicate(Target) ? Target : null;
-        
+
         public static WoWUnit BotTargetFast(Func<WoWUnit, bool> predicate) => predicate(Target) ? Target : null;
 
         public static WoWUnit PetTarget(Func<WoWUnit, bool> predicate) =>
@@ -282,17 +300,20 @@ namespace AIO.Framework {
         public static uint GetThreatStatus(this WoWUnit unit) =>
             Lua.LuaDoString<uint>($"return UnitThreatSituation(\"{unit.Name}\");");
 
-        public static int GetThreatStatusMemory(this WoWUnit unit) {
+        public static int GetThreatStatusMemory(this WoWUnit unit)
+        {
             const uint ClntObjMgrGetActivePlayerObj = 0x004038F0 - 0x400000;
             const uint UnitThreatSituationFunc = 0x0052A1A0 - 0x400000;
             const uint objGuid = 0x30;
             uint baseAddress = unit.GetBaseAddress;
 
-            try {
+            try
+            {
                 if (!Conditions.InGameAndConnected)
                     return -1;
 
-                if (baseAddress > 0) {
+                if (baseAddress > 0)
+                {
                     uint resultCodecave = Memory.WowMemory.AllocData.Get(0x4);
 
                     if (resultCodecave <= 0)
@@ -322,21 +343,24 @@ namespace AIO.Framework {
 
                     return Math.Max(0, result);
                 }
-            } catch {
+            }
+            catch
+            {
                 Logging.WriteError("Failed to get ThreatStatus from memory.");
             }
 
             return -1;
         }
 
-        public static int GetAggroDifferenceFor(WoWUnit unit) {
+        public static int GetAggroDifferenceFor(WoWUnit unit)
+        {
             uint myThreat = GetThreatStatus(unit);
             uint highestParty = (from p in RotationFramework.PartyMembers
-                let tVal = GetThreatStatus(p)
-                orderby tVal descending
-                select tVal).FirstOrDefault();
+                                 let tVal = GetThreatStatus(p)
+                                 orderby tVal descending
+                                 select tVal).FirstOrDefault();
 
-            int result = (int) myThreat - (int) highestParty;
+            int result = (int)myThreat - (int)highestParty;
             return result;
         }
 
@@ -346,43 +370,53 @@ namespace AIO.Framework {
         public static bool IsAutoAttacking() =>
             Lua.LuaDoString<bool>("return IsCurrentSpell('Auto Attack') == 1 or IsCurrentSpell('Auto Attack') == true");
 
-        public static bool CastSpell(RotationSpell spell, WoWUnit unit, bool force) {
-            if (unit == null ||
-                !spell.KnownSpell ||
-                !spell.IsSpellUsable ||
-                !unit.IsValid ||
-                unit.IsDead ||
-                wManagerSetting.CurrentSetting.IgnoreFightGoundMount
-                && Me.IsMounted &&
-                !LaggyTransports.Entries.Contains(ObjectManager.GetObjectByGuid(Me.TransportGuid).Entry))
-                return false;
+        public static bool CastSpell(RotationSpell spell, WoWUnit unit, bool force)
+        {
+            try
+            {
+                if (unit == null ||
+                    !spell.KnownSpell ||
+                    !spell.IsSpellUsable ||
+                    !unit.IsValid ||
+                    unit.IsDead ||
+                    wManagerSetting.CurrentSetting.IgnoreFightGoundMount && Me.IsMounted && !LaggyTransports.Entries.Contains(ObjectManager.GetObjectByGuid(Me.TransportGuid).Entry))
+                    return false;
 
-            //Lua.LuaDoString("if IsMounted() then Dismount() end");
-            if (spell.CastTime > 0.0 && Me.GetMove) {
-                if (freeMove) return false;
-                MovementManager.StopMoveTo(false, (int) (spell.CastTime * 1000));
+                //Lua.LuaDoString("if IsMounted() then Dismount() end");
+                if (spell.CastTime > 0.0 && Me.GetMove)
+                {
+                    if (freeMove) return false;
+                    MovementManager.StopMoveTo(false, (int)(spell.CastTime * 1000));
+                }
+
+                if (!force && Me.IsCast) return false;
+
+                if (force) StopCasting();
+
+                RotationLogger.Fight($"Casting {spell.Name} on {unit.Name} [{unit.Guid}]");
+                SpellManager.CastSpellByNameOn(spell.Name, GetLuaId(unit));
+                if (AreaSpells.Contains(spell.Name)) ClickOnTerrain.Pulse(unit.Position);
+
+                // Usefuls.WaitIsCasting();
+                TimeSinceLastCast.Restart();
+                return true;
             }
-
-            if (!force && Me.IsCast) return false;
-
-            if (force) StopCasting();
-
-            RotationLogger.Fight($"Casting {spell.Name} on {unit.Name} [{unit.Guid}]");
-            SpellManager.CastSpellByNameOn(spell.Name, GetLuaId(unit));
-            if (AreaSpells.Contains(spell.Name)) ClickOnTerrain.Pulse(unit.Position);
-
-            // Usefuls.WaitIsCasting();
-            TimeSinceLastCast.Restart();
-            return true;
+            catch (Exception e)
+            {
+                Logging.WriteError($"{e.Message} \n{e.StackTrace}", true);
+                return false;
+            }
         }
-        
+
         public static readonly Stopwatch TimeSinceLastCast = Stopwatch.StartNew();
 
-        public static void StopCasting() {
+        public static void StopCasting()
+        {
             Lua.LuaDoString("SpellStopCasting();");
         }
 
-        public static string GetLuaId(WoWUnit unit) {
+        public static string GetLuaId(WoWUnit unit)
+        {
             if (unit.Guid == Me.Guid)
                 return "player";
             if (unit.Guid == Target.Guid)
@@ -395,7 +429,8 @@ namespace AIO.Framework {
         public static T ExecuteActionOnUnit<T>(WoWUnit unit, Func<string, T> action) =>
             ExecuteActionOnTarget(unit.Guid, action);
 
-        public static T ExecuteActionOnTarget<T>(ulong target, Func<string, T> action) {
+        public static T ExecuteActionOnTarget<T>(ulong target, Func<string, T> action)
+        {
             if (target == Me.Guid) return action("player");
 
             if (target == Target.Guid) return action("target");
@@ -405,16 +440,19 @@ namespace AIO.Framework {
             return action("mouseover");
         }
 
-        public static T ExecuteActionOnFocus<T>(ulong target, Func<string, T> action) {
+        public static T ExecuteActionOnFocus<T>(ulong target, Func<string, T> action)
+        {
             SetFocusGuid(target);
             return action("focus");
         }
 
-        public static void SetFocusGuid(ulong guid) {
+        public static void SetFocusGuid(ulong guid)
+        {
             Me.FocusGuid = guid;
         }
 
-        private static void SetMouseoverGuid(ulong guid) {
+        private static void SetMouseoverGuid(ulong guid)
+        {
             Me.MouseOverGuid = guid;
         }
     }

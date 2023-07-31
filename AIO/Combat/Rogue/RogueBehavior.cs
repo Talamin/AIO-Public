@@ -5,6 +5,7 @@ using AIO.Settings;
 using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
+using wManager.Events;
 
 namespace AIO.Combat.Rogue
 {
@@ -29,10 +30,27 @@ namespace AIO.Combat.Rogue
             })
         {
             SetDefaultRange();
-            Addons.Add(new ConditionalCycleable(() => Settings.Current.PullRanged, new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND)));
+            Addons.Add(new Racials());
+            if (Settings.Current.PullRanged)
+                Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
         }
 
-        protected override void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => PoisonHelper.CheckPoison();
+        public override void Initialize()
+        {
+            MovementEvents.OnMovementPulse += OnMovementPulse;
+            base.Initialize();
+        }
+
+        public override void Dispose()
+        {
+            MovementEvents.OnMovementPulse -= OnMovementPulse;
+            base.Dispose();
+        }
+
+        private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
+        {
+            PoisonHelper.CheckPoison();
+        }
     }
 }
 
