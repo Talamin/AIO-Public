@@ -9,42 +9,11 @@ namespace AIO.Settings
     [Serializable]
     public sealed class PriestLevelSettings : BasePersistentSettings<PriestLevelSettings>
     {
-        public PriestLevelSettings()
-        {
-            UseWand = true;
-            UseWandTresh = 20;
-            UseAutoBuffInt = true;
-            UseAutoBuff = false;
-            ShadowForm = true;
-            ShadowShadowfiend = 30;
-            ShadowUseHeaInGrp = false;
-            ShadowUseShieldTresh = 60;
-            ShadowUseRenewTresh = 90;
-            ShadowUseFlashTresh = 60;
-            ShadowUseHealTresh = 40;
-            ShadowUseMindflay = false;
-            ShadowDPUse = true;
-            ShadowDotOff = true;
-            ShadowUseShieldParty = true;
-            ShadowDispersion = 30;
-            HolyGuardianSpiritTresh = 25;
-            HolyBigSingleTargetHeal = 65;
-            HolyBindingHealTresh = 85;
-            HolyPrayerOfMendingTresh = 95;
-            HolyPrayerOfHealingTresh = 80;
-            HolyCircleOfHealingTresh = 90;
-            HolyDivineHymnTresh = 45;
-            HolyProtectAgainstFear = true;
-            HolyUseMindSoothe = true;
-            HolyMindSootheDistance = 6;
-            HolyShackleUndead = false;
-            HolyOffTankCastingMana = 40;
-            HolyPreventiveHealMana = 70;
-            HolyIgnoreManaManagementOOC = true;
-            HolyCustomTank = "";
-            HolyDeDeBuff = false;
-        }
+        //Lists
+        [TriggerDropdown("PriestTriggerDropdown", new string[] { nameof(Spec.Priest_GroupDiscipline), nameof(Spec.Priest_GroupHoly), nameof(Spec.Priest_SoloShadow), nameof(Spec.Priest_GroupShadow) })]
+        public override string ChooseRotation { get; set; }
 
+        #region General
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
@@ -73,218 +42,404 @@ namespace AIO.Settings
         [DisplayName("Use intelligent Buffing (Group)?")]
         [Description("Use Intelligent Buffing in General?")]
         public bool UseAutoBuffInt { get; set; }
+        #endregion
 
+        #region GroupShadow
         [Setting]
         [DefaultValue(true)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("ShadowForm?")]
         [Description("Use ShadowForm in General?")]
-        public bool ShadowForm { get; set; }
+        public bool GroupShadowShadowForm { get; set; }
 
         [Setting]
         [DefaultValue(30)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Shadowfiend")]
         [Description("% when use Shadowfiend in General?")]
-        public int ShadowShadowfiend { get; set; }
+        public int GroupShadowShadowfiend { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Dot on Offtargets?")]
         [Description("Use Dot on Adds?")]
-        public bool ShadowDotOff { get; set; }
+        public bool GroupShadowDotOff { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Devouring Plague?")]
         [Description("Use DP up to level 80?")]
-        public bool ShadowDPUse { get; set; }
+        public bool GroupShadowDPUse { get; set; }
 
         [Setting]
         [DefaultValue(60)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Shield Treshold?")]
         [Description("Own life for Shield Usage?")]
         [Percentage(true)]
-        public int ShadowUseShieldTresh { get; set; }
+        public int GroupShadowUseShieldTresh { get; set; }
 
         [Setting]
         [DefaultValue(90)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Renew Treshold?")]
         [Description("Treshold for Renew Usage?")]
         [Percentage(true)]
-        public int ShadowUseRenewTresh { get; set; }
+        public int GroupShadowUseRenewTresh { get; set; }
 
         [Setting]
         [DefaultValue(40)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Heal Treshold?")]
         [Description("Treshold for Heal Usage?")]
         [Percentage(true)]
-        public int ShadowUseHealTresh { get; set; }
+        public int GroupShadowUseHealTresh { get; set; }
         
         [Setting]
         [DefaultValue(60)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Flash Heal Treshold?")]
         [Description("Treshold for Flash Heal Usage?")]
         [Percentage(true)]
-        public int ShadowUseFlashTresh { get; set; }
+        public int GroupShadowUseFlashTresh { get; set; }
 
         [Setting]
         [DefaultValue(30)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Dispersion")]
         [Description("Treshold for Dispersion Usage?")]
         [Percentage(true)]
-        public int ShadowDispersion { get; set; }
+        public int GroupShadowDispersion { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Mindflay?")]
         [Description("Use Mindflay in General?")]
-        public bool ShadowUseMindflay { get; set; }
+        public bool GroupShadowUseMindflay { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Use Heal in Group?")]
         [Description("Use Heal in Group?")]
-        public bool ShadowUseHeaInGrp { get; set; }
+        public bool GroupShadowUseHeaInGrp { get; set; }
 
         [Setting]
         [DefaultValue(true)]
-        [Category("Shadow")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("PW Shield?")]
         [Description("Use Shield on Partymembers in Shadow Spec?")]
-        public bool ShadowUseShieldParty { get; set; }
+        public bool GroupShadowUseShieldParty { get; set; }
+
+        #endregion
+
+        #region SoloShadow
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("ShadowForm?")]
+        [Description("Use ShadowForm in General?")]
+        public bool SoloShadowShadowForm { get; set; }
 
         [Setting]
-        [DefaultValue("")]
-        [Category("Holy")]
-        [DisplayName("Custom Tank")]
-        [Description("If you want to override the tank. Leave empty if you don't know")]
-        public string HolyCustomTank { get; set; }
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Shadowfiend")]
+        [Description("% when use Shadowfiend in General?")]
+        public int SoloShadowShadowfiend { get; set; }
 
         [Setting]
-        [DefaultValue(65)]
-        [Category("Holy")]
-        [DisplayName("Slow Heal")]
-        [Description("Treshhold to cast a big single target heal")]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Dot on Offtargets?")]
+        [Description("Use Dot on Adds?")]
+        public bool SoloShadowDotOff { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Devouring Plague?")]
+        [Description("Use DP up to level 80?")]
+        public bool SoloShadowDPUse { get; set; }
+
+        [Setting]
+        [DefaultValue(60)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Shield Treshold?")]
+        [Description("Own life for Shield Usage?")]
         [Percentage(true)]
-        public int HolyBigSingleTargetHeal { get; set; }
-
-        [Setting]
-        [DefaultValue(85)]
-        [Category("Holy")]
-        [DisplayName("Binding Heal")]
-        [Description("Treshhold to cast binding heal on you and a friendly target")]
-        [Percentage(true)]
-        public int HolyBindingHealTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(95)]
-        [Category("Holy")]
-        [DisplayName("Prayer of Mending")]
-        [Description("Treshhold to cast Prayer of Mending on friendly targets")]
-        [Percentage(true)]
-        public int HolyPrayerOfMendingTresh { get; set; }
+        public int SoloShadowUseShieldTresh { get; set; }
 
         [Setting]
         [DefaultValue(90)]
-        [Category("Holy")]
-        [DisplayName("Circle of Healing")]
-        [Description("Treshhold to cast Circle of Healing on friendly targets")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Renew Treshold?")]
+        [Description("Treshold for Renew Usage?")]
         [Percentage(true)]
-        public int HolyCircleOfHealingTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(80)]
-        [Category("Holy")]
-        [DisplayName("Prayer of Healing")]
-        [Description("Treshhold to cast Prayer of Healing on friendly targets")]
-        [Percentage(true)]
-        public int HolyPrayerOfHealingTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(45)]
-        [Category("Holy")]
-        [DisplayName("Divine Hymn")]
-        [Description("Treshhold to cast Divine Hymn if 3 party members fall below the mana treshhold")]
-        [Percentage(true)]
-        public int HolyDivineHymnTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(25)]
-        [Category("Holy")]
-        [DisplayName("Guardian Spirit")]
-        [Description("Treshhold to cast Guardian Spirit on tank or me")]
-        [Percentage(true)]
-        public int HolyGuardianSpiritTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Holy")]
-        [DisplayName("Fear Ward")]
-        [Description("Cast Fear Ward if an enemy is casting an fear inducing spell on us")]
-        public bool HolyProtectAgainstFear { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Holy")]
-        [DisplayName("Mind Soothe")]
-        [Description("Uses Mind Soothe if you are too close to an enemy")]
-        public bool HolyUseMindSoothe { get; set; }
-
-        [Setting]
-        [DefaultValue(6)]
-        [Category("Holy")]
-        [DisplayName("Mind Soothe dist.")]
-        [Description("Distance to cast Mind Soothe before an enemy will attack you")]
-        public int HolyMindSootheDistance { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Holy")]
-        [DisplayName("Shackle Undead")]
-        [Description("Shackles Undead if they are out of range and targeting you")]
-        public bool HolyShackleUndead { get; set; }
+        public int SoloShadowUseRenewTresh { get; set; }
 
         [Setting]
         [DefaultValue(40)]
-        [Category("Holy")]
-        [DisplayName("Cast Off Tank")]
-        [Description("Minimum mana percentage to do off tank casts")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Heal Treshold?")]
+        [Description("Treshold for Heal Usage?")]
         [Percentage(true)]
-        public int HolyOffTankCastingMana { get; set; }
-        
-        [Setting]
-        [DefaultValue(70)]
-        [Category("Holy")]
-        [DisplayName("Preventive Healing")]
-        [Description("Minimum mana percentage to do preventive healing (100 will disable it)")]
-        [Percentage(true)]
-        public int HolyPreventiveHealMana { get; set; }
+        public int SoloShadowUseHealTresh { get; set; }
 
         [Setting]
-        [DefaultValue(true)]
-        [Category("Holy")]
-        [DisplayName("OOC Refresh")]
-        [Description("Will refresh your group OOC? Will burn up your mana. Expected to use drinks afterwards")]
-        public bool HolyIgnoreManaManagementOOC { get; set; }
+        [DefaultValue(60)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Flash Heal Treshold?")]
+        [Description("Treshold for Flash Heal Usage?")]
+        [Percentage(true)]
+        public int SoloShadowUseFlashTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(30)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Dispersion")]
+        [Description("Treshold for Dispersion Usage?")]
+        [Percentage(true)]
+        public int SoloShadowDispersion { get; set; }
 
         [Setting]
         [DefaultValue(false)]
-        [Category("Holy")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Mindflay?")]
+        [Description("Use Mindflay in General?")]
+        public bool SoloShadowUseMindflay { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("Use Heal in Group?")]
+        [Description("Use Heal in Group?")]
+        public bool SoloShadowUseHeaInGrp { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_SoloShadow))]
+        [DisplayName("PW Shield?")]
+        [Description("Use Shield on Partymembers in Shadow Spec?")]
+        public bool SoloShadowUseShieldParty { get; set; }
+
+        #endregion
+
+        #region GroupHoly  
+        [Setting]
+        [DefaultValue("")]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Custom Tank")]
+        [Description("If you want to override the tank. Leave empty if you don't know")]
+        public string GroupHolyCustomTank { get; set; }
+
+        [Setting]
+        [DefaultValue(65)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Slow Heal")]
+        [Description("Treshhold to cast a big single target heal")]
+        [Percentage(true)]
+        public int GroupHolyBigSingleTargetHeal { get; set; }
+
+        [Setting]
+        [DefaultValue(85)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Binding Heal")]
+        [Description("Treshhold to cast binding heal on you and a friendly target")]
+        [Percentage(true)]
+        public int GroupHolyBindingHealTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(95)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Prayer of Mending")]
+        [Description("Treshhold to cast Prayer of Mending on friendly targets")]
+        [Percentage(true)]
+        public int GroupHolyPrayerOfMendingTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(90)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Circle of Healing")]
+        [Description("Treshhold to cast Circle of Healing on friendly targets")]
+        [Percentage(true)]
+        public int GroupHolyCircleOfHealingTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(80)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Prayer of Healing")]
+        [Description("Treshhold to cast Prayer of Healing on friendly targets")]
+        [Percentage(true)]
+        public int GroupHolyPrayerOfHealingTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(45)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Divine Hymn")]
+        [Description("Treshhold to cast Divine Hymn if 3 party members fall below the mana treshhold")]
+        [Percentage(true)]
+        public int GroupHolyDivineHymnTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(25)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Guardian Spirit")]
+        [Description("Treshhold to cast Guardian Spirit on tank or me")]
+        [Percentage(true)]
+        public int GroupHolyGuardianSpiritTresh { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Fear Ward")]
+        [Description("Cast Fear Ward if an enemy is casting an fear inducing spell on us")]
+        public bool GroupHolyProtectAgainstFear { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Mind Soothe")]
+        [Description("Uses Mind Soothe if you are too close to an enemy")]
+        public bool GroupHolyUseMindSoothe { get; set; }
+
+        [Setting]
+        [DefaultValue(6)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Mind Soothe dist.")]
+        [Description("Distance to cast Mind Soothe before an enemy will attack you")]
+        public int GroupHolyMindSootheDistance { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Shackle Undead")]
+        [Description("Shackles Undead if they are out of range and targeting you")]
+        public bool GroupHolyShackleUndead { get; set; }
+
+        [Setting]
+        [DefaultValue(40)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Cast Off Tank")]
+        [Description("Minimum mana percentage to do off tank casts")]
+        [Percentage(true)]
+        public int GroupHolyOffTankCastingMana { get; set; }
+        
+        [Setting]
+        [DefaultValue(70)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("Preventive Healing")]
+        [Description("Minimum mana percentage to do preventive healing (100 will disable it)")]
+        [Percentage(true)]
+        public int GroupHolyPreventiveHealMana { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
+        [DisplayName("OOC Refresh")]
+        [Description("Will refresh your group OOC? Will burn up your mana. Expected to use drinks afterwards")]
+        public bool GroupHolyIgnoreManaManagementOOC { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupHoly))]
         [DisplayName("De-DeBuff")]
         [Description("Will remove harmful magic and diseases")]
-        public bool HolyDeDeBuff { get; set; }
+        public bool GroupHolyDeDeBuff { get; set; }
+        #endregion
 
-        [DropdownList(new[] { nameof(Spec.Priest_SoloShadow), nameof(Spec.Priest_GroupHoly) })]
-        public override string ChooseRotation { get; set; }
+        public PriestLevelSettings()
+        {
+            UseWand = true;
+            UseWandTresh = 20;
+            UseAutoBuffInt = true;
+            UseAutoBuff = false;
+
+            SoloShadowShadowForm = true;
+            SoloShadowShadowfiend = 30;
+            SoloShadowUseHeaInGrp = false;
+            SoloShadowUseShieldTresh = 60;
+            SoloShadowUseRenewTresh = 90;
+            SoloShadowUseFlashTresh = 60;
+            SoloShadowUseHealTresh = 40;
+            SoloShadowUseMindflay = false;
+            SoloShadowDPUse = true;
+            SoloShadowDotOff = true;
+            SoloShadowUseShieldParty = true;
+            SoloShadowDispersion = 30;
+
+            GroupShadowShadowForm = true;
+            GroupShadowShadowfiend = 30;
+            GroupShadowUseHeaInGrp = false;
+            GroupShadowUseShieldTresh = 60;
+            GroupShadowUseRenewTresh = 90;
+            GroupShadowUseFlashTresh = 60;
+            GroupShadowUseHealTresh = 40;
+            GroupShadowUseMindflay = false;
+            GroupShadowDPUse = true;
+            GroupShadowDotOff = true;
+            GroupShadowUseShieldParty = true;
+            GroupShadowDispersion = 30;
+
+            GroupHolyGuardianSpiritTresh = 25;
+            GroupHolyBigSingleTargetHeal = 65;
+            GroupHolyBindingHealTresh = 85;
+            GroupHolyPrayerOfMendingTresh = 95;
+            GroupHolyPrayerOfHealingTresh = 80;
+            GroupHolyCircleOfHealingTresh = 90;
+            GroupHolyDivineHymnTresh = 45;
+            GroupHolyProtectAgainstFear = true;
+            GroupHolyUseMindSoothe = true;
+            GroupHolyMindSootheDistance = 6;
+            GroupHolyShackleUndead = false;
+            GroupHolyOffTankCastingMana = 40;
+            GroupHolyPreventiveHealMana = 70;
+            GroupHolyIgnoreManaManagementOOC = true;
+            GroupHolyCustomTank = "";
+            GroupHolyDeDeBuff = false;
+        }
     }
 }

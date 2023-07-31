@@ -312,12 +312,13 @@
     <Compile Include="Combat\Paladin\GroupRetribution.cs" />
     <Compile Include="Combat\Paladin\SoloRetribution.cs" />
     <Compile Include="Combat\Priest\CombatBuffs.cs" />
+    <Compile Include="Combat\Priest\SoloShadow.cs" />
     <Compile Include="Combat\Priest\OOCBuffs.cs" />
     <Compile Include="Combat\Priest\GroupDiscipline.cs" />
     <Compile Include="Combat\Priest\GroupHoly.cs" />
     <Compile Include="Combat\Priest\LowLevel.cs" />
     <Compile Include="Combat\Priest\PriestBehavior.cs" />
-    <Compile Include="Combat\Priest\SoloShadow.cs" />
+    <Compile Include="Combat\Priest\GroupShadow.cs" />
     <Compile Include="Combat\Rogue\GroupCombat.cs" />
     <Compile Include="Combat\Rogue\SoloAssassination.cs" />
     <Compile Include="Combat\Rogue\SoloCombat.cs" />

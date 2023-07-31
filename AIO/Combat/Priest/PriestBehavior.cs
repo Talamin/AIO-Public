@@ -18,14 +18,14 @@ namespace AIO.Combat.Priest
                 { Spec.LowLevel, new LowLevel() },
                 { Spec.Priest_GroupHoly, new GroupHoly() },
                 { Spec.Priest_GroupDiscipline, new GroupDiscipline() },
-                { Spec.Priest_SoloShadow, new SoloShadow() },
-                { Spec.Fallback, new SoloShadow() },
+                { Spec.Priest_GroupShadow, new GroupShadow() },
+                { Spec.Fallback, new GroupShadow() },
             } , 
             new AutoPartyResurrect("Resurrection"),
             new OOCBuffs(),
             new CombatBuffs())
         {
-            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Priest_GroupHoly || Specialisation == Spec.Priest_SoloShadow, new SlowLuaCaching()));
+            Addons.Add(new ConditionalCycleable(() => Specialisation == Spec.Priest_GroupHoly || Specialisation == Spec.Priest_GroupShadow, new SlowLuaCaching()));
         }
     }
 }

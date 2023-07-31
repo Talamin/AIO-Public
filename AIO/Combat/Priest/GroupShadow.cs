@@ -18,7 +18,7 @@ using Math = System.Math;
 namespace AIO.Combat.Priest {
     using Settings = PriestLevelSettings;
 
-    internal class SoloShadow : BaseRotation {
+    internal class GroupShadow : BaseRotation {
         private static readonly HashSet<ulong> PartyGuids = new HashSet<ulong>();
         private static CancelableSpell _healSpell;
         private static WoWUnit _tank;
@@ -26,7 +26,7 @@ namespace AIO.Combat.Priest {
         private static bool _haveShadowWeaving;
         private static bool _targetAttackable;
 
-        public SoloShadow() : base(completelySynthetic: Settings.Current.CompletelySynthetic) {
+        public GroupShadow() : base(completelySynthetic: Settings.Current.CompletelySynthetic) {
             _healSpell = FindCorrectHealSpell();
             _haveShadowWeaving = TalentsManager.HaveTalent(3, 12);
 
@@ -42,8 +42,8 @@ namespace AIO.Combat.Priest {
                 (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             
             new RotationStep(new RotationSpell("Power Word: Shield"), 1f,
-                (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) &&
-                          Me.CHealthPercent() <= Settings.Current.SoloShadowUseShieldTresh &&
+                (s, t) => (Settings.Current.GroupShadowUseHeaInGrp || !Me.CIsInGroup()) &&
+                          Me.CHealthPercent() <= Settings.Current.GroupShadowUseShieldTresh &&
                           !Me.CHaveBuff("Power Word: Shield") && !Me.CHaveBuff("Weakened Soul"),
                 RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             
@@ -51,18 +51,18 @@ namespace AIO.Combat.Priest {
             //     action => Me.CIsInGroup() && Me.GetCachedThreatSituation() > 1, RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
             
             new RotationStep(_healSpell, 2f,
-                (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) &&
-                          Me.CHealthPercent() < Settings.Current.SoloShadowUseHealTresh, RotationCombatUtil.FindMe, checkRange: false),
+                (s, t) => (Settings.Current.GroupShadowUseHeaInGrp || !Me.CIsInGroup()) &&
+                          Me.CHealthPercent() < Settings.Current.GroupShadowUseHealTresh, RotationCombatUtil.FindMe, checkRange: false),
             
-            new RotationStep(new CancelableSpell("Flash Heal", unit => unit.CHealthPercent() > Settings.Current.SoloShadowUseFlashTresh + 10), 3f,
-                (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) &&
-                          Me.CHealthPercent() < Settings.Current.SoloShadowUseFlashTresh ||
-                          Me.CHealthPercent() < Math.Min(Settings.Current.SoloShadowUseFlashTresh + 25, 99) && !Me.CHaveBuff("Shadowform"),
+            new RotationStep(new CancelableSpell("Flash Heal", unit => unit.CHealthPercent() > Settings.Current.GroupShadowUseFlashTresh + 10), 3f,
+                (s, t) => (Settings.Current.GroupShadowUseHeaInGrp || !Me.CIsInGroup()) &&
+                          Me.CHealthPercent() < Settings.Current.GroupShadowUseFlashTresh ||
+                          Me.CHealthPercent() < Math.Min(Settings.Current.GroupShadowUseFlashTresh + 25, 99) && !Me.CHaveBuff("Shadowform"),
                 RotationCombatUtil.FindMe, checkRange: false),
             
             new RotationStep(new RotationSpell("Renew"), 4f,
-                (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) && 
-                          !Me.CHaveBuff("Shadowform") && Me.CHealthPercent() < Settings.Current.SoloShadowUseRenewTresh && 
+                (s, t) => (Settings.Current.GroupShadowUseHeaInGrp || !Me.CIsInGroup()) && 
+                          !Me.CHaveBuff("Shadowform") && Me.CHealthPercent() < Settings.Current.GroupShadowUseRenewTresh && 
                           Me.CManaPercentage() > 40 && t.CBuffTimeLeft("Renew") < 1000, RotationCombatUtil.FindMe, checkRange: false),
             
             new RotationStep(new RotationSpell("Psychic Scream"), 5f,
@@ -71,31 +71,31 @@ namespace AIO.Combat.Priest {
                 RotationCombatUtil.FindMe, checkRange: false),
             
             new RotationStep(new RotationSpell("Power Word: Shield"), 6f,
-                (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) && 
-                          Settings.Current.SoloShadowUseShieldParty && t.CHealthPercent() < Settings.Current.SoloShadowUseShieldTresh &&
+                (s, t) => (Settings.Current.GroupShadowUseHeaInGrp || !Me.CIsInGroup()) && 
+                          Settings.Current.GroupShadowUseShieldParty && t.CHealthPercent() < Settings.Current.GroupShadowUseShieldTresh &&
                           t.GetCachedThreatSituation() > 1 && !t.CHaveBuff("Power Word: Shield") &&
                           !t.CHaveBuff("Weakened Soul"), pred => RotationFramework.PartyMembers.CFindInRange(unit => unit.CIsAlive() && pred(unit), 40, 5), checkLoS: true, checkRange: false),
             
             // Cast Shadowfiend on tank's combat partner to gain some mana
             new RotationStep(new RotationSpell("Shadowfiend"), 7f,
                 (action, target) => target.IsEnemy() && target.IsAttackable && target.Target == _tank.Guid,
-                action => _tank != null && Me.CManaPercentage() < Settings.Current.SoloShadowShadowfiend + 10 && _tank.CInCombat(),
+                action => _tank != null && Me.CManaPercentage() < Settings.Current.GroupShadowShadowfiend + 10 && _tank.CInCombat(),
                 predicate => predicate(_tank?.TargetObject) ? _tank?.TargetObject : null, checkLoS: true),
             
             // Cast Shadowfiend on high HP combat partner to gain some Mana
             new RotationStep(new RotationSpell("Shadowfiend"), 8f,
                 (action, target) => target.IsEnemy() && target.IsAttackable,
-                action => Me.CManaPercentage() < Settings.Current.SoloShadowShadowfiend + 10,
+                action => Me.CManaPercentage() < Settings.Current.GroupShadowShadowfiend + 10,
                 RotationCombatUtil.CGetHighestHpPartyMemberTarget, checkLoS: true),
             
             // Cast Shadowfiend on basically anything targeting me to gain some Mana
             new RotationStep(new RotationSpell("Shadowfiend"), 9f,
                 (action, target) => target.Target == Me.Guid && target.IsAttackable,
-                action => Me.CManaPercentage() < Settings.Current.SoloShadowShadowfiend && Me.CInCombat(),
+                action => Me.CManaPercentage() < Settings.Current.GroupShadowShadowfiend && Me.CInCombat(),
                 predicate => RotationFramework.Enemies.FirstOrDefault(predicate), checkLoS: true),
             
             new RotationStep(new RotationSpell("Dispersion"), 10f,
-                (s, t) => Me.CManaPercentage() <= Settings.Current.SoloShadowDispersion && !Me.CHaveBuff("Dispersion") &&
+                (s, t) => Me.CManaPercentage() <= Settings.Current.GroupShadowDispersion && !Me.CHaveBuff("Dispersion") &&
                 (Pet?.CreatedBySpell ?? 0) != 34433 /*Shadowfiend*/,
                 RotationCombatUtil.FindMe, checkRange: false),
             
@@ -129,7 +129,7 @@ namespace AIO.Combat.Priest {
             
             new RotationStep(new RotationSpell("Devouring Plague"), 15f,
                 (s, t) => ((t.CHealthPercent() > 40 || t.IsBoss && t.CHealthPercent() > 15) &&
-                          t.CMyBuffTimeLeft("Devouring Plague") < 2590) && Settings.Current.SoloShadowDPUse, CQuickBotTarget,
+                          t.CMyBuffTimeLeft("Devouring Plague") < 2590) && Settings.Current.GroupShadowDPUse, CQuickBotTarget,
                 checkLoS: true),
             
             new RotationStep(new RotationSpell("Mind Blast"), 16f, (s, t) => true,
@@ -145,7 +145,7 @@ namespace AIO.Combat.Priest {
             //     predicate => RotationFramework.Enemies.CFindInRange(predicate, 36f, 5), checkLoS: true),
             
             new RotationStep(new RotationSpell("Mind Flay"), 18f,
-                (s, t) => Settings.Current.SoloShadowUseMindflay && (t.CHaveMyBuff("Shadow Word: Pain") ||
+                (s, t) => Settings.Current.GroupShadowUseMindflay && (t.CHaveMyBuff("Shadow Word: Pain") ||
                           t.CHaveMyBuff("Devouring Plague")), action => !Me.GetMove, CQuickBotTarget, checkLoS: true),
 
             new RotationStep(new RotationSpell("Vampiric Embrace"), 19f,
@@ -191,12 +191,12 @@ namespace AIO.Combat.Priest {
         private static CancelableSpell FindCorrectHealSpell() {
             if (SpellManager.KnowSpell("Greater Heal"))
                 return new CancelableSpell("Greater Heal",
-                    unit => unit.CHealthPercent() > Settings.Current.SoloShadowUseHealTresh + 10);
+                    unit => unit.CHealthPercent() > Settings.Current.GroupShadowUseHealTresh + 10);
             return SpellManager.KnowSpell("Heal")
                 ? new CancelableSpell("Heal",
-                    unit => unit.CHealthPercent() > Settings.Current.SoloShadowUseHealTresh + 10)
+                    unit => unit.CHealthPercent() > Settings.Current.GroupShadowUseHealTresh + 10)
                 : new CancelableSpell("Lesser Heal",
-                    unit => unit.CHealthPercent() > Settings.Current.SoloShadowUseHealTresh + 10);
+                    unit => unit.CHealthPercent() > Settings.Current.GroupShadowUseHealTresh + 10);
         }
 
         private static WoWUnit CQuickBotTarget(Func<WoWUnit, bool> predicate) {
