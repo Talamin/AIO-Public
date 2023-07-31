@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -32,9 +33,9 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Ice Block"), 3f, (s,t) => Me.CHealthPercent() < 30 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Evocation"), 4f, (s,t) => Settings.Current.GlyphOfEvocation && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 2), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Pyroblast"), 4.5f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && Me.HaveBuff("Hot Streak") && t.HealthPercent > 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Living Bomb"), 5f, (s,t) => !t.CHaveMyBuff("Living Bomb") && RotationFramework.Enemies.Count() >= 2, RotationCombatUtil.FindEnemyAttackingGroup, checkLoS: true),
+            new RotationStep(new RotationSpell("Living Bomb"), 5f, RotationCombatUtil.Always, FindEnemyWithoutMyLivingBomb),
             new RotationStep(new RotationSpell("Flamestrike"), 6f, (s,t) => Settings.Current.GroupFireFlamestrikeWithoutFire && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.GroupFireFlamestrikeWithoutCountFire && Settings.Current.GroupFireUseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true, forcedTimerMS: flamestrikeTimeout),
-            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.GroupFireAOEInstance) && Settings.Current.GroupFireUseAOE, FindBlizzardCluster, checkLoS: true),
+            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe()), Settings.Current.GroupFireAOEInstance) && Settings.Current.GroupFireUseAOE, FindBlizzardCluster, checkLoS: true),
             new RotationStep(new RotationSpell("Scorch"), 9f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && TalentsManager.HaveTalent(2,11) && !t.HaveMyBuff("Improved Scorch"), RotationCombatUtil.BotTarget, forcedTimerMS: scorchTimeout),
             new RotationStep(new RotationSpell("Combustion"), 10f, (s,t) => !Me.HaveMyBuff("Combustion"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Blast Wave"), 11f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && t.CGetDistance() <= 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
@@ -42,16 +43,6 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && !t.CHaveMyBuff("Living Bomb"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fire Blast"), 14f, (s,t) => Settings.Current.GroupFireUseFireBlast && Me.ManaPercentage > Settings.Current.UseWandTresh && t.CHealthPercent() < 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.isboss), RotationCombatUtil.BotTargetFast, checkLoS: true),
-            
-            //// Only cast Polymorph if Sheep is enabled in settings
-            //new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 
-            //// Only cast Polymorph if more than one enemy is targeting the Mage
-            //&& !t.IsMyTarget && RotationFramework.Enemies.Count(o => o.IsTargetingMe) > 1 
-            //// Make sure no enemies in 30 yard casting range are polymorphed right now
-            //&& RotationFramework.Enemies.Count(o => o.GetDistance <= 30 && o.HaveBuff("Polymorph")) < 1
-            //// Only polymorph a valid target
-            //&& (t.IsCreatureType("Humanoid") || t.IsCreatureType("Beast") || t.IsCreatureType("Critter")),
-            //    RotationCombatUtil.FindEnemyTargetingMe),
         };
         private bool DoPreCalculations()
         {
@@ -99,6 +90,18 @@ namespace AIO.Combat.Mage
             }
             return largestCenter;
         }
+        private WoWUnit FindEnemyWithoutMyLivingBomb(Func<WoWUnit, bool> predicate)
+        {
+            return RotationFramework.Enemies
+                .FirstOrDefault(u => u.IsAttackable
+                    && u.IsTargetingMeOrMyPetOrPartyMember
+                    && u.IsElite
+                    && u.GetDistance < 29
+                    && u.HealthPercent > 80
+                    && !u.CHaveMyBuff("Living Bomb")
+                    && !TraceLine.TraceLineGo(u.PositionWithoutType));
+        }
+
     }
 
 }
