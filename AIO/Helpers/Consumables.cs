@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
 public static class Consumables
@@ -33,7 +33,7 @@ public static class Consumables
             "Demonic Soulstone"
         };
     }
-
+    
     // Checks if we have a Healthstone
     public static bool HaveHealthstone()
     {
@@ -61,4 +61,4 @@ public static class Consumables
     {
         Extension.UseFirstMatchingItem(Soulstones());
     }
-}
+}*/

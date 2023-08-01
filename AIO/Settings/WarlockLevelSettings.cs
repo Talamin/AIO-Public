@@ -66,23 +66,23 @@ namespace AIO.Settings
         [DisplayName("Life Tap OOC")]
         [Description("Should Life Tap be used out of combat in dungeons?")]
         public bool LifeTapOOC { get; set; }
-
+        /*
         [Setting]
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Soulshards")]
         [Description("Automanage your Soulshards?")]
         public bool Soulshards { get; set; }
-
+        
         [Setting]
         [DefaultValue(true)]
         [Category("Fight")]
         [DisplayName("Healthstone")]
         [Description("Use Healthstone / Cast Healthstone?")]
         public bool Healthstone { get; set; }
-
+        */
         [Setting]
-        [DefaultValue("Tank")]
+        [DefaultValue("On self")]
         [Category("General")]
         [DisplayName("Soulstone")]
         [Description("Choose the target for your soulstone")]
@@ -369,14 +369,14 @@ namespace AIO.Settings
             Pet = "Voidwalker";
             ReSummonPetInfight = true;
             //General
-            Healthstone = true;
+            //Healthstone = true;
             UseWandTresh = 20;
             UseWand = true;
             Buffing = true;
-            Soulshards = true;
+            //Soulshards = true;
             GlyphLifeTap = false;
             LifeTapOOC = true;
-            GeneralSoulstoneTarget = "Tank";
+            GeneralSoulstoneTarget = "On self";
 
             //Rotation SoloAffliction
             SoloAfflictionUseSeedGroup = true;

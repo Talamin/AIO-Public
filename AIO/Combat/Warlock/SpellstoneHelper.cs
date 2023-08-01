@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using System.Threading;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
@@ -39,7 +39,7 @@ namespace AIO.Combat.Warlock
             }
             return "";
         }
-
+        
         public static void Refresh()
         {
             if (HasEnchant)
@@ -87,4 +87,4 @@ namespace AIO.Combat.Warlock
         }
     }
 }
-
+*/

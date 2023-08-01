@@ -21,12 +21,44 @@ namespace AIO.Combat.Warlock
     {
         public override float Range => 29.0f;
 
-        private readonly Spell _createHealthStoneSpell = new Spell("Create Healthstone");
         private readonly Spell _summonImpSpell = new Spell("Summon Imp");
         private readonly Spell _summonVoidWalkerSpell = new Spell("Summon Voidwalker");
         private readonly Spell _summonFelguardSpell = new Spell("Summon Felguard");
         private readonly Spell _summonFelhunterSpell = new Spell("Summon Felhunter");
+
         private readonly Spell _createSoulstoneSpell = new Spell("Create Soulstone");
+        private readonly Spell _createSpellstoneSpell = new Spell("Create Spellstone");
+        private readonly Spell _createHealthStoneSpell = new Spell("Create Healthstone");
+
+        private readonly List<string> _spellstones = new List<string> {
+            "Spellstone",
+            "Greater Spellstone",
+            "Major Spellstone",
+            "Master Spellstone",
+            "Demonic Spellstone",
+            "Grand Spellstone"
+        };
+        private readonly List<string> _healthStones = new List<string>
+        {
+            "Minor Healthstone",
+            "Lesser Healthstone",
+            "Healthstone",
+            "Greater Healthstone",
+            "Major Healthstone",
+            "Master Healthstone",
+            "Fel Healthstone",
+            "Demonic Healthstone"
+        };
+        private readonly List<string> _soulStones = new List<string>
+        {
+            "Minor Soulstone",
+            "Lesser Soulstone",
+            "Soulstone",
+            "Greater Soulstone",
+            "Major Soulstone",
+            "Master Soulstone",
+            "Demonic Soulstone"
+        };
 
         internal WarlockBehavior() : base(
             Settings.Current,
@@ -71,9 +103,10 @@ namespace AIO.Combat.Warlock
 
         private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
-            if (Me.HealthPercent < 20 && Me.IsAlive)
+            if (Me.HealthPercent < 20
+                && Me.IsAlive)
             {
-                Consumables.UseHealthstone();
+                Extension.UseFirstMatchingItem(_healthStones);
             }
 
             if (Settings.Current.ReSummonPetInfight)
@@ -81,132 +114,265 @@ namespace AIO.Combat.Warlock
                 RefreshPet();
             }
 
-            if (RotationFramework.Enemies.Count(o => o.Position.DistanceTo(Pet.Position) <= 8) > 1 && PetManager.CurrentWarlockPet == "Voidwalker")
+            if (RotationFramework.Enemies.Count(o => o.Position.DistanceTo(Pet.Position) <= 8) > 1
+                && PetManager.CurrentWarlockPet == "Voidwalker")
             {
                 PetManager.PetSpellCast("Suffering");
             }
 
-            var Devour = RotationFramework.PartyMembers.Where(u => u.IsAlive && u.HaveImportantMagic()).FirstOrDefault();
-            if (PetManager.CurrentWarlockPet == "Felhunter" && Devour != null)
+            if (PetManager.CurrentWarlockPet == "Felhunter")
             {
-                Me.FocusGuid = Devour.Guid;
-                if (Pet.Position.DistanceTo(Target.Position) <= 30)
+                WoWPlayer unitToDevour = RotationFramework.PartyMembers
+                    .Where(u => u.IsAlive && u.HaveImportantMagic())
+                    .FirstOrDefault();
+                if (unitToDevour != null)
                 {
-                    PetManager.PetSpellCastFocus("Devour Magic");
-                    Thread.Sleep(50);
-                    Lua.LuaDoString("ClearFocus();");
+                    Me.FocusGuid = unitToDevour.Guid;
+                    if (Pet.Position.DistanceTo(Target.Position) <= 30)
+                    {
+                        PetManager.PetSpellCastFocus("Devour Magic");
+                        Thread.Sleep(50);
+                        Lua.LuaDoString("ClearFocus();");
+                    }
                 }
-            }
 
-            var Interrupt = RotationFramework.Enemies.Where(u => u.IsCast && u.IsTargetingMeOrMyPetOrPartyMember).FirstOrDefault();
-            if (PetManager.CurrentWarlockPet == "Felhunter" && Interrupt != null)
-            {
-                if (Pet.Target != Interrupt.Guid)
+                WoWUnit unitToInterrupt = RotationFramework.Enemies
+                    .Where(u => u.IsCast && u.IsTargetingMeOrMyPetOrPartyMember)
+                    .FirstOrDefault();
+                if (unitToInterrupt != null)
                 {
-                    Logging.Write("Found Target to Interrupt" + Interrupt);
-                    Me.FocusGuid = Interrupt.Guid;
-                    Logging.Write("Attacking Target with Pet to Interrupt");
-                    Lua.RunMacroText("/petattack [@focus]");
-                    Lua.LuaDoString("ClearFocus();");
-                }
-                if (Pet.Target == Interrupt.Guid)
-                {
-                    if (Pet.Position.DistanceTo(Interrupt.Position) <= 30)
-                        PetManager.PetSpellCast("Spell Lock");
+                    if (Pet.Target != unitToInterrupt.Guid)
+                    {
+                        Logging.Write("Found Target to Interrupt" + unitToInterrupt);
+                        Me.FocusGuid = unitToInterrupt.Guid;
+                        Logging.Write("Attacking Target with Pet to Interrupt");
+                        Lua.RunMacroText("/petattack [@focus]");
+                        Lua.LuaDoString("ClearFocus();");
+                    }
+                    if (Pet.Target == unitToInterrupt.Guid)
+                    {
+                        if (Pet.Position.DistanceTo(unitToInterrupt.Position) <= 30)
+                            PetManager.PetSpellCast("Spell Lock");
+                    }
                 }
             }
         }
         private void OnFightEnd(ulong guid)
         {
-            if (Pet.IsAlive && Pet.HealthPercent < 80 && !Pet.HaveBuff("Consume Shadows") && PetManager.CurrentWarlockPet == "Voidwalker")
+            // Voidwalker's Consume Shadows
+            if (Pet.IsAlive
+                && Pet.HealthPercent < 80
+                && PetManager.CurrentWarlockPet == "Voidwalker"
+                && !Pet.HaveBuff("Consume Shadows"))
             {
                 PetManager.PetSpellCast("Consume Shadows");
             }
 
-            if (!Me.IsInGroup && !Pet.InCombat)
+            if (!Me.IsInGroup
+                && !Pet.InCombat)
             {
                 Lua.LuaDoString("PetDefensiveMode();");
             }
 
-            if (Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.IsTargetingPartyMember) <= 0 && !Pet.InCombat)
+            if (Me.IsInGroup
+                && !Pet.InCombat
+                && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.IsTargetingPartyMember) <= 0)
             {
                 Lua.LuaDoString("PetDefensiveMode();");
-            }
-
-            if (ItemsHelper.CountItemStacks("Soul Shard") >= 5)
-            {
-                ItemsHelper.DeleteItems(6265, 5);
             }
         }
 
         private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
+            string lua = $@"
+                local result = {{}};
+                local allSpellStones = {{{ConcatenateForLUA(_spellstones)}}};
+                local allHealthStones = {{{ConcatenateForLUA(_healthStones)}}};
+                local allSoulStones = {{{ConcatenateForLUA(_soulStones)}}};
+                local nbSpellStones = 0;
+                local nbHealthStones = 0;
+                local nbSoulStones = 0;
+                for i = 1, #allSpellStones do
+                  nbSpellStones = nbSpellStones + GetItemCount(allSpellStones[i])
+                end
+                for i = 1, #allHealthStones do
+                  nbHealthStones = nbHealthStones + GetItemCount(allHealthStones[i])
+                end
+                for i = 1, #allSoulStones do
+                  nbSoulStones = nbSoulStones + GetItemCount(allSoulStones[i])
+                end
+                local hasMainHandEnchant, _, _, _, _, _, _, _, _ = GetWeaponEnchantInfo();
+                hasMainHandEnchant = hasMainHandEnchant ~= nil and 1 or 0;
+                table.insert(result, GetItemCount('Soul Shard'));
+                table.insert(result, nbSpellStones);
+                table.insert(result, nbHealthStones);
+                table.insert(result, nbSoulStones);
+                table.insert(result, hasMainHandEnchant);
+                return unpack(result);
+            ";
+
+            int[] stats = Lua.LuaDoString<int[]>(lua);
+            if (stats.Length == 5)
+            {
+                int nbSoulShards = stats[0];
+                int nbSpellStones = stats[1];
+                int nbHealthStones = stats[2];
+                int nbSoulStones = stats[3];
+                int hasMainHandEnchant = stats[4];
+
+                // SpellStone creation
+                if (nbSpellStones <= 0
+                    && _createSpellstoneSpell.KnownSpell
+                    && _createSpellstoneSpell.IsSpellUsable)
+                {
+                    Main.Log($"Creating SpellStone");
+                    _createSpellstoneSpell.Launch();
+                    Usefuls.WaitIsCasting();
+                    if (hasMainHandEnchant == 0)
+                        FindAndUseSpellStone();
+                }
+
+                // SpellStone use
+                if (hasMainHandEnchant == 0
+                    && nbSpellStones > 0)
+                {
+                    FindAndUseSpellStone();
+                }
+
+                // Excess Soul shard deletion
+                if (nbSoulShards > 5)
+                {
+                    Main.Log($"Deleting excess Soul Shard ({nbSoulShards}/5)");
+                    ItemsHelper.DeleteItems(6265, 5);
+                }
+
+                // Health Stone creation
+                if (nbHealthStones == 0
+                    && _createHealthStoneSpell.KnownSpell
+                    && _createHealthStoneSpell.IsSpellUsable)
+                {
+                    Main.Log($"Creating HealthStone");
+                    _createHealthStoneSpell.Launch();
+                    Usefuls.WaitIsCasting();
+                }
+
+                // Soul Stone creation
+                if (nbSoulStones == 0
+                    && _createSoulstoneSpell.KnownSpell
+                    && _createSoulstoneSpell.IsSpellUsable)
+                {
+                    Main.Log($"Creating SoulStone");
+                    _createSoulstoneSpell.Launch();
+                    Usefuls.WaitIsCasting();
+                }
+
+                // Soul Stone use
+                switch (Settings.Current.GeneralSoulstoneTarget)
+                {
+                    case "On self":
+                        FindAndUseSoulStoneOn(ObjectManager.Me.Name);
+                        break;
+                    case "Tank":
+                        FindAndUseSoulStoneOn(RotationFramework.TankName);
+                        break;
+                    case "Healer":
+                        FindAndUseSoulStoneOn(RotationFramework.HealName);
+                        break;
+                }
+            }
+
             RefreshPet();
-            SpellstoneHelper.Refresh();
-            HealthstoneRefresh();
-            SoulstoneRefresh();
-            Consumables.UseSoulstone();
         }
 
-        private void HealthstoneRefresh()
+        private void FindAndUseSpellStone()
         {
-            if (!Consumables.HaveHealthstone()
-                && _createHealthStoneSpell.KnownSpell
-                && _createHealthStoneSpell.IsSpellUsable)
+            WoWItem spellStone = Bag.GetBagItem().FirstOrDefault(item => _spellstones.Contains(item.Name));
+            if (spellStone != null)
             {
-                _createHealthStoneSpell.Launch();
+                Main.Log($"Using Spell Stone");
+                ItemsManager.UseItemByNameOrId(spellStone.Name);
+                Thread.Sleep(100);
+                Lua.RunMacroText("/use 16");
+                Lua.LuaDoString("StaticPopup1Button1:Click()");
                 Usefuls.WaitIsCasting();
-            }
-
-            if (ItemsHelper.CountItemStacks("Soul Shard") >= 5)
-            {
-                ItemsHelper.DeleteItems(6265, 5);
-            }
-
-            if (!Fight.InFight || Settings.Current.ReSummonPetInfight)
-            {
-                RefreshPet();
+                Lua.LuaDoString("ClearCursor();");
             }
         }
 
-        private void SoulstoneRefresh()
+        private void FindAndUseSoulStoneOn(string unitName)
         {
-            if (!Consumables.HaveSoulstone()
-                && _createSoulstoneSpell.KnownSpell
-                && _createSoulstoneSpell.IsSpellUsable)
+            if (string.IsNullOrEmpty(unitName)) return;
+
+            WoWUnit unit = RotationCombatUtil.FindFriendlyPlayer(u =>
+                u.Name == unitName
+                && u.GetDistance < 20
+                && !u.HaveBuff("Soulstone Resurrection")
+                && !TraceLine.TraceLineGo(u.PositionWithoutType));
+
+            if (unit == null) return;
+
+            WoWItem soulStone = Bag.GetBagItem()
+                .FirstOrDefault(item => _soulStones.Contains(item.Name));
+            if (soulStone != null)
             {
-                _createSoulstoneSpell.Launch();
-                Usefuls.WaitIsCasting();
+                // Check item CD
+                bool soulStoneItemReady = Lua.LuaDoString<bool>($@"
+                    local startTime, duration, enable = GetItemCooldown({soulStone.Entry});
+                    local time = duration - (GetTime() - startTime);
+                    return time < 0;
+                ");
+                if (soulStoneItemReady)
+                {
+                    Main.Log($"Using {soulStone.Name} on {unit.Name}");
+                    MovementManager.StopMove();
+                    Lua.RunMacroText($"/target {unit.Name}");
+                    Thread.Sleep(100);
+                    if (Target.Name == unit.Name)
+                    {
+                        ItemsManager.UseItemByNameOrId(soulStone.Name);
+                        Usefuls.WaitIsCasting();
+                        Interact.ClearTarget();
+                    }
+                    Lua.LuaDoString("ClearCursor();");
+                }
             }
         }
 
         private void RefreshPet()
         {
-            if ((!Pet.IsAlive || (Pet.IsAlive && PetManager.CurrentWarlockPet != Settings.Current.Pet)) &&
-                !Me.IsMounted)
+            if ((!Pet.IsAlive || (Pet.IsAlive && PetManager.CurrentWarlockPet != Settings.Current.Pet))
+                && !Me.IsMounted)
             {
-                if (Settings.Current.Pet == "Felhunter" && _summonFelhunterSpell.KnownSpell && _summonFelhunterSpell.IsSpellUsable)
+                if (Settings.Current.Pet == "Felhunter"
+                    && _summonFelhunterSpell.KnownSpell
+                    && _summonFelhunterSpell.IsSpellUsable)
                 {
                     _summonFelhunterSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
 
-                if (Settings.Current.Pet == "Voidwalker" && _summonVoidWalkerSpell.KnownSpell && _summonVoidWalkerSpell.IsSpellUsable)
+                if (Settings.Current.Pet == "Voidwalker"
+                    && _summonVoidWalkerSpell.KnownSpell
+                    && _summonVoidWalkerSpell.IsSpellUsable)
                 {
                     _summonVoidWalkerSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
 
-                if (Settings.Current.Pet == "Felguard" && _summonFelguardSpell.KnownSpell && _summonFelguardSpell.IsSpellUsable)
+                if (Settings.Current.Pet == "Felguard"
+                    && _summonFelguardSpell.KnownSpell
+                    && _summonFelguardSpell.IsSpellUsable)
                 {
                     _summonFelguardSpell.Launch();
                     Usefuls.WaitIsCasting();
                     return;
                 }
 
-                if (PetManager.CurrentWarlockPet != "Imp" && _summonImpSpell.KnownSpell && _summonImpSpell.IsSpellUsable)
+                if (PetManager.CurrentWarlockPet != "Imp"
+                    && _summonImpSpell.KnownSpell
+                    && _summonImpSpell.IsSpellUsable)
                 {
                     _summonImpSpell.Launch();
                     Usefuls.WaitIsCasting();
@@ -226,6 +392,14 @@ namespace AIO.Combat.Warlock
                 Thread.Sleep(50);
                 PetManager.TogglePetSpellAuto("Shadow Bite", true);
             }
+        }
+
+        private string ConcatenateForLUA(List<string> list)
+        {
+            string result = "";
+            foreach (string item in list)
+                result += $"'{item}',";
+            return result;
         }
     }
 }
