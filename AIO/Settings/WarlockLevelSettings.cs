@@ -81,6 +81,14 @@ namespace AIO.Settings
         [Description("Use Healthstone / Cast Healthstone?")]
         public bool Healthstone { get; set; }
 
+        [Setting]
+        [DefaultValue("Tank")]
+        [Category("General")]
+        [DisplayName("Soulstone")]
+        [Description("Choose the target for your soulstone")]
+        [DropdownList(new string[] {"Tank", "Healer", "On self", "None"})]
+        public string GeneralSoulstoneTarget { get; set; }
+
         //Rotation SoloAffliction
         [DefaultValue(20)]
         [Category("Rotation")]
@@ -240,6 +248,24 @@ namespace AIO.Settings
 
         public bool SoloDestructionUseAOE { get; set; }
 
+        //Rotation GroupDestruction
+
+        [DefaultValue(4)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDestruction))]
+        [DisplayName("Use AOE Count")]
+        [Description("Number of Targets around the Tank to use AOE in Instance")]
+        [Percentage(false)]
+        public int GroupDestructionAOECount { get; set; }
+
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_SoloDestruction))]
+        [DisplayName("Use AOE")]
+        [Description("Set this if you want to use AOE in Instance")]
+
+        public bool GroupDestructionUseAOE { get; set; }
+
         //Rotation GroupAffliction
         [DefaultValue(20)]
         [Category("Rotation")]
@@ -350,6 +376,7 @@ namespace AIO.Settings
             Soulshards = true;
             GlyphLifeTap = false;
             LifeTapOOC = true;
+            GeneralSoulstoneTarget = "Tank";
 
             //Rotation SoloAffliction
             SoloAfflictionUseSeedGroup = true;
@@ -391,6 +418,10 @@ namespace AIO.Settings
             //Rotation SoloDestruction
             SoloDestructionUseAOE = true;
             SoloDestructionAOECount = 4;
+
+            //Rotation GroupDestruction
+            GroupDestructionUseAOE = true;
+            GroupDestructionAOECount = 4;
         }
     }
 }
