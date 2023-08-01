@@ -67,7 +67,7 @@ namespace AIO.Helpers.Caching
             }
             else
             {
-                propertyValue = (T)Access[entryIndex](unit); // here
+                propertyValue = (T)Access[entryIndex](unit);
                 unitCache[entryIndex] = propertyValue;
             }
 

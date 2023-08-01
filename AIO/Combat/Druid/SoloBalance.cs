@@ -24,7 +24,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Innervate"), 1.6f, (s,t) => Me.IsInGroup && t.Name == RotationFramework.HealName && t.ManaPercentage < Settings.Current.Innervate, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Innervate"), 1.7f, (s,t) => Me.ManaPercentage <= Settings.Current.Innervate, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Moonkin Form"), 2f, (s, t) => !Me.HaveBuff("Moonkin Form"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Barkskin"), 3f, (s, t) => RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <= 20) >= 2 || (!Me.IsInGroup && Fight.InFight), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Barkskin"), 3f, (s, t) => RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <= 20) >= 2 || (!Me.IsInGroup && Me.InCombat), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Abolish Poison"), 3.2f, (s,t) =>  !t.HaveMyBuff("Abolish Poison") && t.HaveImportantPoison(), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Remove Curse"), 3.3f, (s,t) => t.HaveImportantCurse(), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Typhoon"), 4f, (s, t) => t.GetDistance < 30 && RotationFramework.Enemies.Count(u => u.IsTargetingMeOrMyPetOrPartyMember) >= 3, RotationCombatUtil.BotTarget),

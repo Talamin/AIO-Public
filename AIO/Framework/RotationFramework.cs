@@ -18,7 +18,7 @@ namespace AIO.Framework
     {
         public static event EventHandler OnCacheUpdated;
         public static bool CacheDirectTransmission = false;
-        public static bool UseSynthetic = false;
+        //public static bool UseSynthetic = false;
 
         private static bool UseFramelock = true;
 
@@ -180,7 +180,7 @@ namespace AIO.Framework
             for (var i = 0; i < allUnits.Count; i++)
             {
                 WoWUnit unit = allUnits[i];
-                if (!unit.IsEnemy() || (!UseSynthetic && !unit.IsAttackable))
+                if (!unit.IsEnemy() || (/*!UseSynthetic && */!unit.IsAttackable))
                 // if(!unit.IsAttackable)
                 {
                     continue;
@@ -217,20 +217,6 @@ namespace AIO.Framework
         public static WoWPlayer[] PlayerUnits { get; private set; } = new WoWPlayer[0];
         public static WoWPlayer[] PartyMembers { get; private set; } = new WoWPlayer[0];
 
-        public static void RunRotationNoLock(string caller, List<RotationStep> rotation)
-        {
-            try
-            {
-                var globalCd = GetGlobalCooldown();
-                var gcdEnabled = globalCd != 0;
-                RunRotation(rotation, gcdEnabled);
-            }
-            catch (Exception e)
-            {
-                Logging.WriteError($"{e.Message}\n{e.StackTrace}");
-            }
-        }
-
         public static void RunRotation(string caller, List<RotationStep> rotation, bool alreadyLocked = false)
         {
             //GetGlobalCooldown picked directly of Memory, needs approval.
@@ -262,10 +248,11 @@ namespace AIO.Framework
             }
             else
             {
-                RunInLock(action);
+                action();
+                //RunInLock(action);
             }
         }
-
+        /*
         private static void RunInLock(Action action)
         {
             lock (ObjectManager.Locker)
@@ -273,7 +260,7 @@ namespace AIO.Framework
                 action();
             }
         }
-
+        */
         private static void RunInFrameLock(Action action)
         {
             lock (Memory.WowMemory.LockFrameLocker)

@@ -117,7 +117,7 @@ namespace AIO.Framework
             }
             catch (Exception e)
             {
-                Logging.WriteError($"{e.Message} \n{e.StackTrace}", true);
+                Logging.WriteError($"{e.Message}\n{e.StackTrace}", true);
                 return false;
             }
         };
@@ -188,7 +188,7 @@ namespace AIO.Framework
             }
             catch (Exception e)
             {
-                Logging.WriteError($"{e.Message} \n{e.StackTrace}", true);
+                Logging.WriteError($"{e.Message}\n{e.StackTrace}", true);
                 return false;
             }
         }

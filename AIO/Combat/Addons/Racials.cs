@@ -1,4 +1,5 @@
 ﻿using AIO.Framework;
+using AIO.Helpers.Caching;
 using System.Collections.Generic;
 using System.Linq;
 using wManager.Wow.Class;
@@ -41,7 +42,7 @@ namespace AIO.Combat.Addons
                     break;
                 case WoWRace.Undead:
                     _rotation.Add(new RotationStep(new RotationSpell(WilloftheForsaken), 1f, (s, t) => Me.HaveBuff("Fear") || Me.HaveBuff("Charm") || Me.HaveBuff("Sleep"), RotationCombatUtil.FindMe));
-                    _rotation.Add(new RotationStep(new RotationSpell(Cannibalize), 1f, (s, t) => !Me.HaveBuff("Drink") && !Me.HaveBuff("Food") && RotationFramework.AllUnits.Where(u => u.GetDistance <= 8 && u.IsDead && (u.CreatureTypeTarget == "Humanoid" || u.CreatureTypeTarget == "Undead")).Count() > 0, RotationCombatUtil.FindMe));
+                    _rotation.Add(new RotationStep(new RotationSpell(Cannibalize), 1f, (s, t) => Me.CHealthPercent() < 50 && !Me.HaveBuff("Drink") && !Me.HaveBuff("Food") && RotationFramework.AllUnits.Where(u => u.GetDistance <= 8 && u.IsDead && (u.CreatureTypeTarget == "Humanoid" || u.CreatureTypeTarget == "Undead")).Count() > 0, RotationCombatUtil.FindMe));
                     break;
                 case WoWRace.Human:
                     _rotation.Add(new RotationStep(new RotationSpell(Everyman), 1f, (s, t) => Me.HaveBuff("Fear") || Me.HaveBuff("Charm") || Me.HaveBuff("Sleep"), RotationCombatUtil.FindMe));

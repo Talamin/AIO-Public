@@ -9,7 +9,6 @@ using AIO.Combat.Rogue;
 using AIO.Combat.Shaman;
 using AIO.Combat.Warlock;
 using AIO.Combat.Warrior;
-using AIO.Events;
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Lists;
@@ -30,11 +29,114 @@ using static AIO.Constants;
 
 public class Main : ICustomClass
 {
-    private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;
-    public float Range => CombatClass?.Range ?? 5.0f;
-
+    private BaseCombatClass CombatClass;
+    private readonly List<ICycleable> Components;
     private CancellationTokenSource TokenRelativePositionFix;
     private CancellationTokenSource TokenKeyboardHook;
+
+    private readonly string version = FileVersionInfo.GetVersionInfo(Others.GetCurrentDirectory + @"\FightClass\" + wManager.wManagerSetting.CurrentSetting.CustomClass).FileVersion;
+    private static string wowClass => Me.WowClass.ToString();
+    private static bool _debug => false;
+    public float Range => CombatClass?.Range ?? 5.0f;
+
+    public Main() => Components = new List<ICycleable> {
+        //new SyntheticEvents(),
+        new RotationFramework(),
+        //new RacialManager(),
+        new TalentsManager(),
+        new DeferredCycleable(() => CombatClass)
+    };
+
+    public void Initialize()
+    {
+        // Logging.Write("Started!");
+        // Radar3D.OnDrawEvent += DrawArea;
+        // Radar3D.Pulse();
+        // Vector3 oldPosition = ClickToMove.GetClickToMovePosition();
+        // while (Conditions.ProductIsStarted) {
+        //     Vector3 newPosition = ClickToMove.GetClickToMovePosition();
+        //     if (oldPosition.DistanceTo(newPosition) > 1) {
+        //         Logging.Write("Found a new CTM at " + newPosition);
+        //         _points.Add(newPosition);
+        //         oldPosition = newPosition;
+        //     }
+
+        //     Thread.Sleep(100);
+        // }
+
+        // var watch = Stopwatch.StartNew();
+        // while (Conditions.InGameAndConnectedAndProductStarted) {
+        //     watch.Restart();
+        //     for (int i = 0; i < 1000000; i++) {
+        //         int test = Usefuls.Latency;
+        //     }
+        //     Logging.Write(watch.ElapsedMilliseconds.ToString());
+        // }
+        // 
+        if (!Extension.DefaultRotations.ContainsKey(Me.WowClass))
+        {
+            Logging.WriteError($"ERROR: The default rotations dictionary (Helpers.Extension) doesn't contain an entry for {Me.WowClass}");
+            Products.DisposeProduct();
+            return;
+        }
+
+        AIOWOTLKSettings.Load();
+        AutoUpdater.CheckUpdate(version);
+
+        Log("Started " + version + " Discovering class and finding rotation...");
+        if (Others.ParseInt(Information.Version.Replace(".", "").Substring(0, 3)) == 172)
+        {
+            Log($"AIO couldn't load (v {Information.Version})");
+            return;
+        }
+
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs += ForceBindItem;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs += ForceStepBackward;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs += CancelableSpell.CastStopHandler;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs += CombatLogger.ParseCombatLog;
+
+        wManagerSetting.CurrentSetting.UseLuaToMove = true;
+
+        TokenRelativePositionFix = new CancellationTokenSource();
+        Task.Factory.StartNew(() =>
+        {
+            while (!TokenRelativePositionFix.IsCancellationRequested)
+            {
+                FixRelativePositionLag();
+                Thread.Sleep(5000);
+            }
+        }, TokenRelativePositionFix.Token);
+
+        TokenKeyboardHook = new CancellationTokenSource();
+        Task.Factory.StartNew(() =>
+        {
+            while (!TokenKeyboardHook.IsCancellationRequested)
+            {
+                Hotkeys.CheckKeyPress();
+                Thread.Sleep(1000);
+            }
+        }, TokenKeyboardHook.Token);
+
+        _ = CombatSettings;
+        _ = CombatClass = LazyCombatClass;
+        Components.ForEach(c => c?.Initialize());
+    }
+
+    public void Dispose()
+    {
+        // Radar3D.OnDrawEvent -= DrawArea;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceBindItem;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceStepBackward;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= CancelableSpell.CastStopHandler;
+        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= CombatLogger.ParseCombatLog;
+
+        TokenRelativePositionFix?.Cancel();
+        TokenKeyboardHook?.Cancel();
+
+        Hotkeys.DisableRangeCircles();
+
+        Components.ForEach(c => c?.Dispose());
+    }
 
     private static BaseSettings CombatSettings
     {
@@ -102,18 +204,6 @@ public class Main : ICustomClass
             }
         }
     }
-
-    private BaseCombatClass CombatClass;
-
-    private readonly List<ICycleable> Components;
-
-    public Main() => Components = new List<ICycleable> {
-        //new SyntheticEvents(),
-        new RotationFramework(),
-        //new RacialManager(),
-        new TalentsManager(),
-        new DeferredCycleable(() => CombatClass)
-    };
 
     private void ForceStepBackward(string name, List<string> ps)
     {
@@ -195,105 +285,7 @@ public class Main : ICustomClass
         }
     }
 
-
-
-    public void Initialize()
-    {
-        // Logging.Write("Started!");
-        // Radar3D.OnDrawEvent += DrawArea;
-        // Radar3D.Pulse();
-        // Vector3 oldPosition = ClickToMove.GetClickToMovePosition();
-        // while (Conditions.ProductIsStarted) {
-        //     Vector3 newPosition = ClickToMove.GetClickToMovePosition();
-        //     if (oldPosition.DistanceTo(newPosition) > 1) {
-        //         Logging.Write("Found a new CTM at " + newPosition);
-        //         _points.Add(newPosition);
-        //         oldPosition = newPosition;
-        //     }
-
-        //     Thread.Sleep(100);
-        // }
-
-        // var watch = Stopwatch.StartNew();
-        // while (Conditions.InGameAndConnectedAndProductStarted) {
-        //     watch.Restart();
-        //     for (int i = 0; i < 1000000; i++) {
-        //         int test = Usefuls.Latency;
-        //     }
-        //     Logging.Write(watch.ElapsedMilliseconds.ToString());
-        // }
-        // 
-        if (!Extension.DefaultRotations.ContainsKey(Me.WowClass))
-        {
-            Logging.WriteError($"ERROR: The default rotations dictionary (Helpers.Extension) doesn't contain an entry for {Me.WowClass}");
-            Products.DisposeProduct();
-            return;
-        }
-
-        AIOWOTLKSettings.Load();
-        AutoUpdater.CheckUpdate(version);
-
-        Log("Started " + version + " Discovering class and finding rotation...");
-        if (Others.ParseInt(Information.Version.Replace(".", "").Substring(0, 3)) == 172)
-        {
-            Log($"AIO couldn't load (v {Information.Version})");
-            return;
-        }
-
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs += ForceBindItem;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs += ForceStepBackward;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs += CancelableSpell.CastStopHandler;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs += CombatLogger.ParseCombatLog;
-
-        wManagerSetting.CurrentSetting.UseLuaToMove = true;
-
-        TokenRelativePositionFix = new CancellationTokenSource();
-        Task.Factory.StartNew(() =>
-        {
-            while (!TokenRelativePositionFix.IsCancellationRequested)
-            {
-                FixRelativePositionLag();
-                Thread.Sleep(5000);
-            }
-        }, TokenRelativePositionFix.Token);
-
-        TokenKeyboardHook = new CancellationTokenSource();
-        Task.Factory.StartNew(() =>
-        {
-            while (!TokenKeyboardHook.IsCancellationRequested)
-            {
-                Hotkeys.CheckKeyPress();
-                Thread.Sleep(1000);
-            }
-        }, TokenKeyboardHook.Token);
-
-        _ = CombatSettings;
-        _ = CombatClass = LazyCombatClass;
-        Components.ForEach(c => c?.Initialize());
-    }
-
-
-
-    public void Dispose()
-    {
-        // Radar3D.OnDrawEvent -= DrawArea;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceBindItem;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= ForceStepBackward;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= CancelableSpell.CastStopHandler;
-        EventsLuaWithArgs.OnEventsLuaStringWithArgs -= CombatLogger.ParseCombatLog;
-
-        TokenRelativePositionFix?.Cancel();
-        TokenKeyboardHook?.Cancel();
-
-        Hotkeys.DisableRangeCircles();
-
-        Components.ForEach(c => c?.Dispose());
-    }
-
     public void ShowConfiguration() => CombatSettings?.ShowConfiguration();
-
-    private static string wowClass => Me.WowClass.ToString();
-    private static bool _debug => false;
 
     public static void LogFight(string message)
     {

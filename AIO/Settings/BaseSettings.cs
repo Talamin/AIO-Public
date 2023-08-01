@@ -41,20 +41,20 @@ namespace AIO.Settings
         //[DisplayName("NPCs LoS Credits")]
         //[Description("Maximum number of NPCs to compute LoS for, as part of the caching")]
         public int LoSCreditsNPCs { get; set; }
-
+        /*
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
         [DisplayName("Healbot?")]
         [Description("Make AIO Compatible with Healbot")]
         public bool UseSyntheticCombatEvents { get; set; }
-
+        */
         //[Setting]
         //[DefaultValue(false)]
         //[Category("General")]
         //[DisplayName("Straight Pipe")]
         //[Description("You will most likely not want to enable this. Only makes sense when playing manually.")]
-        public bool CompletelySynthetic { get; set; }
+        //public bool CompletelySynthetic { get; set; }
 
         [Setting]
         [DefaultValue(false)]
@@ -103,8 +103,8 @@ namespace AIO.Settings
             ScanRange = 80;
             LoSCreditsPlayers = 5;
             LoSCreditsNPCs = 10;
-            UseSyntheticCombatEvents = false;
-            CompletelySynthetic = false;
+            //UseSyntheticCombatEvents = false;
+            //CompletelySynthetic = false;
             Backwards = true;
             FreeMove = false;
             AssignTalents = true;
@@ -127,7 +127,7 @@ namespace AIO.Settings
             TalentsManager.Set(AssignTalents, UseDefaultTalents, TalentCodes.ToArray(), (Spec)Enum.Parse(typeof(Spec), ChooseRotation));
             RotationFramework.Setup(framelock: FrameLock, losCreditsPlayers: LoSCreditsPlayers, losCreditsNPCs: LoSCreditsNPCs, scanRange: ScanRange);
             RotationCombatUtil.freeMove = FreeMove;
-            RotationFramework.UseSynthetic = UseSyntheticCombatEvents;
+            //RotationFramework.UseSynthetic = UseSyntheticCombatEvents;
         }
 
         public void ShowConfiguration()
