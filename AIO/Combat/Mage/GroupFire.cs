@@ -42,7 +42,7 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationSpell("Dragon's Breath"), 12f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, 1), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Living Bomb"), 13f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && !t.CHaveMyBuff("Living Bomb"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Fire Blast"), 14f, (s,t) => Settings.Current.GroupFireUseFireBlast && Me.ManaPercentage > Settings.Current.UseWandTresh && t.CHealthPercent() < 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
-            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.isboss), RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Fireball"), 15f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh && (t.CHealthPercent() >= 10 || BossList.MyTargetIsBoss), RotationCombatUtil.BotTargetFast, checkLoS: true),
         };
         private bool DoPreCalculations()
         {

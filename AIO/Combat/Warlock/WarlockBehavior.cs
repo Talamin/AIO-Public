@@ -26,6 +26,7 @@ namespace AIO.Combat.Warlock
         private readonly Spell _summonVoidWalkerSpell = new Spell("Summon Voidwalker");
         private readonly Spell _summonFelguardSpell = new Spell("Summon Felguard");
         private readonly Spell _summonFelhunterSpell = new Spell("Summon Felhunter");
+        private readonly Spell _createSoulstoneSpell = new Spell("Create Soulstone");
 
         internal WarlockBehavior() : base(
             Settings.Current,
@@ -138,18 +139,6 @@ namespace AIO.Combat.Warlock
             }
         }
 
-        //protected override void OnMovementCalculation(Vector3 from, Vector3 to, string continentnamempq, CancelEventArgs cancelable)
-        //{
-        //    RefreshPet();
-        //    SpellstoneHelper.Refresh();
-        //    HealthstoneRefresh();
-        //}
-
-        //protected override void OnObjectManagerPulse()
-        //{
-        //    RefreshPet();
-        //}
-
         private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable)
         {
             RefreshPet();
@@ -161,13 +150,12 @@ namespace AIO.Combat.Warlock
 
         private void HealthstoneRefresh()
         {
-            if (!Consumables.HaveHealthstone())
+            if (!Consumables.HaveHealthstone()
+                && _createHealthStoneSpell.KnownSpell
+                && _createHealthStoneSpell.IsSpellUsable)
             {
-                if (_createHealthStoneSpell.KnownSpell && _createHealthStoneSpell.IsSpellUsable)
-                {
-                    _createHealthStoneSpell.Launch();
-                    Usefuls.WaitIsCasting();
-                }
+                _createHealthStoneSpell.Launch();
+                Usefuls.WaitIsCasting();
             }
 
             if (ItemsHelper.CountItemStacks("Soul Shard") >= 5)
@@ -183,13 +171,12 @@ namespace AIO.Combat.Warlock
 
         private void SoulstoneRefresh()
         {
-            if (!Consumables.HaveSoulstone())
+            if (!Consumables.HaveSoulstone()
+                && _createSoulstoneSpell.KnownSpell
+                && _createSoulstoneSpell.IsSpellUsable)
             {
-                if (CreateSoulstone.KnownSpell && CreateSoulstone.IsSpellUsable)
-                {
-                    CreateSoulstone.Launch();
-                    Usefuls.WaitIsCasting();
-                }
+                _createSoulstoneSpell.Launch();
+                Usefuls.WaitIsCasting();
             }
         }
 
