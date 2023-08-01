@@ -16,7 +16,7 @@ namespace AIO.Combat.Shaman
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationBuff("Nature's Swiftness"), 4f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.NatureSwiftness && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Nature's Swiftness"), 4f, RotationCombatUtil.Always, s => Me.InCombat && RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.NatureSwiftness && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Healing Wave"), 5f, (s,t) => t.HealthPercent <= 25, s => Me.HaveBuff("Nature's Swiftness"), RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationBuff("Earth Shield"), 6f, (s,t) => !t.HaveBuff("Earth Shield"), RotationCombatUtil.FindTank),
             new RotationStep(new RotationBuff("Mana Spring Totem"), 6.5f, (s,t) => !Me.HaveBuff("Mana Spring") && !SpellManager.KnowSpell("Call of the Elements"), RotationCombatUtil.FindMe),

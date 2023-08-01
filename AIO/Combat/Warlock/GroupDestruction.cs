@@ -8,7 +8,7 @@ using static AIO.Constants;
 namespace AIO.Combat.Warlock
 {
     using Settings = WarlockLevelSettings;
-    internal class SoloDestruction : BaseRotation
+    internal class GroupDestruction : BaseRotation
     {
 
         const int immolateTimeout = 1000;
@@ -22,7 +22,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Life Tap"), 3.1f, (s,t) => Settings.Current.GlyphLifeTap && !Me.HaveBuff("Life Tap") && Me.HealthPercent > 25, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Curse of the Elements"), 3.2f, (s,t) => t.HealthPercent > 35 && !t.HaveBuff("Curse of the Elements") && t.IsElite && t.HealthPercent > 75, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadowfury"), 3.5f, (s,t) => (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10 && o.IsElite) >= 2) || (BossList.isboss && !t.IsStunned), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Rain of Fire"), 3.6f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloDestructionAOECount && Settings.Current.SoloDestructionUseAOE, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Rain of Fire"), 3.6f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.GroupDestructionAOECount && Settings.Current.GroupDestructionUseAOE, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Life"), 3.9f, (s,t) => !Me.IsInGroup && Me.HealthPercent < 75, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Corruption"), 4f, (s,t) => !t.HaveMyBuff("Corruption") && t.HealthPercent > 50 && t.IsElite, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Immolate"), 5f, (s,t) => !t.HaveMyBuff("Immolate") && t.HealthPercent > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget, forcedTimerMS: immolateTimeout),

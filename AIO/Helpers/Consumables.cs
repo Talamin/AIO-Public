@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 public static class Consumables
 {
@@ -18,6 +19,21 @@ public static class Consumables
         };
     }
 
+    // Soulstones list
+    public static List<string> Soulstones()
+    {
+        return new List<string>
+        {
+            "Minor Soulstone",
+            "Lesser Soulstone",
+            "Soulstone",
+            "Greater Soulstone",
+            "Major Soulstone",
+            "Master Soulstone",
+            "Demonic Soulstone"
+        };
+    }
+
     // Checks if we have a Healthstone
     public static bool HaveHealthstone()
     {
@@ -26,9 +42,23 @@ public static class Consumables
         return false;
     }
 
+    // Checks if we have a Soulstone
+    public static bool HaveSoulstone()
+    {
+        if (Extension.HaveOneInList(Soulstones()))
+            return true;
+        return false;
+    }
+
     // Use Healthstone
     public static void UseHealthstone()
     {
         Extension.UseFirstMatchingItem(HealthStones());
+    }
+
+    // Use Soulstone
+    public static void UseSoulstone()
+    {
+        Extension.UseFirstMatchingItem(Soulstones());
     }
 }

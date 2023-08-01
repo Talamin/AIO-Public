@@ -27,20 +27,21 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Holy Light"), 1.3f, (s,t) => Me.HealthPercent < 35, RotationCombatUtil.FindMe),
             //TODO: add Holy Light combat usage to settings
             new RotationStep(new RotationSpell("Hand of Freedom"), 1.5f, (s,t) => !Me.Silenced && (Me.HaveImportantSlow() || Me.HaveImportantRoot()) && EnemiesAttackingGroup.ContainsAtLeast(enem => enem.CGetDistance() >= 5 && enem.IsTargetingMe, 1), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Divine Sacrifice"), 1.6f, UseDivineSacrifice, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Divine Sacrifice"), 1.6f, UseDivineSacrifice, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.8f, RotationCombatUtil.Always, _ => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe,checkRange:false),
             new RotationStep(new RotationSpell("Consecration"), 2f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Count(unit => unit.CGetDistance() <=8) >= Settings.Current.GroupProtConsecration, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Hand of Reckoning"), 3f, (s,t) => !t.CIsTargetingMe(),_ => Settings.Current.GroupProtectionHoR, FindEnemyAttackingGroup, checkLoS:true),
             //maybe needs some better Targeting
             new RotationStep(new RotationSpell("Righteous Defense"), 4f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(u => !u.CIsTargetingMe() && u.CIsTargetingMeOrMyPetOrPartyMember()),RotationCombatUtil.CFindPartyMemberWithoutMe,checkLoS:true),
-            new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.CFindPartyMember,checkLoS:true),
-            new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.GroupProtectionCleanse == "Me" && Me.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe, checkRange: false),
+            new RotationStep(new RotationSpell("Cleanse"), 4.2f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.CFindPartyMember,checkLoS:true),
+            new RotationStep(new RotationSpell("Cleanse"), 4.5f, (s,t) => Settings.Current.GroupProtectionCleanse == "Me" && Me.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe, checkRange: false),
+            new RotationStep(new RotationSpell("Holy Shield"), 4.6f, (s,t) => Me.InCombat, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Judgement of Wisdom"), 4.8f,(s,t) => !t.CHaveBuff("Judgement of Wisdom") && t.HealthPercent > 35, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Divine Plea"), 5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe, checkRange: false),
-            new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => Settings.Current.DivineProtection && (EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe() && u.IsElite, 3) && Me.HealthPercent < 85 || BossList.MyTargetIsBoss && Me.HealthPercent < 85), RotationCombatUtil.FindMe, checkRange:false),
-            new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.Fleeing || Me.HealthPercent < 50 || (t.CCanInterruptCasting() && Settings.Current.GroupProtectionHammerofJustice) || (BossList.MyTargetIsBoss && !t.IsStunned && !t.HaveBuff("Death Coil")), RotationCombatUtil.BotTargetFast),            
-            new RotationStep(new RotationSpell("Hand of Salvation"), 9.1f, (s,t) => EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()), RotationCombatUtil.CFindHeal),
+            new RotationStep(new RotationSpell("Divine Protection"), 7f, (s,t) => Settings.Current.DivineProtection && (EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe() && u.IsElite, 3) && Me.HealthPercent < 85 || BossList.isboss && Me.HealthPercent < 85), RotationCombatUtil.FindMe, checkRange:false),
+            new RotationStep(new RotationSpell("Hammer of Justice"), 8f, (s,t) => t.Fleeing || Me.HealthPercent < 50 || (t.CCanInterruptCasting() && Settings.Current.GroupProtectionHammerofJustice) || (BossList.isboss && !t.IsStunned && !t.HaveBuff("Death Coil")), RotationCombatUtil.BotTargetFast),            
+            new RotationStep(new RotationSpell("Hand of Salvation"), 9.1f, (s,t) => EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()), RotationCombatUtil.CFindPartyMemberWithoutMe),
             new RotationStep(new RotationSpell("Hand of Protection"), 9.2f, (s,t) => 
             Settings.Current.GroupProtectionHoP
             && EnemiesAttackingGroup.Any(unit => unit.CIsTargetingMeOrMyPetOrPartyMember()) 
@@ -49,6 +50,7 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Avenger's Shield"), 10f, (s,t) => Me.CManaPercentage() > 20 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() > 10 && u.CGetDistance() < 30 && u.IsTargetingPartyMember, 3), RotationCombatUtil.BotTargetFast, checkLoS:true),
             new RotationStep(new RotationSpell("Avenging Wrath"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 2) && Settings.Current.GroupAvengingWrathProtection,RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Judgement of Light"), 12f, (s,t) => !SpellManager.KnowSpell("Judgement of Wisdom"), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Holy Wrath"), 12.5f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.IsElite && (u.IsCreatureType("Undead") || u.IsCreatureType("Demon")) && !u.IsStunned && u.CGetDistance() < 10, 2), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Exorcism"), 13f, (s,t) => (t.IsCreatureType("Undead") || t.IsCreatureType("Demon")) && Me.ManaPercentage > 25 && t.IsElite, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Hammer of Wrath"), 14f, (s,t) => t.CHealthPercent() < 20 && Me.CManaPercentage() > 50 , FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Hammer of the Righteous"), 16f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),

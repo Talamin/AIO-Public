@@ -155,6 +155,8 @@ namespace AIO.Combat.Warlock
             RefreshPet();
             SpellstoneHelper.Refresh();
             HealthstoneRefresh();
+            SoulstoneRefresh();
+            Consumables.UseSoulstone();
         }
 
         private void HealthstoneRefresh()
@@ -176,6 +178,18 @@ namespace AIO.Combat.Warlock
             if (!Fight.InFight || Settings.Current.ReSummonPetInfight)
             {
                 RefreshPet();
+            }
+        }
+
+        private void SoulstoneRefresh()
+        {
+            if (!Consumables.HaveSoulstone())
+            {
+                if (CreateSoulstone.KnownSpell && CreateSoulstone.IsSpellUsable)
+                {
+                    CreateSoulstone.Launch();
+                    Usefuls.WaitIsCasting();
+                }
             }
         }
 
