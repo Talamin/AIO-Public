@@ -9,16 +9,17 @@ namespace AIO.Framework
 {
     public class RotationStep : IComparable<RotationStep>
     {
-        private readonly float Priority;
-        private readonly IRotationAction Action;
-        private readonly Func<IRotationAction, WoWUnit, bool> TargetPredicate;
-        private readonly Func<IRotationAction, bool> ConstantPredicate;
-        private readonly Func<Func<WoWUnit, bool>, WoWUnit> TargetFinder;
-        private readonly bool ForceCast = false;
-        private readonly bool CheckRange = true;
-        private readonly bool CheckLoS = false;
-        private readonly string Name;
-        private readonly Timer ForcedTimer;
+        private readonly float _priority;
+        private readonly IRotationAction _action;
+        private readonly Func<IRotationAction, WoWUnit, bool> _targetPredicate;
+        private readonly Func<IRotationAction, bool> _constantPredicate;
+        private readonly Func<Func<WoWUnit, bool>, WoWUnit> _targetFinder;
+        private readonly bool _forceCast = false;
+        private readonly bool _checkRange = true;
+        private readonly bool _checkLoS = false;
+        private readonly string _name;
+        private Timer _forcedTimer;
+        private readonly int _forcedTimerMs;
 
         public RotationStep(IRotationAction action,
             float priority,
@@ -31,25 +32,25 @@ namespace AIO.Framework
             bool checkLoS = false,
             int forcedTimerMS = 0)
         {
-            Action = action;
-            Priority = priority;
-            TargetPredicate = targetPredicate;
-            ConstantPredicate = constantPredicate;
-            TargetFinder = targetFinder;
+            _action = action;
+            _priority = priority;
+            _targetPredicate = targetPredicate;
+            _constantPredicate = constantPredicate;
+            _targetFinder = targetFinder;
             Exclusive = exclusive;
-            ForceCast = forceCast;
-            CheckRange = checkRange;
-            CheckLoS = checkLoS;
+            _forceCast = forceCast;
+            _checkRange = checkRange;
+            _checkLoS = checkLoS;
+            _forcedTimerMs = forcedTimerMS;
 
-            Name = action.GetType().FullName;
-            if (Action is RotationSpell spell)
+            _name = action.GetType().FullName;
+            if (_action is RotationSpell spell)
             {
-                Name = spell.Name;
+                _name = spell.Name;
             }
-
-            if (forcedTimerMS > 0)
+            if (_action is RotationAction rCode)
             {
-                ForcedTimer = new Timer(forcedTimerMS);
+                _name = rCode.Name;
             }
         }
 
@@ -66,33 +67,40 @@ namespace AIO.Framework
                 checkLoS, forcedTimerMS)
         { }
 
-        public int CompareTo(RotationStep other) => Priority.CompareTo(other.Priority);
+        // For code execution
+        public RotationStep(IRotationAction action,
+            float priority,
+            int forcedTimerMS = 0) :
+            this(action, priority, (a, t) => true, (_) => true, RotationCombatUtil.FindMe, null, false, false, false, forcedTimerMS)
+        { }
+
+        public int CompareTo(RotationStep other) => _priority.CompareTo(other._priority);
 
         private Func<WoWUnit, bool> CreatePredicate(Exclusives exclusives) => (target) =>
         {
             try
             {
                 /* If CheckRange is enabled, check the action range */
-                if (CheckRange && target.GetDistance > Action.MaxRange)
+                if (_checkRange && target.GetDistance > _action.MaxRange)
                 {
-                    RotationLogger.Trace($"{Name} is out of range on {target.Name}");
+                    RotationLogger.Trace($"{_name} is out of range on {target.Name}");
                     return false;
                 }
 
                 /* If the unique token has been consumed for this target, fail the search */
                 if (exclusives.Contains(target, Exclusive))
                 {
-                    RotationLogger.Trace($"{Name} has already had its token consumed on {target.Name}");
+                    RotationLogger.Trace($"{_name} has already had its token consumed on {target.Name}");
                     return false;
                 }
 
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                bool correctTarget = TargetPredicate(Action, target);
-                bool could = correctTarget && (!CheckLoS || target.IsLocalPlayer ||
+                bool correctTarget = _targetPredicate(_action, target);
+                bool could = correctTarget && (!_checkLoS || target.IsLocalPlayer ||
                                                !TraceLine.TraceLineGo(ObjectManager.Me.PositionWithoutType,
                                                    target.PositionWithoutType, CGWorldFrameHitFlags.HitTestSpellLoS));
                 watch.Stop();
-                RotationLogger.Trace($"{Name} target predicated evaluated to {could} on {target.Name} in {watch.ElapsedMilliseconds} ms");
+                RotationLogger.Trace($"{_name} target predicated evaluated to {could} on {target.Name} in {watch.ElapsedMilliseconds} ms");
 
                 /* If the step predicate failed, fail the search */
                 if (!could)
@@ -101,9 +109,9 @@ namespace AIO.Framework
                 }
 
                 watch.Restart();
-                (bool should, bool consume) = Action.Should(target);
+                (bool should, bool consume) = _action.Should(target);
                 watch.Stop();
-                RotationLogger.Trace($"{Name} action should predicate evaluated to ({should}, {consume}) on {target.Name} in {watch.ElapsedMilliseconds} ms");
+                RotationLogger.Trace($"{_name} action should predicate evaluated to ({should}, {consume}) on {target.Name} in {watch.ElapsedMilliseconds} ms");
 
                 /* Consume the token, in order to avoid letting other actions override the effects of this action */
                 if (consume)
@@ -127,34 +135,31 @@ namespace AIO.Framework
             try
             {
                 // abort casting spells very early on to prevent any lagging due to poorly chosen conditions
-                if (RotationCombatUtil.freeMove && Action is RotationSpell spell && spell.CastTime > 0.0 && Me.GetMove)
+                if (RotationCombatUtil.freeMove && _action is RotationSpell spell && spell.CastTime > 0.0 && Me.GetMove)
                 {
                     return false;
                 }
 
                 //can't execute this, because global is still active
                 //can't execute this because we can't stop the current cast to execute this
-                if ((globalActive && !Action.IgnoresGlobal) || !ForceCast && Me.IsCast)
+                if ((globalActive && !_action.IgnoresGlobal) || !_forceCast && Me.IsCast)
                 {
-                    RotationLogger.Trace($"{Name} false because of GCD or IsCast.");
+                    RotationLogger.Trace($"{_name} false because of GCD or IsCast.");
                     return false;
                 }
 
-                //if (Fight.InFight && Name == "Shield Wall") Logging.WriteError($"{Priority} ConstantPredicate");
-                bool constantEval = ConstantPredicate(Action);
-                //if (Fight.InFight && Name == "Shield Wall") Logging.WriteError($"{Priority} constantEval {constantEval}");
-                if (!constantEval)
+                if (!_constantPredicate(_action))
                 {
-                    RotationLogger.Trace($"{Name} false because of constant predicate.");
+                    RotationLogger.Trace($"{_name} false because of constant predicate.");
                     return false;
                 }
 
                 Func<WoWUnit, bool> predicate = CreatePredicate(exclusives);
 
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                WoWUnit target = TargetFinder(predicate);
+                WoWUnit target = _targetFinder(predicate);
                 watch.Stop();
-                RotationLogger.Trace($"({Name}) targetFinder: {target?.Name} {watch.ElapsedMilliseconds} ms");
+                RotationLogger.Trace($"({_name}) targetFinder: {target?.Name} {watch.ElapsedMilliseconds} ms");
 
                 if (target == null)
                 {
@@ -162,20 +167,24 @@ namespace AIO.Framework
                 }
 
                 // Check if the step has a forced timer
-                if (ForcedTimer != null)
+                if (_forcedTimer == null)
                 {
-                    if (!ForcedTimer.IsReady)
+                    _forcedTimer = _forcedTimerMs > 0 ? _forcedTimer = new Timer(_forcedTimerMs) : null;
+                }
+                else 
+                {
+                    if (!_forcedTimer.IsReady)
                     {
-                        RotationLogger.Trace($"{Name} false because its forced timer is not ready.");
+                        RotationLogger.Trace($"{_name} false because its forced timer is not ready.");
                         return false;
                     }
-                    ForcedTimer.Reset();
+                    _forcedTimer.Reset();
                 }
 
                 watch.Restart();
-                bool executed = Action.Execute(target, ForceCast);
+                bool executed = _action.Execute(target, _forceCast);
                 watch.Stop();
-                RotationLogger.Trace($"({Name}) execute {executed}: {watch.ElapsedMilliseconds} ms");
+                RotationLogger.Trace($"({_name}) execute {executed}: {watch.ElapsedMilliseconds} ms");
 
                 if (!executed)
                 {
@@ -193,7 +202,7 @@ namespace AIO.Framework
             }
         }
 
-        public override string ToString() => $"[{Priority}] {Name}";
+        public override string ToString() => $"[{_priority}] {_name}";
 
         public Exclusive Exclusive { get; }
     }

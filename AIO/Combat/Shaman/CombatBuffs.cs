@@ -5,6 +5,8 @@ using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using static AIO.Constants;
 
@@ -14,6 +16,10 @@ namespace AIO.Combat.Shaman
 
     internal class CombatBuffs : IAddon
     {
+        private readonly Spell _rockbiterWeaponSpell = new Spell("Rockbiter Weapon");
+        private readonly Spell _flametongueWeaponSpell = new Spell("Flametongue Weapon");
+        private readonly Spell _earthlivingWeaponSpell = new Spell("Earthliving Weapon");
+        private readonly Spell _windfuryWeaponSpell = new Spell("Windfury Weapon");
         private readonly BaseCombatClass CombatClass;
         private readonly Totems Totems;
         private Spec Spec => CombatClass.Specialisation;
@@ -28,6 +34,7 @@ namespace AIO.Combat.Shaman
         }
 
         public List<RotationStep> Rotation => new List<RotationStep> {
+            new RotationStep(new RotationAction("Weapons Enchants", EnchantStep), 1f, 5000),
 
             new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => !Me.IsMounted && (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
@@ -80,5 +87,103 @@ namespace AIO.Combat.Shaman
         };
         public void Initialize() { }
         public void Dispose() { }
+
+        private void ApplyEnchant(Spell enchant)
+        {
+            enchant.Launch();
+            Task.Run(async delegate
+            {
+                await Task.Delay(100);
+                Lua.LuaDoString("StaticPopup1Button1:Click()");
+            });
+        }
+
+        private bool EnchantStep()
+        {
+            bool[] result = Lua.LuaDoString<bool[]>($@"
+                local result = {{}};
+
+                local hasWeapon = OffhandHasWeapon();                    
+                local hasMainHandEnchant, _, _, _, hasOffHandEnchant, _, _, _, _ = GetWeaponEnchantInfo();
+                table.insert(result, hasWeapon ~= nil);
+                table.insert(result, hasMainHandEnchant ~= nil);
+                table.insert(result, hasOffHandEnchant ~= nil);
+                return unpack(result);
+            ");
+
+            if (result.Length < 3) return false;
+
+            bool hasOffHandWeapon = result[0];
+            bool hasMainHandEnchant = result[1];
+            bool hasOffHandEnchant = result[2];
+
+            switch (Spec)
+            {
+                case Spec.Shaman_SoloEnhancement:
+                case Spec.Shaman_GroupEnhancement:
+                    if (!hasMainHandEnchant)
+                    {
+                        if (_windfuryWeaponSpell.KnownSpell)
+                        {
+                            ApplyEnchant(_windfuryWeaponSpell);
+                            return true;
+                        }
+                        else
+                        {
+                            ApplyEnchant(_rockbiterWeaponSpell);
+                            return true;
+                        }
+                    }
+                    if (hasOffHandWeapon && !hasOffHandEnchant)
+                    {
+                        if (_flametongueWeaponSpell.KnownSpell)
+                        {
+                            ApplyEnchant(_flametongueWeaponSpell);
+                            return true;
+                        }
+                        else
+                        {
+                            ApplyEnchant(_rockbiterWeaponSpell);
+                            return true;
+                        }
+                    }
+                    break;
+                case Spec.Shaman_GroupRestoration:
+                    if (!hasMainHandEnchant)
+                    {
+                        if (_earthlivingWeaponSpell.KnownSpell)
+                        {
+                            ApplyEnchant(_earthlivingWeaponSpell);
+                            return true;
+                        }
+                        else
+                        {
+                            ApplyEnchant(_flametongueWeaponSpell);
+                            return true;
+                        }
+                    }
+                    break;
+                case Spec.Shaman_SoloElemental:
+                    if (!hasMainHandEnchant)
+                    {
+                        ApplyEnchant(_flametongueWeaponSpell);
+                        return true;
+                    }
+                    break;
+                case Spec.LowLevel:
+                    if (!hasMainHandEnchant)
+                    {
+                        ApplyEnchant(_rockbiterWeaponSpell);
+                        return true;
+                    }
+                    if (hasOffHandWeapon && !hasOffHandEnchant)
+                    {
+                        ApplyEnchant(_rockbiterWeaponSpell);
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
     }
 }

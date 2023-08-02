@@ -13,7 +13,7 @@ public static class AutoUpdater
     {
         if (wManager.Information.Version.Contains("1.7.2"))
         {
-            Logging.Write($"AIO couldn't load (v {wManager.Information.Version})");
+            Main.LogError($"AIO couldn't load (v {wManager.Information.Version})");
             Products.ProductStop();
             return;
         }
@@ -31,7 +31,7 @@ public static class AutoUpdater
         // If last update try was < 30 seconds ago, we exit to avoid looping
         if (timeSinceLastUpdate < 30)
         {
-            Logging.Write($"Last update attempts was {timeSinceLastUpdate} seconds ago. Exiting updater.");
+            Main.Log($"Last update attempts was {timeSinceLastUpdate} seconds ago. Exiting updater.");
             return;
         }
 
@@ -48,7 +48,7 @@ public static class AutoUpdater
 
             if (onlineVersion.CompareTo(currentVersion) <= 0)
             {
-                Logging.Write($"Your version is up to date ({currentVersion} / {onlineVersion})");
+                Main.Log($"Your version is up to date ({currentVersion} / {onlineVersion})");
                 return;
             }
 
@@ -57,7 +57,7 @@ public static class AutoUpdater
             var onlineFileContent = new WebClient { Encoding = Encoding.UTF8 }.DownloadData(onlineDllLink);
             if (onlineFileContent != null && onlineFileContent.Length > 0)
             {
-                Logging.Write($"Updating your version {currentVersion} to online Version {onlineVersion}");
+                Main.Log($"Updating your version {currentVersion} to online Version {onlineVersion}");
                 System.IO.File.WriteAllBytes(currentFile, onlineFileContent); // replace user file by online file
                 Thread.Sleep(1000);
                 new Thread(CustomClass.ResetCustomClass).Start();
@@ -65,7 +65,7 @@ public static class AutoUpdater
         }
         catch (Exception e)
         {
-            Logging.WriteError("Auto update: " + e);
+            Main.LogError("Auto update: " + e);
         }
     }
 }

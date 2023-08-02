@@ -1,8 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
-using AIO.Helpers;
 using AIO.Settings;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using wManager.Wow.Helpers;
@@ -12,8 +10,8 @@ namespace AIO.Combat.Druid
 {
     using Settings = DruidLevelSettings;
     internal class GroupFeralTank : BaseRotation
-    {       
-        protected override List<RotationStep> Rotation => new List<RotationStep> {          
+    {
+        protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Barkskin"), 1.5f, (s, t) => Me.HealthPercent <= 35, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Dire Bear Form"), 2f, (s, t) => Me.Level >= 40, RotationCombatUtil.FindMe),
@@ -28,8 +26,8 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 7f, (s, t) => t.GetDistance < 7 && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.GroupFeralFaerieFire, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Mangle (Bear)"), 8f, (s, t) => !t.HaveMyBuff("Mangle") && (Me.HaveBuff("Dire Bear Form") || Me.HaveBuff("Bear Form")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Swipe (Bear)"), 9f, (s, t) => RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <= 8) >=3, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Maul"), 10f, (s, t) => t.GetDistance < 8 && !RotationCombatUtil.IsCurrentSpell("Maul"), RotationCombatUtil.BotTarget),                        
+            new RotationStep(new RotationSpell("Maul"), 10f, (s, t) => t.GetDistance < 8 && !RotationCombatUtil.IsCurrentSpell("Maul"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Enrage"), 11f, (s, t) =>t.HealthPercent >= 35 && !Me.HaveBuff("Enrage"), RotationCombatUtil.FindMe),
-        };       
+        };
     }
 }

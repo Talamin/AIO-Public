@@ -356,6 +356,7 @@
     <Compile Include="Framework\CancelableSpell.cs" />
     <Compile Include="Framework\Exclusives.cs" />
     <Compile Include="Framework\RotationBuff.cs" />
+    <Compile Include="Framework\RotationAction.cs" />
     <Compile Include="Framework\RotationStep.cs" />
     <Compile Include="Framework\RotationSpell.cs" />
     <Compile Include="Framework\RotationLogger.cs" />

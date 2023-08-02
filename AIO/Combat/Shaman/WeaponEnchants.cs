@@ -1,15 +1,11 @@
-﻿using AIO.Combat.Addons;
+﻿/*using AIO.Combat.Addons;
 using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Lists;
-using robotManager.Helpful;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using wManager.Events;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
-using wManager.Wow.ObjectManager;
 
 namespace AIO.Combat.Shaman
 {
@@ -18,35 +14,26 @@ namespace AIO.Combat.Shaman
         private readonly BaseCombatClass CombatClass;
         private Spec Spec => CombatClass.Specialisation;
 
-        public bool RunOutsideCombat => true;
-        public bool RunInCombat => true;
-        public List<RotationStep> Rotation => new List<RotationStep>();
-
         private readonly Spell _rockbiterWeaponSpell = new Spell("Rockbiter Weapon");
         private readonly Spell _flametongueWeaponSpell = new Spell("Flametongue Weapon");
         private readonly Spell _earthlivingWeaponSpell = new Spell("Earthliving Weapon");
         private readonly Spell _windfuryWeaponSpell = new Spell("Windfury Weapon");
-        private readonly Timer _weaponCHeckTimer = new Timer(3000);
+
+        public bool RunOutsideCombat => true;
+        public bool RunInCombat => true;
+        public List<RotationStep> Rotation => new List<RotationStep>()
+        {
+            new RotationStep(new RotationCode("Weapon Enchants", Enchant), 1f, 3000),
+        };
 
         internal WeaponEnchants(BaseCombatClass combatClass)
         {
             CombatClass = combatClass;
         }
 
-        public void Initialize()
-        {
-            FightEvents.OnFightLoop += OnFightLoop;
-            MovementEvents.OnMovementPulse += OnMovementPulse;
-        }
+        public void Initialize() { }
 
-        public void Dispose()
-        {
-            FightEvents.OnFightLoop -= OnFightLoop;
-            MovementEvents.OnMovementPulse -= OnMovementPulse;
-        }
-
-        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable) => Enchant();
-        private void OnMovementPulse(List<Vector3> points, CancelEventArgs cancelable) => Enchant();
+        public void Dispose() { }
 
         private void ApplyEnchant(Spell enchant)
         {
@@ -56,14 +43,11 @@ namespace AIO.Combat.Shaman
                 await Task.Delay(100);
                 Lua.LuaDoString("StaticPopup1Button1:Click()");
             });
-            
+
         }
 
-        private void Enchant()
+        private bool Enchant()
         {
-            if (!_weaponCHeckTimer.IsReady) return;
-            _weaponCHeckTimer.Reset();
-
             bool[] result = Lua.LuaDoString<bool[]>($@"
                 local result = {{}};
 
@@ -75,7 +59,7 @@ namespace AIO.Combat.Shaman
                 return unpack(result);
             ");
 
-            if (result.Length < 3) return;
+            if (result.Length < 3) return false;
 
             bool hasOffHandWeapon = result[0];
             bool hasMainHandEnchant = result[1];
@@ -90,11 +74,12 @@ namespace AIO.Combat.Shaman
                         if (_windfuryWeaponSpell.KnownSpell)
                         {
                             ApplyEnchant(_windfuryWeaponSpell);
-
+                            return true;
                         }
                         else
                         {
                             ApplyEnchant(_rockbiterWeaponSpell);
+                            return true;
                         }
                     }
                     if (hasOffHandWeapon && !hasOffHandEnchant)
@@ -102,10 +87,12 @@ namespace AIO.Combat.Shaman
                         if (_flametongueWeaponSpell.KnownSpell)
                         {
                             ApplyEnchant(_flametongueWeaponSpell);
+                            return true;
                         }
                         else
                         {
                             ApplyEnchant(_rockbiterWeaponSpell);
+                            return true;
                         }
                     }
                     break;
@@ -115,10 +102,12 @@ namespace AIO.Combat.Shaman
                         if (_earthlivingWeaponSpell.KnownSpell)
                         {
                             ApplyEnchant(_earthlivingWeaponSpell);
+                            return true;
                         }
                         else
                         {
                             ApplyEnchant(_flametongueWeaponSpell);
+                            return true;
                         }
                     }
                     break;
@@ -126,21 +115,25 @@ namespace AIO.Combat.Shaman
                     if (!hasMainHandEnchant)
                     {
                         ApplyEnchant(_flametongueWeaponSpell);
+                        return true;
                     }
                     break;
                 case Spec.LowLevel:
                     if (!hasMainHandEnchant)
                     {
                         ApplyEnchant(_rockbiterWeaponSpell);
+                        return true;
                     }
                     if (hasOffHandWeapon && !hasOffHandEnchant)
                     {
                         ApplyEnchant(_rockbiterWeaponSpell);
+                        return true;
                     }
                     break;
             }
-
+            return false;
         }
     }
 }
 
+*/

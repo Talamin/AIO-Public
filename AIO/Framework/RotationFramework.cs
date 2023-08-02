@@ -37,17 +37,16 @@ namespace AIO.Framework
 
         public void Initialize()
         {
-            ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
-            EventsLuaWithArgs.OnEventsLuaStringWithArgs += UpdatePartyMembers;
-            EventsLua.AttachEventLua("RAID_ROSTER_UPDATE", _ => LuaCache.UpdateRaidGroups());
             LuaCache.UpdateRaidGroups();
-            UpdatePartyMembers("INSTANCE_BOOT_START", null);
+            DetectHealAndTank();
+            ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
+            EventsLuaWithArgs.OnEventsLuaStringWithArgs += OnEventsLuaStringWithArgs;
         }
 
         public void Dispose()
         {
             ObjectManagerEvents.OnObjectManagerPulsed -= OnObjectManagerPulsed;
-            EventsLuaWithArgs.OnEventsLuaStringWithArgs -= UpdatePartyMembers;
+            EventsLuaWithArgs.OnEventsLuaStringWithArgs -= OnEventsLuaStringWithArgs;
         }
 
         private readonly TimeSpan UpdateCacheMaxDelay = new TimeSpan(hours: 0, minutes: 0, seconds: 3);
@@ -67,62 +66,59 @@ namespace AIO.Framework
             }
         }
 
-        public static void UpdatePartyMembers(string name, List<string> args)
+        public void OnEventsLuaStringWithArgs(string eventId, List<string> args)
         {
-            if (name != "INSTANCE_BOOT_START")
+            switch (eventId)
             {
-                return;
+                case "PLAYER_ENTERING_WORLD":
+                case "INSTANCE_BOOT_START":
+                case "WORLD_MAP_UPDATE":
+                case "PARTY_MEMBERS_CHANGED":
+                case "GROUP_ROSTER_CHANGED":
+                case "PARTY_MEMBER_DISABLE":
+                case "PARTY_MEMBER_ENABLE":
+                    DetectHealAndTank();
+                    break;
+                case "RAID_ROSTER_UPDATE":
+                    LuaCache.UpdateRaidGroups();
+                    break;
             }
+        }
 
-            string tankName;
-            string healName;
-            bool IsTank = Lua.LuaDoString<bool>(@"
-                            local isTank,_,_ = UnitGroupRolesAssigned('player')
-                                if isTank then
-                                    return true
-                                end");
-            if (IsTank)
+        private void DetectHealAndTank()
+        {
+            if (Me.IsInGroup)
             {
-                tankName = Me.Name;
-            }
-            else
-            {
-                tankName = Lua.LuaDoString<string>(@"
-                            for i = 1, 4 do 
-                                local isTank,_,_ = UnitGroupRolesAssigned('party' .. i)
-                                if isTank then                                    
-                                    return UnitName('party' .. i);
-                                end
-                            end").Split(new[] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
-            }
+                string[] luaResult = Lua.LuaDoString<string[]>($@"
+                    local result = {{}};
+                    local tankName = '';
+                    local healName = '';
+                    local group = {{""party1"", ""party2"", ""party3"", ""party4"", ""player""}};
+                    for i = 1, #group do
+                      local isTank, isHeal,_ = UnitGroupRolesAssigned(group[i]);
+                        if isTank then                                    
+                            tankName = UnitName(group[i]);
+                        end
+                        if isHeal then                                    
+                            healName = UnitName(group[i]);
+                        end    
+                    end
+                    table.insert(result, tankName);
+                    table.insert(result, healName);
+                    return unpack(result);
+                ");
 
-            if (tankName != TankName)
-            {
-                Logging.Write($"Tank name: {tankName}");
+                if (luaResult.Length != 2) return;
+
+                string tankName = luaResult[0];
+                string healName = luaResult[1];
+
+                if (tankName != "" && tankName != TankName)
+                    Main.Log($"Group tank found: {tankName}");
+                if (healName != "" && healName != HealName)
+                    Main.Log($"Group healer found: {healName}");
+
                 TankName = tankName;
-            }
-            bool IsHealer = Lua.LuaDoString<bool>(@"
-                            local _,isHeal,_ = UnitGroupRolesAssigned('player')
-                                if isHeal then
-                                    return true
-                                end");
-            if (IsHealer)
-            {
-                healName = Me.Name;
-            }
-            else
-            {
-                healName = Lua.LuaDoString<string>(@"
-                            for i = 1, 4 do 
-                                local _,isHeal,_ = UnitGroupRolesAssigned('party' .. i)
-                                if isHeal then                                    
-                                    return UnitName('party' .. i);
-                                end
-                            end").Split(new[] { "#||#" }, StringSplitOptions.None).FirstOrDefault();
-            }
-            if (healName != HealName)
-            {
-                Logging.Write($"Heal name: {healName}");
                 HealName = healName;
             }
         }
@@ -316,7 +312,6 @@ namespace AIO.Framework
                     // watch.Restart();
                     try
                     {
-                        // Logging.Write("Executing step " + (i+1) + " - " + step);
                         if (step.Execute(gcdEnabled, exclusives))
                         {
                             break;

@@ -34,7 +34,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Nature's Swiftness"), 8f, (s, t) => _hurtPartyMembers.Any(Member => Member.CHealthPercent() < Settings.Current.GroupRestorationHealingTouch), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Healing Touch"), 8.9f, (s, t) => Me.HaveBuff("Nature's Swiftness") && t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindTank, checkLoS:true),
             new RotationStep(new RotationSpell("Healing Touch"), 9f, (s, t) => Me.HaveBuff("Nature's Swiftness") && t.CHealthPercent() <= Settings.Current.GroupRestorationHealingTouch, RotationCombatUtil.FindPartyMember, checkLoS:true),
-            new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationLifebloom, RotationCombatUtil.FindTank, checkLoS:true),          
+            new RotationStep(new RotationBuff("Lifebloom", minimumStacks: 3, minimumRefreshTimeLeft: 2000), 10f, (s, t) => t.CHealthPercent() <= Settings.Current.GroupRestorationLifebloom, RotationCombatUtil.FindTank, checkLoS:true),
             new RotationStep(new RotationSpell("Regrowth"), 11f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.GroupRestorationRegrowth, RotationCombatUtil.FindTank, checkLoS:true),
             new RotationStep(new RotationSpell("Regrowth"), 11.1f, (s, t) => !t.CHaveMyBuff("Regrowth") &&  t.CHealthPercent() <= Settings.Current.GroupRestorationRegrowth, RotationCombatUtil.FindPartyMember, checkLoS:true),
             new RotationStep(new RotationBuff("Rejuvenation"), 12f, (s, t) => !t.CHaveMyBuff("Rejuventation") && t.CHealthPercent() <= Settings.Current.GroupRestorationRejuvenation, RotationCombatUtil.FindTank, checkLoS:true),
@@ -70,11 +70,11 @@ namespace AIO.Combat.Druid
 
         //build Lists
         private void BuildLists()
-        { 
+        {
             for (int i = 0; i < RotationFramework.PartyMembers.Count(); i++)
             {
                 WoWPlayer Partymember = RotationFramework.PartyMembers[i];
-                if(Partymember.CHealthPercent()<99)
+                if (Partymember.CHealthPercent() < 99)
                 {
                     _hurtPartyMembers.Add(Partymember);
                 }
@@ -100,7 +100,7 @@ namespace AIO.Combat.Druid
                     continue;
                 }
                 Vector3 originPos = originUnit.CGetPosition();
-                int localCount = _hurtPartyMembers.Count(unit => unit.CIsAlive() && unit.CHealthPercent() <= Settings.Current.GroupRestorationWildGrowth && unit.CGetPosition().DistanceTo(originPos) <= 15 );
+                int localCount = _hurtPartyMembers.Count(unit => unit.CIsAlive() && unit.CHealthPercent() <= Settings.Current.GroupRestorationWildGrowth && unit.CGetPosition().DistanceTo(originPos) <= 15);
 
                 if (localCount > largestCount)
                 {
@@ -109,11 +109,6 @@ namespace AIO.Combat.Druid
                 }
             }
             return largestCenter;
-        }
-        //Find  Custom  Tank
-        private static WoWUnit FindTank(Func<WoWUnit, bool> predicate)
-        {
-            return _tank != null && predicate(_tank) ? _tank : null;
         }
 
         private static WoWUnit FindExplicitPartyMemberByName(string name) => RotationFramework.PartyMembers.FirstOrDefault(partyMember => partyMember.Name.ToLower().Equals(name.ToLower()));

@@ -41,7 +41,7 @@ namespace AIO.Combat.Shaman
             Addons.Add(new AutoPartyResurrect("Ancestral Spirit"));
             Addons.Add(totems);
             Addons.Add(new CombatBuffs(this, totems));
-            Addons.Add(new WeaponEnchants(this));
+            //Addons.Add(new WeaponEnchants(this));
         }
 
         public override void Initialize()

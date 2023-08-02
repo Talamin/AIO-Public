@@ -85,12 +85,6 @@ namespace AIO.Combat.Paladin
 
             if (Me.IsInGroup)
             {
-                if ((String.IsNullOrEmpty(RotationFramework.TankName) || String.IsNullOrEmpty(RotationFramework.HealName)))
-                {
-                    Logging.Write("Updating Tank and Healer names");
-                    RotationFramework.UpdatePartyMembers("INSTANCE_BOOT_START", null);
-                    Logging.Write($"Tank : {RotationFramework.TankName}, Healer : {RotationFramework.HealName}");
-                }
                 foreach (WoWPlayer player in RotationFramework.PartyMembers)
                 {
                     if (HaveShaman && !SeenManaSpringTotem)

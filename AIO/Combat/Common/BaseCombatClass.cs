@@ -1,7 +1,6 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Lists;
 using AIO.Settings;
-using robotManager.Helpful;
 using robotManager.Products;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace AIO.Combat.Common
             }
             else
             {
-                Logging.WriteError($"Couldn't find rotation {_settings.ChooseRotation}, setting back to default");
+                Main.LogError($"Couldn't find rotation {_settings.ChooseRotation}, setting back to default");
                 Specialisation = (Spec)Enum.Parse(typeof(Spec), Extension.DefaultRotations[myClass]);
             }
 
@@ -43,16 +42,16 @@ namespace AIO.Combat.Common
             {
                 if (!specialisations.ContainsKey(Spec.Fallback))
                 {
-                    Logging.WriteError($"ERROR: No fallback rotation has been defined in the the class rotation dictionary for {myClass}");
+                    Main.LogError($"ERROR: No fallback rotation has been defined in the the class rotation dictionary for {myClass}");
                     Products.DisposeProduct();
                     return;
                 }
-                Logging.WriteError($"WARNING: {Specialisation} is absent from the class rotation dictionary. Using fallback ({specialisations[Spec.Fallback]}).");
+                Main.LogError($"WARNING: {Specialisation} is absent from the class rotation dictionary. Using fallback ({specialisations[Spec.Fallback]}).");
                 _baseRotation = specialisations[Spec.Fallback];
             }
             else
             {
-                Logging.Write($"Running {Specialisation} specialisation");
+                Main.Log($"Running {Specialisation} specialisation");
             }
         }
 
