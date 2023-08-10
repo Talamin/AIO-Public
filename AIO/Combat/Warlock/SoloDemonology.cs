@@ -16,7 +16,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Metamorphosis"), 3f, (s,t) => !Me.HaveBuff("Metamorphosis") && Settings.Current.SoloDemonologyMetamorphosis =="OnCooldown", RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Metamorphosis"), 3.1f, (s,t) => !Me.HaveBuff("Metamorphosis") && Settings.Current.SoloDemonologyMetamorphosis =="OnBosses" && t.IsBoss, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Metamorphosis"), 3.1f, (s,t) => !Me.HaveBuff("Metamorphosis") && Settings.Current.SoloDemonologyMetamorphosis =="OnBosses" && BossList.MyTargetIsBoss, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 4f, (s,t) => !Pet.HaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Life Tap"), 5f, (s,t) => Me.HealthPercent > 50 && Me.ManaPercentage < Settings.Current.SoloDemonologyLifetap,RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Life Tap"), 5.1f, (s,t) => Settings.Current.GlyphLifeTap && !Me.HaveBuff("Life Tap") && Me.HealthPercent > 25, RotationCombatUtil.FindMe),

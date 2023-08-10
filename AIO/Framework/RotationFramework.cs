@@ -4,6 +4,7 @@ using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using wManager.Events;
 using wManager.Wow;
@@ -11,18 +12,24 @@ using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 using Math = System.Math;
+using Timer = robotManager.Helpful.Timer;
 
 namespace AIO.Framework
 {
     public class RotationFramework : ICycleable
     {
-        public static event EventHandler OnCacheUpdated;
+        private static readonly object _rotationLock = new object();
+        //public static event EventHandler OnCacheUpdated;
         public static bool CacheDirectTransmission = false;
         //public static bool UseSynthetic = false;
 
         private static bool UseFramelock = true;
 
         private static int ScanRange = 50;
+
+        private static readonly Queue<double> _combatRotationSpeed = new Queue<double>();
+        private static readonly Queue<double> _oocRotationSpeed = new Queue<double>();
+        private const int _maxRSpeedQueueSize = 25;
 
         private static int LoSCreditsPlayers = 5;
         private static int LoSCreditsNPCs = 10;
@@ -41,12 +48,40 @@ namespace AIO.Framework
             DetectHealAndTank();
             ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs += OnEventsLuaStringWithArgs;
+            if (!Radar3D.IsLaunched) Radar3D.Pulse();
+            Radar3D.OnDrawEvent += Draw;
+        }
+
+        private void Draw()
+        {
+            int averageSpeed = 0;
+            int max = 0;
+            string rotationName = "";
+            if (_oocRotationSpeed.Count > 0)
+            {
+                averageSpeed = (int)_oocRotationSpeed.Average();
+                max = (int)_oocRotationSpeed.Max();
+                rotationName = "OOC Rotation";
+            }
+            else if (_combatRotationSpeed.Count > 0)
+            {
+                averageSpeed = (int)_combatRotationSpeed.Average();
+                max = (int)_combatRotationSpeed.Max();
+                rotationName = "Combat Rotation";
+            }
+            Color color = Color.LightGreen;
+            if (averageSpeed > 70) color = Color.Yellow;
+            if (averageSpeed > 150) color = Color.Orange;
+            if (averageSpeed > 250) color = Color.Red;
+            Radar3D.DrawString($"{rotationName}: {averageSpeed}ms (Max: {max}ms)", new Vector3(150, 150, 0), 13, color, 255, FontFamily.GenericSerif);
         }
 
         public void Dispose()
         {
             ObjectManagerEvents.OnObjectManagerPulsed -= OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs -= OnEventsLuaStringWithArgs;
+            Radar3D.OnDrawEvent -= Draw;
+            Radar3D.Stop();
         }
 
         private readonly TimeSpan UpdateCacheMaxDelay = new TimeSpan(hours: 0, minutes: 0, seconds: 3);
@@ -60,9 +95,7 @@ namespace AIO.Framework
             }
             else
             {
-                UpdateTimer.RunAdaptive(
-                    () => Run(UpdateCache), UpdateCacheMaxDelay
-                );
+                UpdateTimer.RunAdaptive(() => Run(UpdateCache), UpdateCacheMaxDelay);
             }
         }
 
@@ -125,13 +158,14 @@ namespace AIO.Framework
 
         private static void UpdateCache()
         {
+            //Stopwatch sw = Stopwatch.StartNew();
             List<WoWUnit> omUnits = ObjectManager.GetObjectWoWUnit();
             List<WoWPlayer> omPlayers = ObjectManager.GetObjectWoWPlayer();
 
             Vector3 myPosition = Me.PositionWithoutType;
 
-            int losCreditsPlayers = LoSCreditsPlayers;
-            int losCreditsMonsters = LoSCreditsNPCs;
+            //int losCreditsPlayers = LoSCreditsPlayers;
+            //int losCreditsMonsters = LoSCreditsNPCs;
 
             var allUnits = new List<WoWUnit>(capacity: omUnits.Count + omPlayers.Count);
             for (var i = 0; i < omUnits.Count; i++)
@@ -141,6 +175,7 @@ namespace AIO.Framework
                 {
                     continue;
                 }
+                /*
                 if (losCreditsMonsters > 0)
                 {
                     losCreditsMonsters--;
@@ -149,8 +184,11 @@ namespace AIO.Framework
                         continue;
                     }
                 }
+                */
                 allUnits.AddSorted(unit, u => myPosition.DistanceTo(u.PositionWithoutType));
             }
+
+            //double swomUnits = sw.ElapsedMilliseconds;
 
             var players = new List<WoWPlayer>(capacity: omPlayers.Count + 1) { Me };
             for (var i = 0; i < omPlayers.Count; i++)
@@ -160,6 +198,7 @@ namespace AIO.Framework
                 {
                     continue;
                 }
+                /*
                 if (losCreditsPlayers > 0)
                 {
                     losCreditsPlayers--;
@@ -168,9 +207,12 @@ namespace AIO.Framework
                         continue;
                     }
                 }
+                */
                 allUnits.AddSorted(player, p => myPosition.DistanceTo(p.PositionWithoutType));
                 players.AddSorted(player, p => myPosition.DistanceTo(p.PositionWithoutType));
             }
+
+            //double swPlayers = sw.ElapsedMilliseconds;
 
             var enemies = new List<WoWUnit>(capacity: allUnits.Count);
             for (var i = 0; i < allUnits.Count; i++)
@@ -183,6 +225,8 @@ namespace AIO.Framework
                 }
                 enemies.AddSorted(unit, u => myPosition.DistanceTo(u.PositionWithoutType));
             }
+
+            //double swEnemies = sw.ElapsedMilliseconds;
 
             List<ulong> guidHomeAndInstance = Party.GetPartyGUIDHomeAndInstance();
 
@@ -197,12 +241,16 @@ namespace AIO.Framework
                 partyMembers.AddSorted(player, p => p.HealthPercent);
             }
 
+            //double swGroup = sw.ElapsedMilliseconds;
+
             PlayerUnits = players.ToArray();
             Enemies = enemies.ToArray();
             AllUnits = allUnits.ToArray();
             PartyMembers = partyMembers.ToArray();
 
-            if (CacheDirectTransmission) OnCacheUpdated?.Invoke(null, EventArgs.Empty);
+            //if (sw.ElapsedMilliseconds > 100)
+            //  Logging.WriteError($"Cache update took {sw.ElapsedMilliseconds} swomUnits: {swomUnits}, swPlayers: {swPlayers}, swEnemies: {swEnemies}, swGroup: {swGroup}");
+            //if (CacheDirectTransmission) OnCacheUpdated?.Invoke(null, EventArgs.Empty);
         }
 
         public static string HealName { get; private set; } = "";
@@ -216,11 +264,12 @@ namespace AIO.Framework
         public static void RunRotation(string caller, List<RotationStep> rotation, bool alreadyLocked = false)
         {
             //GetGlobalCooldown picked directly of Memory, needs approval.
+            // Note from Zero : unfortunately this is not reliable (ex: some spells return a 1499 CD in the CD list)
             var globalCd = GetGlobalCooldown();
             var gcdEnabled = globalCd != 0;
 
             var watch = Stopwatch.StartNew();
-            Run(() => RunRotation(rotation, gcdEnabled), alreadyLocked);
+            Run(() => RunRotation(rotation, gcdEnabled, caller), alreadyLocked);
             watch.Stop();
 
             //if (watch.ElapsedMilliseconds > 64)
@@ -245,11 +294,11 @@ namespace AIO.Framework
             else
             {
                 action();
-                //RunInLock(action);
+                //RunInLock(action, caller);
             }
         }
         /*
-        private static void RunInLock(Action action)
+        private static void RunInLock(Action action, string caller)
         {
             lock (ObjectManager.Locker)
             {
@@ -295,7 +344,7 @@ namespace AIO.Framework
                           $"has the highest maximum.");
         }
 
-        private static void RunRotation(IReadOnlyList<RotationStep> rotation, bool gcdEnabled)
+        private static void RunRotation(IReadOnlyList<RotationStep> rotation, bool gcdEnabled, string caller)
         {
             try
             {
@@ -303,9 +352,15 @@ namespace AIO.Framework
                 // if(_ticks % 500 == 0) PrintStats();
 
                 var exclusives = new Exclusives();
+                // Experimental GCD wait
+                int gcd = Lua.LuaDoString<int>($@"
+                        local startTime, duration, enabled = GetSpellCooldown(61304);
+                        return (duration - (GetTime() - startTime)) * 1000;
+                    ");
+                if (gcd > 0) return;
 
+                Stopwatch sw = Stopwatch.StartNew();
                 // var watch = new Stopwatch();
-
                 for (ushort i = 0; i < rotation.Count; i++)
                 {
                     RotationStep step = rotation[i];
@@ -319,6 +374,18 @@ namespace AIO.Framework
                     }
                     finally
                     {
+                        if (caller == "Combat Rotation")
+                        {
+                            _combatRotationSpeed.Enqueue(sw.ElapsedMilliseconds);
+                            if (_combatRotationSpeed.Count > _maxRSpeedQueueSize) _combatRotationSpeed.Dequeue();
+                            _oocRotationSpeed.Clear();
+                        }
+                        if (caller == "OOC Rotation")
+                        {
+                            _oocRotationSpeed.Enqueue(sw.ElapsedMilliseconds);
+                            if (_oocRotationSpeed.Count > _maxRSpeedQueueSize) _oocRotationSpeed.Dequeue();
+                            _combatRotationSpeed.Clear();
+                        }
                         // watch.Stop();
                         // if(!Stats.ContainsKey(i)) {
                         //     Stats.Add(i, new List<long> {watch.ElapsedMilliseconds});
@@ -360,6 +427,7 @@ namespace AIO.Framework
 
             return 0;
         }
+
         public struct SpellCooldown
         {
             public uint SpellId;
@@ -375,6 +443,7 @@ namespace AIO.Framework
                 Duration = duration;
             }
         }
+
         public static IEnumerable<SpellCooldown> SpellCooldownTimeLeft()
         {
             // based on https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/248891-3-1-3-info-getting-spell-cooldowns-3.html#post1780758
@@ -383,7 +452,6 @@ namespace AIO.Framework
 
             while ((currentListObject != 0) && ((currentListObject & 1) == 0))
             {
-
                 uint currentSpellId = Memory.WowMemory.Memory.ReadPtr(currentListObject + 8);
 
                 int start = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x10));

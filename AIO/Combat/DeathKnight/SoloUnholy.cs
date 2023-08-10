@@ -18,7 +18,7 @@ namespace AIO.Combat.DeathKnight
             new RotationStep(new RotationSpell("Death and Decay"), 5f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance < 15) >= Settings.Current.SoloUnholyDnD, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Icy Touch"), 6f, (s,t) => !t.HaveMyBuff("Frost Fever"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Plague Strike"), 7f, (s,t) => !t.HaveMyBuff("Blood Plague"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Summon Gargoyle"), 4.0f, (s,t) => t.IsBoss, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Summon Gargoyle"), 4.0f, (s,t) => BossList.MyTargetIsBoss, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Pestilence"), 8f, (s,t) => t.HaveMyBuff("Blood Plague", "Frost Fever") && RotationFramework.Enemies.Count(o => o.GetDistance < 15 && !o.HaveMyBuff("Blood Plague", "Frost Fever")) >=2, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Blood Strike"), 9f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) == Settings.Current.SoloUnholyBloodStrike, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heart Strike"), 10f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <= 10) >= Settings.Current.SoloUnholyHearthStrike, RotationCombatUtil.BotTarget),

@@ -26,10 +26,10 @@ namespace AIO.Combat.Mage
             // Only polymorph a valid target
             && (t.IsCreatureType("Humanoid") || t.IsCreatureType("Beast") || t.IsCreatureType("Critter")),
                 RotationCombatUtil.FindEnemyTargetingMe),
-            new RotationStep(new RotationSpell("Icy Veins"), 3f, (s,t) => Me.BuffStack(36032) >= 1 && t.IsBoss, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Arcane Power"), 4f, (s,t) => Me.BuffStack(36032) >= 1 && t.IsBoss, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Mirror Image"), 5f, (s,t) => Me.BuffStack(36032) >= 1 && t.IsBoss, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Presence of Mind"), 6f, (s,t) => Me.BuffStack(36032) >=2 && t.IsBoss, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Icy Veins"), 3f, (s,t) => Me.BuffStack(36032) >= 1 && BossList.MyTargetIsBoss, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Arcane Power"), 4f, (s,t) => Me.BuffStack(36032) >= 1 && BossList.MyTargetIsBoss, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Mirror Image"), 5f, (s,t) => Me.BuffStack(36032) >= 1 && BossList.MyTargetIsBoss, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Presence of Mind"), 6f, (s,t) => Me.BuffStack(36032) >=2 && BossList.MyTargetIsBoss, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Arcane Missiles"), 7f, (s,t) =>Me.ManaPercentage > Settings.Current.UseWandTresh && Me.BuffStack(36032) >=3 && Me.HaveBuff(44401), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Arcane Blast"), 8f, (s,t) => Me.ManaPercentage > Settings.Current.UseWandTresh, RotationCombatUtil.BotTarget)
         };

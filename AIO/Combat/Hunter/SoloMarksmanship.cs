@@ -17,11 +17,11 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationBuff("Rapid Fire"), 7f, (s,t) =>(RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPet) >=3 && !Me.IsInGroup) 
                     || (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) >= Settings.Current.SoloMarksmanshipAOECount && Me.IsInGroup) 
                     || (t.IsElite && !Me.IsInGroup) 
-                    || (Me.IsInGroup && t.IsBoss), RotationCombatUtil.FindMe),
+                    || (Me.IsInGroup && BossList.MyTargetIsBoss), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Readiness"), 8f, (s,t) => !Me.HaveBuff("Rapid Fire") && (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPet) >=3 && !Me.IsInGroup)
                     || (RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember) >= Settings.Current.SoloMarksmanshipAOECount && Me.IsInGroup)
                     || (t.IsElite && !Me.IsInGroup)
-                    || (Me.IsInGroup && t.IsBoss), RotationCombatUtil.FindMe),
+                    || (Me.IsInGroup && BossList.MyTargetIsBoss), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Kill Shot"), 9f, (s,t) => t.GetDistance >= 5 && t.HealthPercent< 20, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Volley"), 9.1f, (s,t) => RotationFramework.Enemies.Count(o => o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloMarksmanshipAOECount && Settings.Current.SoloMarksmanshipUseAOE, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Hunter's Mark"), 10f, (s,t) => t.GetDistance >= 5 && !t.HaveMyBuff("Hunter's Mark") && t.IsAlive && t.GetDistance >= 5 && t.HealthPercent > 50, RotationCombatUtil.BotTarget),

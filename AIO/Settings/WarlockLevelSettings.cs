@@ -344,6 +344,12 @@ namespace AIO.Settings
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
+        [DisplayName("Spread Unstable Affliction")]
+        [Description("Cast Unstable Affliction on multiple Enemies")]
+        public bool GroupAfflictionSpreadUnstableAffliction { get; set; }
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarlockTriggerDropdown", nameof(Spec.Warlock_GroupAffliction))]
         [DisplayName("Spread Curse of Agony")]
         [Description("Cast Curse of Agony on multiple Enemies")]
         public bool GroupAfflictionSpreadCurseOfAgony { get; set; }
@@ -405,6 +411,7 @@ namespace AIO.Settings
             //GroupAfflictionUseCorruptionGroup = true;
             GroupAfflictionSpreadCorruption = true;
             GroupAfflictionSpreadCurseOfAgony = true;
+            GroupAfflictionSpreadUnstableAffliction = true;
             GroupAfflictionLifetap = 20;
             GroupAfflictionGlyphLifetap = false;
             GroupAfflictionDrainlife = 40;

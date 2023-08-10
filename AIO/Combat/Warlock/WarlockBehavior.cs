@@ -19,7 +19,8 @@ namespace AIO.Combat.Warlock
     using Settings = WarlockLevelSettings;
     internal class WarlockBehavior : BaseCombatClass
     {
-        public override float Range => 29.0f;
+        private float _range = 29f;
+        public override float Range => _range;
 
         private readonly Spell _summonImpSpell = new Spell("Summon Imp");
         private readonly Spell _summonVoidWalkerSpell = new Spell("Summon Voidwalker");
@@ -74,6 +75,8 @@ namespace AIO.Combat.Warlock
             Addons.Add(new Racials());
             Addons.Add(new OOCBuffs());
             Addons.Add(new PetAutoTarget("Torment"));
+            if (Specialisation == Spec.Warlock_GroupAffliction)
+                _range = 25f;
         }
 
         public override void Initialize()

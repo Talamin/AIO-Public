@@ -128,7 +128,7 @@ namespace AIO.Combat.Priest
                 (s, t) => t.CMyBuffTimeLeft("Vampiric Touch") < 1300, CQuickBotTarget, checkLoS: true),
 
             new RotationStep(new RotationSpell("Devouring Plague"), 15f,
-                (s, t) => ((t.CHealthPercent() > 40 || t.IsBoss && t.CHealthPercent() > 15) &&
+                (s, t) => ((t.CHealthPercent() > 40 || BossList.MyTargetIsBoss && t.CHealthPercent() > 15) &&
                           t.CMyBuffTimeLeft("Devouring Plague") < 2590) && Settings.Current.ShadowDPUse, CQuickBotTarget,
                 checkLoS: true),
 

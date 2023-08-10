@@ -30,7 +30,7 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationBuff("Demon Armor"), 4f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe, Exclusive.WarlockSkin),
             new RotationStep(new RotationBuff("Demon Skin"), 5f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe, Exclusive.WarlockSkin),
             new RotationStep(new RotationBuff("Soul Link"), 6f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Life Tap"), 7f, (s, t) => !Me.IsMounted && Me.ManaPercentage < Me.HealthPercent && Settings.Current.LifeTapOOC, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Life Tap"), 7f, (s, t) => !Me.IsMounted && Me.ManaPercentage < 80 && Me.ManaPercentage < Me.HealthPercent && Settings.Current.LifeTapOOC, RotationCombatUtil.FindMe),
         };
 
         public void Initialize() { }
