@@ -21,6 +21,8 @@ namespace AIO.Combat.Shaman
     {
         private float CombatRange;
         public override float Range => CombatRange;
+        private readonly Spell _ghostWolfSpell = new Spell("Ghost Wolf");
+        private readonly Spell _totemRecallSpell = new Spell("Totemic Recall");
 
         internal ShamanBehavior() : base(
             Settings.Current,
@@ -37,11 +39,10 @@ namespace AIO.Combat.Shaman
             Addons.Add(new Racials());
             if (Settings.Current.HealOOC)
                 Addons.Add(new HealOOC());
-            var totems = new Totems(this);
+            Totems totemsAddon = new Totems(this);
             Addons.Add(new AutoPartyResurrect("Ancestral Spirit"));
-            Addons.Add(totems);
-            Addons.Add(new CombatBuffs(this, totems));
-            //Addons.Add(new WeaponEnchants(this));
+            Addons.Add(totemsAddon);
+            Addons.Add(new CombatBuffs(this, totemsAddon));
         }
 
         public override void Initialize()
@@ -92,15 +93,13 @@ namespace AIO.Combat.Shaman
             UseGhostWolf(last);
         }
 
-        private readonly Spell TotemRecall = new Spell("Totemic Recall");
-
         private void UseTotemicRecall(Vector3 point)
         {
             if (point.DistanceTo(Me.Position) < wManagerSetting.CurrentSetting.MountDistance)
             {
                 return;
             }
-            if (!TotemRecall.KnownSpell || !Me.IsAlive)
+            if (!_totemRecallSpell.KnownSpell || !Me.IsAlive)
             {
                 return;
             }
@@ -117,12 +116,11 @@ namespace AIO.Combat.Shaman
                 "Healing Stream Totem") &&
                 !Me.InCombatFlagOnly)
             {
-                TotemRecall.Launch();
+                _totemRecallSpell.Launch();
                 Usefuls.WaitIsCasting();
             }
         }
 
-        private readonly Spell GhostWolf = new Spell("Ghost Wolf");
         private void UseGhostWolf(Vector3 point)
         {
             if (point.DistanceTo(Me.Position) < wManagerSetting.CurrentSetting.MountDistance)
@@ -135,10 +133,10 @@ namespace AIO.Combat.Shaman
                 !Me.HaveMyBuff("Ghost Wolf") &&
                 Settings.Current.UseGhostWolf &&
                 Me.IsAlive &&
-                GhostWolf.KnownSpell &&
+                _ghostWolfSpell.KnownSpell &&
                 !Me.InCombatFlagOnly)
             {
-                GhostWolf.Launch();
+                _ghostWolfSpell.Launch();
                 Usefuls.WaitIsCasting();
             }
         }

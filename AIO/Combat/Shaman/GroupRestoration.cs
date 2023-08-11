@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,20 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationSpell("Chain Heal"), 12f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.RestorationChainHealGroup && o.GetDistance <= 40) >= Settings.Current.RestorationChainHealCountGroup && _tank?.HealthPercent >= 50.0, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Lesser Healing Wave"), 13f, (s,t) => t.HealthPercent <= Settings.Current.RestorationLesserHealingWaveGroup, RotationCombatUtil.FindPartyMember, checkLoS: true),
             new RotationStep(new RotationSpell("Healing Wave"), 14f, (s,t) => t.HealthPercent <= Settings.Current.RestorationHealingWaveGroup, RotationCombatUtil.FindPartyMember),
+            
             new RotationStep(new RotationSpell("Cure Toxins"), 14.1f, (s,t) => t.HaveImportantPoison() || t.HaveImportantDisease(), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Cure Toxins"), 15f, (s,t) => !Me.IsInGroup && t.HasDebuffType("Disease", "Poison"), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
+            
+            new RotationStep(new RotationSpell("Cure Toxins"), 15f, (s,t) =>
+                (RotationCombatUtil.IHaveCachedDebuff(DebuffType.Poison) || RotationCombatUtil.IHaveCachedDebuff(DebuffType.Disease))
+                && (Settings.Current.CureToxin == "Group" || Settings.Current.CureToxin == "Self"),
+                RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Cure Toxins"), 16f, (s,t) =>
+                Settings.Current.CureToxin == "Group",
+                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Poison, true, 30).FirstOrDefault()),
+            new RotationStep(new RotationSpell("Cure Toxins"), 17f, (s,t) =>
+                Settings.Current.CureToxin == "Group",
+                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, true, 30).FirstOrDefault()),
+
             new RotationStep(new RotationSpell("Earth Shock"), 19f, (s,t) => !Me.IsInGroup && !t.HaveMyBuff("Earth Shock"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lightning Bolt"), 20f, (s,t) => !Me.IsInGroup, RotationCombatUtil.BotTarget),
         };

@@ -1,5 +1,13 @@
 ﻿namespace AIO.Lists
 {
+    public enum DebuffType
+    {
+        Curse,
+        Magic,
+        Disease,
+        Poison
+    }
+
     public enum Spec
     {
         LowLevel,

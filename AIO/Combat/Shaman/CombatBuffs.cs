@@ -1,5 +1,4 @@
 ﻿using AIO.Combat.Addons;
-using AIO.Combat.Common;
 using AIO.Framework;
 using AIO.Lists;
 using AIO.Settings;
@@ -20,27 +19,28 @@ namespace AIO.Combat.Shaman
         private readonly Spell _flametongueWeaponSpell = new Spell("Flametongue Weapon");
         private readonly Spell _earthlivingWeaponSpell = new Spell("Earthliving Weapon");
         private readonly Spell _windfuryWeaponSpell = new Spell("Windfury Weapon");
-        private readonly BaseCombatClass CombatClass;
-        private readonly Totems Totems;
-        private Spec Spec => CombatClass.Specialisation;
+        private readonly ShamanBehavior _combatClass;
+        private readonly Totems _totemsAddon;
+        private Spec Spec => _combatClass.Specialisation;
 
         public bool RunOutsideCombat => true;
         public bool RunInCombat => true;
 
-        internal CombatBuffs(BaseCombatClass combatClass, Totems totems)
+        internal CombatBuffs(ShamanBehavior combatClass, Totems totemsAddon)
         {
-            CombatClass = combatClass;
-            Totems = totems;
+            _combatClass = combatClass;
+            _totemsAddon = totemsAddon;
         }
 
         public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationAction("Weapons Enchants", EnchantStep), 1f, 5000),
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 1f, 500),
 
             new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => !Me.IsMounted && (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
 
             new RotationStep(new RotationSpell("Totemic Recall"), 10f, (s,t) => !Me.IsMounted && Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Call of the Elements"), 11f, (s,t) => Fight.InFight && !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && Totems.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Call of the Elements"), 11f, (s,t) => Fight.InFight && !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && _totemsAddon.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Mana Tide Totem"), 20f, (s,t) => !Me.IsMounted && Me.ManaPercentage <= 30, RotationCombatUtil.FindMe),
 
@@ -48,7 +48,7 @@ namespace AIO.Combat.Shaman
                 !Me.IsInGroup &&
                 !Totems.HasAny("Stoneclaw Totem") &&
                 RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 20) >= 3, RotationCombatUtil.FindMe),
-            
+
             new RotationStep(new RotationSpell("Stoneclaw Totem"), 31f, (s,t) =>
                 !Me.IsInGroup &&
                 !Totems.HasAny("Earth Elemental Totem") &&
@@ -69,22 +69,23 @@ namespace AIO.Combat.Shaman
 
             new RotationStep(new RotationSpell("Cleansing Totem"), 50f, (s,t) =>
                 Settings.Current.UseCleansingTotem &&
-                RotationFramework.PartyMembers.Count(o =>
-                o.HasDebuffType("Poison","Disease")) > 0 &&
+                (RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Poison, false, 30).Count > 0 || RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, false, 30).Count > 0) &&
                 !Totems.HasAny("Cleansing Totem"), RotationCombatUtil.FindMe),
-            
+            /*
+             * There is no "Fear","Charm","Sleep" in debuffTypes
             new RotationStep(new RotationSpell("Tremor Totem"), 51f, (s,t) =>
                 RotationFramework.PartyMembers.Count(o =>
                 o.HasDebuffType("Fear","Charm","Sleep")) > 0, RotationCombatUtil.FindMe),
-            
+            */
             new RotationStep(new RotationSpell("Grounding Totem"), 52f, (s,t) =>
                 Settings.Current.UseGroundingTotem &&
                 RotationFramework.Enemies.Count(o => o.GetDistance < 30 && o.IsCast) > 0, RotationCombatUtil.FindMe),
-            
-            new RotationStep(new RotationSpell("Earthbind Totem"), 53f, (s,t) => 
+
+            new RotationStep(new RotationSpell("Earthbind Totem"), 53f, (s,t) =>
                 Settings.Current.UseEarthbindTotem &&
                 RotationFramework.Enemies.Count(o => o.GetDistance < 10 && o.CreatureTypeTarget=="Humanoid") > 0, RotationCombatUtil.FindMe)
         };
+
         public void Initialize() { }
         public void Dispose() { }
 

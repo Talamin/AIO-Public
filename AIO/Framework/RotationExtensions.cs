@@ -1,12 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using AIO.Lists;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using AIO.Helpers.Caching;
 using wManager.Wow.Class;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
-using AIO.Lists;
 using static AIO.Constants;
 
 namespace AIO.Framework
@@ -20,17 +19,14 @@ namespace AIO.Framework
             return RotationCombatUtil.ExecuteActionOnUnit(unit, (luaUnitId) =>
             {
                 var conditions = types.Select(type => $@"(debuffType == ""{type}"")").Aggregate((current, next) => $@"{current} or {next}");
-
                 string luaString = $@"
-                local hasDebuff = false;
-                for i=1,10 do
-                    local name, rank, iconTexture, count, debuffType, duration, timeLeft = UnitDebuff(""{luaUnitId}"", i);
-                    if ({conditions}) then
-                        hasDebuff = true;
-                        break;
+                    for i=1,10 do
+                        local name, rank, iconTexture, count, debuffType, duration, timeLeft = UnitDebuff(""{luaUnitId}"", i);
+                        if ({conditions}) then
+                            return true;
+                        end
                     end
-                end
-                return hasDebuff;";
+                    return false;";
                 return Lua.LuaDoString<bool>(luaString);
             });
         }

@@ -1,3 +1,5 @@
+using AIO.Framework;
+using AIO.Lists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,48 @@ namespace AIO.Helpers.Caching
                     ? threatSituation
                     : -1;
             }
+        }
+
+        public static Dictionary<DebuffType, List<WoWUnit>> GetLUADebuffedPartyMembers()
+        {
+            Dictionary<DebuffType, List<WoWUnit>> cachedDebuffedPlayers = new Dictionary<DebuffType, List<WoWUnit>>();
+            if (RotationFramework.PartyMembers.Length <= 0) return cachedDebuffedPlayers;
+
+            string partyMembersforLua = string.Join(", ", RotationFramework.PartyMembers.Select(m => $"'{m.Name}'"));
+
+            string lua = $@"
+                local result = {{}};
+                local playerNames = {{ {partyMembersforLua} }};
+                for key,name in pairs(playerNames) do
+                    for i=1,10 do
+                        local _, _, _, _, debuffType, _, _ = UnitDebuff(name, i);
+                        if (debuffType ~= nil and debuffType ~= '') then
+                            table.insert(result, debuffType .. '$' .. name);
+                        end
+                    end
+                end
+                return unpack(result);
+            ";
+
+            string[] debuffed = Lua.LuaDoString<string[]>(lua);
+            if (debuffed == null || debuffed.Length <= 0) return cachedDebuffedPlayers;
+
+            foreach (string debuff in debuffed.Where(d => !string.IsNullOrEmpty(d)))
+            {
+                string[] debuffedPlayer = debuff.Split('$');
+                string debuffType = debuffedPlayer[0];
+                string playerName = debuffedPlayer[1];
+                WoWPlayer debuffedWoWPlayer = RotationFramework.PartyMembers.FirstOrDefault(m => m.Name == playerName);
+                if (debuffedWoWPlayer != null && Enum.TryParse(debuffType, out DebuffType dbType))
+                {
+                    if (cachedDebuffedPlayers.ContainsKey(dbType))
+                        cachedDebuffedPlayers[dbType].Add(debuffedWoWPlayer);
+                    else
+                        cachedDebuffedPlayers.Add(dbType, new List<WoWUnit>() { debuffedWoWPlayer });
+                }
+            }
+
+            return cachedDebuffedPlayers;
         }
 
         public static void UpdateRaidGroups()

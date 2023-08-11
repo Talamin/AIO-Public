@@ -18,7 +18,6 @@ namespace AIO.Framework
 {
     public class RotationFramework : ICycleable
     {
-        private static readonly object _rotationLock = new object();
         //public static event EventHandler OnCacheUpdated;
         public static bool CacheDirectTransmission = false;
         //public static bool UseSynthetic = false;
@@ -30,6 +29,8 @@ namespace AIO.Framework
         private static readonly Queue<double> _combatRotationSpeed = new Queue<double>();
         private static readonly Queue<double> _oocRotationSpeed = new Queue<double>();
         private const int _maxRSpeedQueueSize = 25;
+        private static string _slowestStepName;
+        private static double _slowestStepTime;
 
         private static int LoSCreditsPlayers = 5;
         private static int LoSCreditsNPCs = 10;
@@ -73,7 +74,10 @@ namespace AIO.Framework
             if (averageSpeed > 70) color = Color.Yellow;
             if (averageSpeed > 150) color = Color.Orange;
             if (averageSpeed > 250) color = Color.Red;
-            Radar3D.DrawString($"{rotationName}: {averageSpeed}ms (Max: {max}ms)", new Vector3(150, 150, 0), 13, color, 255, FontFamily.GenericSerif);
+            Radar3D.DrawString($"Avg({_maxRSpeedQueueSize}) for {rotationName}: {averageSpeed}ms (Max: {max}ms)", new Vector3(250, 50, 0), 11, color, 255, FontFamily.GenericSerif);
+
+            if (!string.IsNullOrEmpty(_slowestStepName))
+                Radar3D.DrawString($"Slowest: {_slowestStepName} ({_slowestStepTime}ms)", new Vector3(250, 65, 0), 11, Color.LightCyan, 255, FontFamily.GenericSerif);
         }
 
         public void Dispose()
@@ -359,11 +363,13 @@ namespace AIO.Framework
                     ");
                 if (gcd > 0) return;
 
-                Stopwatch sw = Stopwatch.StartNew();
+                Stopwatch rotationWatch = Stopwatch.StartNew();
+                Dictionary<string, double> stepTimes = new Dictionary<string, double>();
                 // var watch = new Stopwatch();
                 for (ushort i = 0; i < rotation.Count; i++)
                 {
                     RotationStep step = rotation[i];
+                    Stopwatch stepWatch = Stopwatch.StartNew();
                     // watch.Restart();
                     try
                     {
@@ -374,15 +380,16 @@ namespace AIO.Framework
                     }
                     finally
                     {
+                        stepTimes.Add($"{i} - {step}", stepWatch.ElapsedMilliseconds);
                         if (caller == "Combat Rotation")
                         {
-                            _combatRotationSpeed.Enqueue(sw.ElapsedMilliseconds);
+                            _combatRotationSpeed.Enqueue(rotationWatch.ElapsedMilliseconds);
                             if (_combatRotationSpeed.Count > _maxRSpeedQueueSize) _combatRotationSpeed.Dequeue();
                             _oocRotationSpeed.Clear();
                         }
                         if (caller == "OOC Rotation")
                         {
-                            _oocRotationSpeed.Enqueue(sw.ElapsedMilliseconds);
+                            _oocRotationSpeed.Enqueue(rotationWatch.ElapsedMilliseconds);
                             if (_oocRotationSpeed.Count > _maxRSpeedQueueSize) _oocRotationSpeed.Dequeue();
                             _combatRotationSpeed.Clear();
                         }
@@ -393,6 +400,11 @@ namespace AIO.Framework
                         //     Stats[i].Add(watch.ElapsedMilliseconds);
                         // }
                     }
+                }
+                if (stepTimes.Count > 0)
+                {
+                    _slowestStepName = stepTimes.FirstOrDefault(x => x.Value == stepTimes.Values.Max()).Key;
+                    _slowestStepTime = stepTimes[_slowestStepName];
                 }
             }
             catch (Exception e)

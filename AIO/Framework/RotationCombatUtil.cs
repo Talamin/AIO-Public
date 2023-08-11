@@ -18,6 +18,34 @@ namespace AIO.Framework
 {
     public static class RotationCombatUtil
     {
+        private static Dictionary<DebuffType, List<WoWUnit>> _cachedDebuffedPlayers = new Dictionary<DebuffType, List<WoWUnit>>();
+        private static List<WoWUnit> _enemiesToInterrupt = new List<WoWUnit>();
+        public static bool CacheLUADebuffedPartyMembersStep()
+        {
+            _cachedDebuffedPlayers = LuaCache.GetLUADebuffedPartyMembers();
+            return false;
+        }
+
+        // Remember to call CacheLUADebuffedPartyMembersStep() before this method in your rotation
+        public static bool IHaveCachedDebuff(DebuffType debuffType)
+        {
+            if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
+                return players.Exists(p => p.Guid == Me.Guid);
+            return false;
+        }
+
+        // Remember to call CacheLUADebuffedPartyMembersStep() before this method in your rotation
+        public static List<WoWUnit> GetPartyMembersWithCachedDebuff(DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
+        {
+            if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
+            {
+                return players
+                    .Where(m => m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position)))
+                    .ToList();
+            }
+            return new List<WoWUnit>();
+        }
+
         private static readonly List<string> AreaSpells = new List<string> {
             "Death and Decay",
             "Mass Dispel",
@@ -216,19 +244,22 @@ namespace AIO.Framework
             FindEnemy(RotationFramework.PlayerUnits, predicate);
 
         public static WoWUnit FindEnemyCasting(Func<WoWUnit, bool> predicate) =>
-            FindEnemyCasting(RotationFramework.Enemies, predicate);
+            FindUnitCasting(RotationFramework.Enemies, predicate);
+
+        public static WoWUnit FindEnemyCastingWithLoS(Func<WoWUnit, bool> predicate) =>
+            FindUnitCastingWithLoS(RotationFramework.Enemies, predicate);
 
         public static WoWUnit FindPlayerCasting(Func<WoWUnit, bool> predicate) =>
-            FindEnemyCasting(RotationFramework.PlayerUnits, predicate);
+            FindUnitCasting(RotationFramework.PlayerUnits, predicate);
 
         public static WoWUnit FindEnemyCastingOnMe(Func<WoWUnit, bool> predicate) =>
-            FindEnemyCastingOnMe(RotationFramework.Enemies, predicate);
+            FindUnitCastingOnMe(RotationFramework.Enemies, predicate);
 
         public static WoWUnit FindEnemyCastingOnGroup(Func<WoWUnit, bool> predicate) =>
-            FindEnemyCastingOnGroup(RotationFramework.Enemies, predicate);
+            FindUnitCastingOnGroup(RotationFramework.Enemies, predicate);
 
         public static WoWUnit FindPlayerCastingOnMe(Func<WoWUnit, bool> predicate) =>
-            FindEnemyCastingOnMe(RotationFramework.PlayerUnits, predicate);
+            FindUnitCastingOnMe(RotationFramework.PlayerUnits, predicate);
 
         public static WoWUnit FindEnemyTargetingMe(Func<WoWUnit, bool> predicate) =>
             FindEnemyTargetingMe(RotationFramework.Enemies, predicate);
@@ -257,14 +288,16 @@ namespace AIO.Framework
                                  u.IsTargetingMeOrMyPetOrPartyMember &&
                                  predicate(u));
 
-        private static WoWUnit FindEnemyCasting(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
+        private static WoWUnit FindUnitCasting(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
             FindEnemy(units, u => predicate(u) && u.IsCast);
+        private static WoWUnit FindUnitCastingWithLoS(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
+            FindEnemy(units, u => predicate(u) && u.IsCast && !TraceLine.TraceLineGo(u.Position));
 
-        private static WoWUnit FindEnemyCastingOnMe(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
-            FindEnemyCasting(units, u => predicate(u) && u.IsTargetingMe);
+        private static WoWUnit FindUnitCastingOnMe(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
+            FindUnitCasting(units, u => predicate(u) && u.IsTargetingMe);
 
-        private static WoWUnit FindEnemyCastingOnGroup(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
-            FindEnemyCasting(units, u => u.IsTargetingPartyMember && predicate(u));
+        private static WoWUnit FindUnitCastingOnGroup(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
+            FindUnitCasting(units, u => u.IsTargetingPartyMember && predicate(u));
 
         private static WoWUnit FindEnemyTargetingMe(IEnumerable<WoWUnit> units, Func<WoWUnit, bool> predicate) =>
             FindEnemy(units, u => predicate(u) && u.IsTargetingMe);
@@ -432,10 +465,7 @@ namespace AIO.Framework
         public static T ExecuteActionOnTarget<T>(ulong target, Func<string, T> action)
         {
             if (target == Me.Guid) return action("player");
-
             if (target == Target.Guid) return action("target");
-
-
             SetMouseoverGuid(target);
             return action("mouseover");
         }
