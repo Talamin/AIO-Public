@@ -20,6 +20,7 @@ namespace AIO.Framework
         private readonly string _name;
         private Timer _forcedTimer;
         private readonly int _forcedTimerMs;
+        private readonly bool _preventDoubleCast;
 
         public RotationStep(IRotationAction action,
             float priority,
@@ -30,7 +31,8 @@ namespace AIO.Framework
             bool forceCast = false,
             bool checkRange = true,
             bool checkLoS = false,
-            int forcedTimerMS = 0)
+            int forcedTimerMS = 0,
+            bool preventDoubleCast = false)
         {
             _action = action;
             _priority = priority;
@@ -42,6 +44,7 @@ namespace AIO.Framework
             _checkRange = checkRange;
             _checkLoS = checkLoS;
             _forcedTimerMs = forcedTimerMS;
+            _preventDoubleCast = preventDoubleCast;
 
             _name = action.GetType().FullName;
             if (_action is RotationSpell spell)
@@ -62,9 +65,10 @@ namespace AIO.Framework
             bool forceCast = false,
             bool checkRange = true,
             bool checkLoS = false,
-            int forcedTimerMS = 0) :
+            int forcedTimerMS = 0,
+            bool preventDoubleCast = false) :
             this(action, priority, targetPredicate, (_) => true, targetFinder, exclusive, forceCast, checkRange,
-                checkLoS, forcedTimerMS)
+                checkLoS, forcedTimerMS, preventDoubleCast)
         { }
 
         // For code execution
@@ -205,5 +209,6 @@ namespace AIO.Framework
         public override string ToString() => $"[{_priority}] {_name}";
 
         public Exclusive Exclusive { get; }
+        public bool PreventDoubleCast => _preventDoubleCast;
     }
 }

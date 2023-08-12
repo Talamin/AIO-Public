@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using wManager.Events;
 using wManager.Wow;
 using wManager.Wow.Helpers;
@@ -31,6 +32,7 @@ namespace AIO.Framework
         private const int _maxRSpeedQueueSize = 25;
         private static string _slowestStepName;
         private static double _slowestStepTime;
+        private static bool _shouldPreventDoubleCast;
 
         private static int LoSCreditsPlayers = 5;
         private static int LoSCreditsNPCs = 10;
@@ -356,12 +358,16 @@ namespace AIO.Framework
                 // if(_ticks % 500 == 0) PrintStats();
 
                 var exclusives = new Exclusives();
-                // Experimental GCD wait
-                int gcd = Lua.LuaDoString<int>($@"
-                        local startTime, duration, enabled = GetSpellCooldown(61304);
-                        return (duration - (GetTime() - startTime)) * 1000;
-                    ");
-                if (gcd > 0) return;
+
+                if (GCDIsActive()) return;
+
+                if (_shouldPreventDoubleCast)
+                {
+                    Thread.Sleep(150);
+                    UpdateCache();
+                    Cache.Reset();
+                    _shouldPreventDoubleCast = false;
+                }
 
                 Stopwatch rotationWatch = Stopwatch.StartNew();
                 Dictionary<string, double> stepTimes = new Dictionary<string, double>();
@@ -375,6 +381,7 @@ namespace AIO.Framework
                     {
                         if (step.Execute(gcdEnabled, exclusives))
                         {
+                            _shouldPreventDoubleCast = step.PreventDoubleCast;
                             break;
                         }
                     }
@@ -423,7 +430,7 @@ namespace AIO.Framework
 
             return 0;
         }
-
+        
         public static bool SpellReady(uint spellid)
         {
             return SpellCooldownTimeLeft(spellid) <= 0;
@@ -439,7 +446,7 @@ namespace AIO.Framework
 
             return 0;
         }
-
+        
         public struct SpellCooldown
         {
             public uint SpellId;
@@ -456,6 +463,38 @@ namespace AIO.Framework
             }
         }
 
+        public static bool GCDIsActiveLUA()
+        {
+            int gcd = Lua.LuaDoString<int>($@"
+                        local startTime, duration, enabled = GetSpellCooldown(61304);
+                        return (duration - (GetTime() - startTime)) * 1000;
+                    ");
+            return gcd > 0;
+        }
+
+        public static bool GCDIsActive()
+        {
+            // based on https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/248891-3-1-3-info-getting-spell-cooldowns-3.html#post1780758
+            var now = Memory.WowMemory.Memory.ReadInt32(0xCD76AC);
+            uint currentListObject = Memory.WowMemory.Memory.ReadPtr(0xD3F5AC + 8);
+
+            while ((currentListObject != 0) && ((currentListObject & 1) == 0))
+            {
+                int start = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x10));
+                int cd1 = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x14));
+                int cd2 = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x20));
+                int length = cd1 + cd2;
+                int globalLength = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x2C));
+                int cdleft = Math.Max(Math.Max(length, globalLength) - (now - start), 0);
+
+                if (cdleft > 0 && cdleft <= 1500 && globalLength >= 1000 && globalLength <= 1500)
+                    return true;
+
+                currentListObject = Memory.WowMemory.Memory.ReadPtr(currentListObject + 4);
+            }
+            return false;
+        }
+        
         public static IEnumerable<SpellCooldown> SpellCooldownTimeLeft()
         {
             // based on https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/248891-3-1-3-info-getting-spell-cooldowns-3.html#post1780758
@@ -474,11 +513,11 @@ namespace AIO.Framework
                 int length = cd1 + cd2;
                 int globalLength = Memory.WowMemory.Memory.ReadInt32((currentListObject + 0x2C));
 
-                int cdleft = System.Math.Max(System.Math.Max(length, globalLength) - (now - start), 0);
+                int cdleft = Math.Max(Math.Max(length, globalLength) - (now - start), 0);
 
                 if (cdleft > 0)
                 {
-                    yield return new SpellCooldown(currentSpellId, cdleft, start, System.Math.Max(length, globalLength));
+                    yield return new SpellCooldown(currentSpellId, cdleft, start, Math.Max(length, globalLength));
                 }
 
                 currentListObject = Memory.WowMemory.Memory.ReadPtr(currentListObject + 4);

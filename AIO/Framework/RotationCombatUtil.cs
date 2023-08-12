@@ -405,43 +405,34 @@ namespace AIO.Framework
 
         public static bool CastSpell(RotationSpell spell, WoWUnit unit, bool force)
         {
-            try
-            {
-                if (unit == null ||
-                    !spell.KnownSpell ||
-                    !spell.IsSpellUsable ||
-                    !unit.IsValid ||
-                    unit.IsDead ||
-                    wManagerSetting.CurrentSetting.IgnoreFightGoundMount && Me.IsMounted && !LaggyTransports.Entries.Contains(ObjectManager.GetObjectByGuid(Me.TransportGuid).Entry))
-                    return false;
-
-                //Lua.LuaDoString("if IsMounted() then Dismount() end");
-                if (spell.CastTime > 0.0 && Me.GetMove)
-                {
-                    if (freeMove) return false;
-                    MovementManager.StopMoveTo(false, (int)(spell.CastTime * 1000));
-                }
-
-                if (!force && Me.IsCast) return false;
-
-                if (force) StopCasting();
-
-                RotationLogger.Fight($"Casting {spell.Name} on {unit.Name} [{unit.Guid}]");
-                SpellManager.CastSpellByNameOn(spell.Name, GetLuaId(unit));
-                if (AreaSpells.Contains(spell.Name)) ClickOnTerrain.Pulse(unit.Position);
-
-                // Usefuls.WaitIsCasting();
-                TimeSinceLastCast.Restart();
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logging.WriteError($"{e.Message} \n{e.StackTrace}", true);
+            if (unit == null ||
+                !spell.KnownSpell ||
+                !spell.IsSpellUsable ||
+                !unit.IsValid ||
+                unit.IsDead ||
+                wManagerSetting.CurrentSetting.IgnoreFightGoundMount && Me.IsMounted && !LaggyTransports.Entries.Contains(ObjectManager.GetObjectByGuid(Me.TransportGuid).Entry))
                 return false;
+
+            //Lua.LuaDoString("if IsMounted() then Dismount() end");
+            if (spell.CastTime > 0.0 && Me.GetMove)
+            {
+                if (freeMove) return false;
             }
+
+            if (!force && Me.IsCast) return false;
+
+            if (force) StopCasting();
+
+            RotationLogger.Fight($"Casting {spell.Name} on {unit.Name} [{unit.Guid}]");
+            SpellManager.CastSpellByNameOn(spell.Name, GetLuaId(unit));
+            if (AreaSpells.Contains(spell.Name)) ClickOnTerrain.Pulse(unit.Position);
+
+            // Usefuls.WaitIsCasting();
+            //TimeSinceLastCast.Restart();
+            return true;
         }
 
-        public static readonly Stopwatch TimeSinceLastCast = Stopwatch.StartNew();
+        //public static readonly Stopwatch TimeSinceLastCast = Stopwatch.StartNew();
 
         public static void StopCasting()
         {

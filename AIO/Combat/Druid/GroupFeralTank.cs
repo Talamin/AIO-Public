@@ -22,7 +22,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Frenzied Regeneration"), 2.2f, (s, t) => Me.HealthPercent < 60, RotationCombatUtil.FindMe),
 
             // Berserk Mangle Spam
-            new RotationStep(new RotationSpell("Mangle (Bear)"), 2.3f, (s, t) => Me.CHaveBuff("Berserk"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Mangle (Bear)"), 2.3f, (s, t) => Me.CHaveBuff("Berserk"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Berserk"), 2.4f, (s,t) => RotationFramework.Enemies.Count(o => t.HasTarget && !o.IsTargetingMe && o.Position.DistanceTo(Me.Position) <= 8) >= 2, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Feral Charge - Bear"), 2.5f, (s,t) => t.GetDistance > 7 && t.HasTarget && !t.IsTargetingMe && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7) && Settings.Current.GroupFeralCharge, RotationCombatUtil.BotTargetFast),

@@ -68,22 +68,24 @@ public static class PetManager
             }
         }
     }
-    public static string CurrentWarlockPet => Lua.LuaDoString<string>
-        ($"for i=1,10 do " +
-            "local name, _, _, _, _, _, _ = GetPetActionInfo(i); " +
-            "if name == 'Firebolt' then " +
-            "return 'Imp' " +
-            "end " +
-            "if name == 'Torment' then " +
-            "return 'Voidwalker' " +
-            "end " +
-            "if name == 'Anguish' then " +
-            "return 'Felguard' " +
-            "end " +
-            "if name == 'Devour Magic' then " +
-            "return 'Felhunter' " +
-            "end " +
-        "end");
+    public static string GetCurrentWarlockPetLUA => Lua.LuaDoString<string>
+        ($@"
+            for i=1,10 do
+                local name, _, _, _, _, _, _ = GetPetActionInfo(i);
+                if name == 'Firebolt' then
+                    return 'Imp';
+                end
+                if name == 'Torment' then
+                    return 'Voidwalker';
+                end
+                if name == 'Anguish' then
+                    return 'Felguard';
+                end
+                if name == 'Devour Magic' then
+                    return 'Felhunter';
+                end
+            end
+            return 'None';");
     #endregion
 }
 

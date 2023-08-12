@@ -338,6 +338,7 @@
     <Compile Include="Combat\Shaman\Totems.cs" />
     <Compile Include="Combat\Warlock\GroupAffliction.cs" />
     <Compile Include="Combat\Warlock\GroupDestruction.cs" />
+    <Compile Include="Combat\Warlock\PetHandler.cs" />
     <Compile Include="Combat\Warlock\SoloAffliction.cs" />
     <Compile Include="Combat\Warlock\OOCBuffs.cs" />
     <Compile Include="Combat\Warlock\SoloDemonology.cs" />
