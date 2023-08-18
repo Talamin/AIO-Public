@@ -19,6 +19,7 @@ namespace AIO.Combat.Priest
                 { Spec.Priest_GroupHoly, new GroupHoly() },
                 { Spec.Priest_GroupDiscipline, new GroupDiscipline() },
                 { Spec.Priest_SoloShadow, new SoloShadow() },
+                { Spec.Priest_GroupShadow, new GroupShadow() },
                 { Spec.Fallback, new SoloShadow() },
             })
         {
@@ -30,6 +31,7 @@ namespace AIO.Combat.Priest
             switch (Specialisation)
             {
                 case Spec.Priest_GroupHoly:
+                case Spec.Priest_SoloShadow:
                     Addons.Add(new SlowLuaCaching());
                     break;
             }
