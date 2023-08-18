@@ -44,6 +44,7 @@
         Priest_GroupDiscipline,
         Priest_GroupHoly,
         Priest_SoloShadow,
+        Priest_GroupShadow,
         // Rogue
         Rogue_GroupCombat,
         Rogue_SoloAssassination,

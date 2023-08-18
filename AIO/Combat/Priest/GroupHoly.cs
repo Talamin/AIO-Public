@@ -56,22 +56,20 @@ namespace AIO.Combat.Priest
 
             // Cast Guardian Spirit on tank if he's about to die (Interrupts)
             new RotationStep(new RotationSpell("Guardian Spirit"), 1.0f,
-                (action, tank) => tank.InCombat && tank.HealthPercent < Settings.Current.HolyGuardianSpiritTresh &&
+                (action, tank) => tank.InCombat && tank.HealthPercent < Settings.Current.GroupHolyGuardianSpiritTresh &&
                                   !tank.CHaveBuff("Guardian Spirit"),
                 FindTank, forceCast: true),
 
             // Cast Guardian Spirit on me if I'm about to die (Interrupts)
-            new RotationStep(new RotationSpell("Guardian Spirit"), 1.1f,
-                RotationCombatUtil.Always,
-                action => !_isSpirit && Me.InCombat && Me.HealthPercent < Settings.Current.HolyGuardianSpiritTresh &&
+            new RotationStep(new RotationSpell("Guardian Spirit"), 1.1f, RotationCombatUtil.Always,
+                action => !_isSpirit && Me.InCombat && Me.HealthPercent < Settings.Current.GroupHolyGuardianSpiritTresh &&
                           !Me.CHaveBuff("Guardian Spirit"),
                 RotationCombatUtil.FindMe,
                 forceCast: true, checkRange: false),
             
             // Cast Fear Ward on myself if enemy is casting a fear inducing spell on me (Interrupts)
-            new RotationStep(new RotationSpell("Fear Ward"), 1.2f,
-                RotationCombatUtil.Always,
-                action => !_isSpirit && Settings.Current.HolyProtectAgainstFear &&
+            new RotationStep(new RotationSpell("Fear Ward"), 1.2f, RotationCombatUtil.Always,
+                action => !_isSpirit && Settings.Current.GroupHolyProtectAgainstFear &&
                           Me.BuffTimeLeft("Fear Ward") < 3000 &&
                           anyoneCastingFearSpellOnMe(CastingOnMeOrGroup),
                 RotationCombatUtil.FindMe,
@@ -95,7 +93,7 @@ namespace AIO.Combat.Priest
             new RotationStep(new RotationSpell("Fear Ward"), 1.5f,
                 (action, tank) => tank.BuffTimeLeft("Fear Ward") < 3000 &&
                                   anyoneCastingFearSpellOnUnit(tank, CastingOnMeOrGroup),
-                action => Settings.Current.HolyProtectAgainstFear,
+                action => Settings.Current.GroupHolyProtectAgainstFear,
                 FindTank),
 
             // Do nothing if the NOP condition is met
@@ -123,9 +121,9 @@ namespace AIO.Combat.Priest
                 (action, enemy) => !enemy.InCombat && !enemy.IsMyTarget && !enemy.PlayerControlled &&
                                    enemy.IsAttackable && enemy.IsCreatureType("Humanoid") &&
                                    enemy.BuffTimeLeft("Mind Soothe") < 1000 && enemy.GetDistance - enemy.AggroDistance <
-                                   Settings.Current.HolyMindSootheDistance,
+                                   Settings.Current.GroupHolyMindSootheDistance,
                 action => !_isSpirit && _shouldCastOffTank && Me.CManaPercentage() > 50 &&
-                          Settings.Current.HolyUseMindSoothe,
+                          Settings.Current.GroupHolyUseMindSoothe,
                 RotationCombatUtil.FindEnemy),
 
             // Cast Psychic Scream if we're still being attacked by more than 2 enemies which are in range
@@ -138,7 +136,7 @@ namespace AIO.Combat.Priest
             new RotationStep(new RotationSpell("Shackle Undead"), 2.3f,
                 (action, enemy) => enemy.IsCreatureType("Undead") && enemy.GetDistance > enemy.CombatReach,
                 action => !_isSpirit && Me.CManaPercentage() > 50 && _shouldCastOffTank &&
-                          Settings.Current.HolyShackleUndead &&
+                          Settings.Current.GroupHolyShackleUndead &&
                           CanShackleNew(),
                 predicate => EnemiesTargetingMe.FirstOrDefault(predicate)),
 
@@ -154,7 +152,7 @@ namespace AIO.Combat.Priest
 
             // Cast Big Single Target Heal on Tank
             new RotationStep(_slowHealSpell, 3.00f,
-                (action, tank) => tank.HealthPercent < Settings.Current.HolyBigSingleTargetHeal &&
+                (action, tank) => tank.HealthPercent < Settings.Current.GroupHolyBigSingleTargetHeal &&
                                   (_groupInCombat && Me.BuffStack("Serendipity") >= 2 || _isSpirit &&
                                       Me.BuffStack("Serendipity") >= 3 || !_groupInCombat),
                 FindTank),
@@ -173,8 +171,8 @@ namespace AIO.Combat.Priest
 
             // Cast Binding Heal on me and tank
             new RotationStep(new RotationSpell("Binding Heal"), 3.03f,
-                (action, tank) => tank.HealthPercent < Settings.Current.HolyBindingHealTresh,
-                action => !_isSpirit && Me.HealthPercent < Settings.Current.HolyBindingHealTresh,
+                (action, tank) => tank.HealthPercent < Settings.Current.GroupHolyBindingHealTresh,
+                action => !_isSpirit && Me.HealthPercent < Settings.Current.GroupHolyBindingHealTresh,
                 FindTank),
 
             // Cast renew on tank
@@ -184,7 +182,7 @@ namespace AIO.Combat.Priest
 
             // Cast Big Single Target Heal on Me
             new RotationStep(_slowHealSpell, 3.04f,
-                (action, me) => !_isSpirit && me.HealthPercent < Settings.Current.HolyBigSingleTargetHeal - 5
+                (action, me) => !_isSpirit && me.HealthPercent < Settings.Current.GroupHolyBigSingleTargetHeal - 5
                                            && (_groupInCombat && Me.BuffStack("Serendipity") >= 2 || !_groupInCombat),
                 RotationCombatUtil.FindMe),
 
@@ -195,9 +193,9 @@ namespace AIO.Combat.Priest
 
             // Cast Binding Heal on me and party member
             new RotationStep(new RotationSpell("Binding Heal"), 3.06f,
-                (action, partyMember) => partyMember.HealthPercent < Settings.Current.HolyBindingHealTresh,
+                (action, partyMember) => partyMember.HealthPercent < Settings.Current.GroupHolyBindingHealTresh,
                 action => !_isSpirit && (_ignoreManaManagementOoc || _shouldCastOffTank) &&
-                          Me.HealthPercent < Settings.Current.HolyBindingHealTresh,
+                          Me.HealthPercent < Settings.Current.GroupHolyBindingHealTresh,
                 RotationCombatUtil.FindExplicitPartyMember),
 
             // Cast renew on me
@@ -209,9 +207,9 @@ namespace AIO.Combat.Priest
             // Cast Prayer of Mending on party members
             new RotationStep(new RotationSpell("Prayer of Mending"), 3.09f,
                 (action, partyMember) => partyMember.InCombat &&
-                                         partyMember.HealthPercent < Settings.Current.HolyPrayerOfMendingTresh &&
+                                         partyMember.HealthPercent < Settings.Current.GroupHolyPrayerOfMendingTresh &&
                                          RotationCombatUtil.CCountAlivePartyMembers(player =>
-                                             player.HealthPercent < Settings.Current.HolyPrayerOfMendingTresh &&
+                                             player.HealthPercent < Settings.Current.GroupHolyPrayerOfMendingTresh &&
                                              partyMember.Position.DistanceTo(player.Position) < 20) >= 2,
                 action => _shouldCastOffTank &&
                           !RotationFramework.PartyMembers.Any(player => player.HaveMyBuff("Prayer of Mending")),
@@ -221,13 +219,13 @@ namespace AIO.Combat.Priest
             new RotationStep(new RotationSpell("Circle of Healing"), 3.10f, RotationCombatUtil.Always,
                 action => (_isSpirit || _ignoreManaManagementOoc || _shouldCastOffTank) &&
                           RotationCombatUtil.CCountAlivePartyMembers(partyMember =>
-                              partyMember.HealthPercent < Settings.Current.HolyCircleOfHealingTresh &&
+                              partyMember.HealthPercent < Settings.Current.GroupHolyCircleOfHealingTresh &&
                               partyMember.GetDistance < 18) > 2,
                 RotationCombatUtil.FindMe),
 
             // Cast Big Single Target Heal on Party Member
             new RotationStep(_slowHealSpell, 3.11f,
-                (action, partyMember) => partyMember.HealthPercent < Settings.Current.HolyBigSingleTargetHeal - 15,
+                (action, partyMember) => partyMember.HealthPercent < Settings.Current.GroupHolyBigSingleTargetHeal - 15,
                 action => _isSpirit || _ignoreManaManagementOoc || _shouldCastOffTank ||
                           Me.BuffStack("Serendipity") >= 2,
                 RotationCombatUtil.FindExplicitPartyMember),
@@ -284,7 +282,7 @@ namespace AIO.Combat.Priest
             new RotationStep(new RotationSpell("Fear Ward"), 5.0f,
                 (action, partyMember) => partyMember.BuffTimeLeft("Fear Ward") < 3000 &&
                                          anyoneCastingFearSpellOnUnit(partyMember, CastingOnMeOrGroup),
-                action => _tank == null && Settings.Current.HolyProtectAgainstFear, // low mana usage - off tank is ok
+                action => _tank == null && Settings.Current.GroupHolyProtectAgainstFear, // low mana usage - off tank is ok
                 RotationCombatUtil.FindExplicitPartyMember),
 
             /*
@@ -337,7 +335,7 @@ namespace AIO.Combat.Priest
             // Cast Mass Dispel if we find an AoE position which is cheaper than dispelling individually
             new RotationStep(new RotationSpell("Mass Dispel"), 7.0f,
                 RotationCombatUtil.Always,
-                action => Settings.Current.HolyDeDeBuff &&
+                action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || _shouldCastOffTank) &&
                           RotationFramework.PartyMembers.Count(partyMember =>
                               partyMember.HasDebuffType("Magic")) >= 3,
@@ -347,31 +345,31 @@ namespace AIO.Combat.Priest
             // Dispel Magic from me
             new RotationStep(new RotationSpell("Dispel Magic"), 7.1f,
                 (action, me) => me.HasDebuffType("Magic"),
-                action => Settings.Current.HolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
+                action => Settings.Current.GroupHolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
                 RotationCombatUtil.FindMe),
 
             // Remove Disease from me
             new RotationStep(_diseaseSpell, 7.2f,
                 (action, me) => !Me.CHaveBuff("Abolish Disease") && me.HasDebuffType("Disease"),
-                action => Settings.Current.HolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
+                action => Settings.Current.GroupHolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
                 RotationCombatUtil.FindMe),
 
             // Dispel Magic from the tank
             new RotationStep(new RotationSpell("Dispel Magic"), 7.3f,
                 (action, tank) => tank.HasDebuffType("Magic"),
-                action => Settings.Current.HolyDeDeBuff &&
+                action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || Me.CManaPercentage() > 40), FindTank),
 
             // Remove Disease from tank
             new RotationStep(_diseaseSpell, 7.4f,
                 (action, tank) => !tank.CHaveBuff("Abolish Disease") && tank.HasDebuffType("Disease"),
-                action => Settings.Current.HolyDeDeBuff &&
+                action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || Me.CManaPercentage() > 40), FindTank),
 
             // Dispel Magic from party members
             new RotationStep(new RotationSpell("Dispel Magic"), 7.5f,
                 (action, partyMember) => partyMember.HasDebuffType("Magic"),
-                action => Settings.Current.HolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
+                action => Settings.Current.GroupHolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
                                                             _shouldCastOffTank && Me.CManaPercentage() > 40),
                 RotationCombatUtil.FindExplicitPartyMember),
 
@@ -379,7 +377,7 @@ namespace AIO.Combat.Priest
             new RotationStep(_diseaseSpell, 7.6f,
                 (action, partyMember) =>
                     !partyMember.CHaveBuff("Abolish Disease") && partyMember.HasDebuffType("Disease"),
-                action => Settings.Current.HolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
+                action => Settings.Current.GroupHolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
                                                             _shouldCastOffTank && Me.CManaPercentage() > 40),
                 RotationCombatUtil.FindExplicitPartyMember)
         };
@@ -397,12 +395,12 @@ namespace AIO.Combat.Priest
                 if (enemy.IsCast && enemy.IsTargetingMeOrMyPetOrPartyMember) CastingOnMeOrGroup.AddLast(enemy);
             }
 
-            _tank = FindExplicitPartyMemberByName(Settings.Current.HolyCustomTank) ??
+            _tank = FindExplicitPartyMemberByName(Settings.Current.GroupHolyCustomTank) ??
                     RotationCombatUtil.FindTank(unit => true);
             _shouldCastOffTank = _tank == null || _tank.IsDead || TraceLine.TraceLineGo(_tank.Position) ||
-                                 Me.CManaPercentage() > Settings.Current.HolyOffTankCastingMana;
+                                 Me.CManaPercentage() > Settings.Current.GroupHolyOffTankCastingMana;
             _groupInCombat = RotationFramework.PartyMembers.Any(partyMember => partyMember.InCombat);
-            _ignoreManaManagementOoc = !_groupInCombat && Settings.Current.HolyIgnoreManaManagementOOC;
+            _ignoreManaManagementOoc = !_groupInCombat && Settings.Current.GroupHolyIgnoreManaManagementOOC;
             _isSpirit = Me.CHaveBuff("Spirit of Redemption");
             _castDivineHymn = ShouldCastDivineHymn();
             return false;
@@ -424,7 +422,7 @@ namespace AIO.Combat.Priest
         private static bool ShouldCastPrayerOfHealing()
         {
             return RotationCombatUtil.CCountAlivePartyMembers(partyMember =>
-                partyMember.HealthPercent < Settings.Current.HolyPrayerOfHealingTresh &&
+                partyMember.HealthPercent < Settings.Current.GroupHolyPrayerOfHealingTresh &&
                 partyMember.GetDistance < 36) > 2;
         }
 
@@ -468,18 +466,18 @@ namespace AIO.Combat.Priest
         private static bool ShouldCastDivineHymn() =>
             RotationCombatUtil.CCountAlivePartyMembers(partyMember =>
                 partyMember.GetDistance < 48 &&
-                partyMember.HealthPercent < Settings.Current.HolyDivineHymnTresh) > 2;
+                partyMember.HealthPercent < Settings.Current.GroupHolyDivineHymnTresh) > 2;
 
         private static CancelableSpell FindCorrectSlowHealSpell()
         {
             if (SpellManager.KnowSpell("Greater Heal"))
                 return new CancelableSpell("Greater Heal",
-                    unit => unit.HealthPercent > Settings.Current.HolyBigSingleTargetHeal + 15);
+                    unit => unit.HealthPercent > Settings.Current.GroupHolyBigSingleTargetHeal + 15);
             return SpellManager.KnowSpell("Heal")
                 ? new CancelableSpell("Heal",
-                    unit => unit.HealthPercent > Settings.Current.HolyBigSingleTargetHeal + 15)
+                    unit => unit.HealthPercent > Settings.Current.GroupHolyBigSingleTargetHeal + 15)
                 : new CancelableSpell("Lesser Heal",
-                    unit => unit.HealthPercent > Settings.Current.HolyBigSingleTargetHeal + 15);
+                    unit => unit.HealthPercent > Settings.Current.GroupHolyBigSingleTargetHeal + 15);
         }
 
         private static CancelableSpell FindCorrectFastHealSpell() =>

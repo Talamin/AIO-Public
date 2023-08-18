@@ -76,7 +76,7 @@ namespace AIO.Helpers {
         }
 
         private static void LogCurrentData() {
-            Logging.Write($"Current custom tank: < {PriestLevelSettings.Current.HolyCustomTank} >");
+            Logging.Write($"Current custom tank: < {PriestLevelSettings.Current.GroupHolyCustomTank} >");
             Logging.Write(" ### Logging statistical values ### ");
             foreach (KeyValuePair<uint, StatisticEntry> entry in CombatLogger.GetDictionary()) {
                 Logging.Write($"{new Spell(entry.Key).Name}: {entry.Value.Average} ({entry.Value.Count})");
@@ -85,7 +85,7 @@ namespace AIO.Helpers {
 
         private static void ForceNewTank() {
             string tankName = ObjectManager.Me.TargetObject?.Name ?? "";
-            PriestLevelSettings.Current.HolyCustomTank = tankName;
+            PriestLevelSettings.Current.GroupHolyCustomTank = tankName;
             Logging.Write($"[Hotkey] Set custom tank to: < {tankName} >");
         }
     }
