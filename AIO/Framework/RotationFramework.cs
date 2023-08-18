@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Helpers.Caching;
+using AIO.Settings;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,9 @@ namespace AIO.Framework
         public static bool CacheDirectTransmission = false;
         //public static bool UseSynthetic = false;
 
-        private static bool UseFramelock = true;
+        private static bool _useFramelock = true;
 
-        private static int ScanRange = 50;
+        private static int _scanRange = 50;
 
         private static readonly Queue<double> _combatRotationSpeed = new Queue<double>();
         private static readonly Queue<double> _oocRotationSpeed = new Queue<double>();
@@ -34,15 +35,17 @@ namespace AIO.Framework
         private static double _slowestStepTime;
         private static bool _shouldPreventDoubleCast;
 
-        private static int LoSCreditsPlayers = 5;
-        private static int LoSCreditsNPCs = 10;
+        private static int _loSCreditsPlayers = 5;
+        private static int _loSCreditsNPCs = 10;
+        private static bool _devMode;
 
-        public static void Setup(bool framelock = true, int losCreditsPlayers = 5, int losCreditsNPCs = 10, int scanRange = 50)
+        public static void Setup(BaseSettings baseSettings)
         {
-            UseFramelock = framelock;
-            ScanRange = scanRange;
-            LoSCreditsPlayers = losCreditsPlayers;
-            LoSCreditsNPCs = losCreditsNPCs;
+            _useFramelock = baseSettings.FrameLock;
+            _scanRange = baseSettings.ScanRange;
+            _loSCreditsPlayers = baseSettings.LoSCreditsPlayers;
+            _loSCreditsNPCs = baseSettings.LoSCreditsNPCs;
+            _devMode = baseSettings.DevMode;
         }
 
         public void Initialize()
@@ -51,8 +54,11 @@ namespace AIO.Framework
             DetectHealAndTank();
             ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs += OnEventsLuaStringWithArgs;
-            if (!Radar3D.IsLaunched) Radar3D.Pulse();
-            Radar3D.OnDrawEvent += Draw;
+            if (_devMode)
+            {
+                if (!Radar3D.IsLaunched) Radar3D.Pulse();
+                Radar3D.OnDrawEvent += Draw;
+            }
         }
 
         private void Draw()
@@ -86,8 +92,11 @@ namespace AIO.Framework
         {
             ObjectManagerEvents.OnObjectManagerPulsed -= OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs -= OnEventsLuaStringWithArgs;
-            Radar3D.OnDrawEvent -= Draw;
-            Radar3D.Stop();
+            if (_devMode)
+            {
+                Radar3D.OnDrawEvent -= Draw;
+                Radar3D.Stop();
+            }
         }
 
         private readonly TimeSpan UpdateCacheMaxDelay = new TimeSpan(hours: 0, minutes: 0, seconds: 3);
@@ -177,7 +186,7 @@ namespace AIO.Framework
             for (var i = 0; i < omUnits.Count; i++)
             {
                 WoWUnit unit = omUnits[i];
-                if (ScanRange != 0 && myPosition.DistanceTo(unit.PositionWithoutType) > ScanRange)
+                if (_scanRange != 0 && myPosition.DistanceTo(unit.PositionWithoutType) > _scanRange)
                 {
                     continue;
                 }
@@ -200,7 +209,7 @@ namespace AIO.Framework
             for (var i = 0; i < omPlayers.Count; i++)
             {
                 WoWPlayer player = omPlayers[i];
-                if (ScanRange != 0 && myPosition.DistanceTo(player.PositionWithoutType) > ScanRange)
+                if (_scanRange != 0 && myPosition.DistanceTo(player.PositionWithoutType) > _scanRange)
                 {
                     continue;
                 }
@@ -293,7 +302,7 @@ namespace AIO.Framework
                 return;
             }
 
-            if (UseFramelock)
+            if (_useFramelock)
             {
                 RunInFrameLock(action);
             }

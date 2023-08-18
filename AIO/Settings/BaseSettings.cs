@@ -64,6 +64,13 @@ namespace AIO.Settings
         public bool FreeMove { get; set; }
 
         [Setting]
+        [DefaultValue(false)]
+        [Category("General")]
+        [DisplayName("Dev Mode")]
+        [Description("For developers only")]
+        public bool DevMode { get; set; }
+
+        [Setting]
         [DefaultValue(true)]
         [Category("General")]
         [DisplayName("Backwards")]
@@ -110,6 +117,7 @@ namespace AIO.Settings
             AssignTalents = true;
             TalentCodes = new List<string> { };
             UseDefaultTalents = true;
+            DevMode = false;
 
             ChooseRotation = Extension.DefaultRotations[ObjectManager.Me.WowClass]; // Default rotation      
         }
@@ -125,7 +133,7 @@ namespace AIO.Settings
             }
 
             TalentsManager.Set(AssignTalents, UseDefaultTalents, TalentCodes.ToArray(), (Spec)Enum.Parse(typeof(Spec), ChooseRotation));
-            RotationFramework.Setup(framelock: FrameLock, losCreditsPlayers: LoSCreditsPlayers, losCreditsNPCs: LoSCreditsNPCs, scanRange: ScanRange);
+            RotationFramework.Setup(this);
             RotationCombatUtil.freeMove = FreeMove;
             //RotationFramework.UseSynthetic = UseSyntheticCombatEvents;
         }
