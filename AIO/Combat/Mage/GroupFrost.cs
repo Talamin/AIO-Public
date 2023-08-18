@@ -1,12 +1,10 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
-using AIO.Helpers;
 using AIO.Helpers.Caching;
 using AIO.Settings;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
@@ -18,14 +16,13 @@ namespace AIO.Combat.Mage
     using Settings = MageLevelSettings;
     internal class GroupFrost : BaseRotation
     {
-        private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
-        private Stopwatch watch = Stopwatch.StartNew();
+        private WoWUnit[] _enemiesAttackingGroup = new WoWUnit[0];
         private readonly bool _knowsFrostFireBolt = SpellManager.KnowSpell("Frostfire Bolt");
         private readonly bool _knowsFrostBolt = SpellManager.KnowSpell("Frostbolt");
         private int _fingersOfFrostStacks;
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new RotationAction("Pre-Calculations", DoPreCalculations), 0f, 500),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.CIsCast() && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Mana Shield"), 1.1f, (s,t) => Me.CHealthPercent() <= 40 && Me.CManaPercentage() >= 30 && !Me.HaveBuff("Mana Shield"), RotationCombatUtil.FindMe),
             //// Only cast Polymorph if Sheep is enabled in settings
@@ -40,17 +37,17 @@ namespace AIO.Combat.Mage
             //new RotationStep(new RotationSpell("Frost Nova"), 2.2f, (s,t) => t.GetDistance <= 6 && t.HealthPercent > 30 && !Me.IsInGroup, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Ice Barrier"), 3f, (s,t) => t.CHealthPercent() < 60, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 3.5f, (s,t) => !Me.CHaveBuff("Ice Barrier") && Me.CHealthPercent() < 60, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) =>  Me.CHealthPercent() < 30 && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) =>  Me.CHealthPercent() < 30 && _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Counterspell"), 5f, (s,t) => t.CIsCast(), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Cone of Cold"), 6f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !EnemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, FindBlizzardCluster),
+            new RotationStep(new RotationSpell("Cone of Cold"), 6f, (s,t) => _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10, Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Blizzard"), 7f, (s,t) => _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 45 && !_enemiesAttackingGroup.Any(ene => ene.CIsTargetingMe() ), Settings.Current.GroupFrostAOEInstance) && Settings.Current.GroupFrostUseAOE, FindBlizzardCluster),
 
             new RotationStep(new RotationSpell("Evocation"), 8f, (s,t) =>  Settings.Current.GlyphOfEvocation && t.CHealthPercent() < 20, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Evocation"), 9f, (s,t) =>  t.CManaPercentage() < 20, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Mirror Image"), 10f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Icy Veins"), 11f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Summon Water Elemental"), 12f, (s,t) => !Settings.Current.GlyphOfEternalWater && EnemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Mirror Image"), 10f, (s,t) => _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Icy Veins"), 11f, (s,t) => _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Summon Water Elemental"), 12f, (s,t) => !Settings.Current.GlyphOfEternalWater && _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 30, 3) || BossList.MyTargetIsBoss, RotationCombatUtil.BotTargetFast),
             
             // Brain Freeze
             new RotationStep(new RotationSpell("Frostfire Bolt"), 13f, (s,t) => Me.CHaveBuff("Fireball!"), RotationCombatUtil.BotTargetFast),
@@ -69,12 +66,8 @@ namespace AIO.Combat.Mage
 
         private bool DoPreCalculations()
         {
-            if (LimitExecutionSpeed(100))
-            {
-                return true;
-            }
             Cache.Reset();
-            EnemiesAttackingGroup = RotationFramework.Enemies.Where(unit => unit.CIsTargetingMeOrMyPetOrPartyMember())
+            _enemiesAttackingGroup = RotationFramework.Enemies.Where(unit => unit.CIsTargetingMeOrMyPetOrPartyMember())
                 .ToArray();
             // Getting auras manually because CBuffStack doesn't seem to return correct values
             foreach (Aura aura in BuffManager.GetAuras(Me.GetBaseAddress).ToList())
@@ -82,20 +75,11 @@ namespace AIO.Combat.Mage
                 if (aura.SpellId == 74396)
                 {
                     _fingersOfFrostStacks = aura.Stack;
-                    break;
+                    return false;
                 }
             }
+            _fingersOfFrostStacks = 0;
             return false;
-        }
-
-        private bool LimitExecutionSpeed(int delay)
-        {
-            if (watch.ElapsedMilliseconds > delay)
-            {
-                watch.Restart();
-                return false;
-            }
-            return true;
         }
 
         private static WoWUnit FindBlizzardCluster(Func<WoWUnit, bool> predicate)

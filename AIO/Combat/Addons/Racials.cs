@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using wManager.Wow.Class;
 using wManager.Wow.Enums;
+using wManager.Wow.Helpers;
 using static AIO.Constants;
 
 namespace AIO.Combat.Addons
@@ -26,6 +27,7 @@ namespace AIO.Combat.Addons
         public bool RunInCombat => true;
 
         private List<RotationStep> _rotation = new List<RotationStep>();
+        private bool _poisonedOrDiseased;
 
         public List<RotationStep> Rotation => _rotation;
 
@@ -54,7 +56,8 @@ namespace AIO.Combat.Addons
                     _rotation.Add(new RotationStep(new RotationSpell(EscapeArtist), 1f, (s, t) => Me.Rooted || Me.HaveBuff("Frostnova"), RotationCombatUtil.FindMe));
                     break;
                 case WoWRace.Dwarf:
-                    _rotation.Add(new RotationStep(new RotationSpell(StoneForm), 1f, (s, t) => Extension.HasPoisonDebuff() || Extension.HasDiseaseDebuff(), RotationCombatUtil.FindMe));
+                    _rotation.Add(new RotationStep(new RotationAction("Cache poisoned or diseased", CachePoisonedOrDiseased), 0f, 1000));
+                    _rotation.Add(new RotationStep(new RotationSpell(StoneForm), 1f, (s, t) => _poisonedOrDiseased, RotationCombatUtil.FindMe));
                     break;
                 case WoWRace.BloodElf:
                     _rotation.Add(new RotationStep(new RotationSpell(ArcaneTorrent), 1f, (s, t) => Target.GetDistance <= 8 && Target.IsCast, RotationCombatUtil.FindMe));
@@ -69,5 +72,18 @@ namespace AIO.Combat.Addons
         }
 
         public void Dispose() { }
+
+        private bool CachePoisonedOrDiseased()
+        {
+            _poisonedOrDiseased = Lua.LuaDoString<bool>(@"
+                for i=1,25 do 
+	                local _, _, _, _, d  = UnitDebuff('player',i);
+	                if d == 'Disease' or d == 'Poison' then
+                    return true
+                    end
+                end
+            ");
+            return false;
+        }
     }
 }

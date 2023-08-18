@@ -39,7 +39,7 @@ namespace AIO.Combat.Hunter
             new RotationStep(new RotationSpell("Serpent Sting"), 13f, (s,t) => t.CGetDistance() >= 5 && !t.CHaveMyBuff("Serpent Sting") && (t.CHealthPercent() >= 70 || (BossList.MyTargetIsBoss && t.CHealthPercent() >= 20)), RotationCombatUtil.BotTargetFast, checkLoS:true),
             new RotationStep(new RotationSpell("Arcane Shot"), 14f, (s,t) => t.CGetDistance() >= 5, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Multi-Shot"), 15f, (s,t) => t.CGetDistance() >= 5 && Settings.Current.GroupBeastMasteryMultiShot && EnemiesAttackingGroup.Count() >= Settings.Current.GroupBeastMasteryMultiShotCount, RotationCombatUtil.BotTargetFast, checkLoS:true),
-            new RotationStep(new RotationSpell("Steady Shot"), 15.1f, (s,t) => !Me.GetMove && t.CGetDistance() >= 5, RotationCombatUtil.BotTargetFast, checkLoS: true),
+            new RotationStep(new RotationSpell("Steady Shot"), 15.1f, (s,t) => !Me.IsCast && !Me.GetMove && t.CGetDistance() >= 5, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Raptor Strike"), 16f, (s,t) => t.CGetDistance() < 5, RotationCombatUtil.BotTargetFast, checkLoS: true),
 
         };
