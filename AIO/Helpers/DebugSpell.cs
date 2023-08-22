@@ -7,11 +7,10 @@ namespace AIO.Helpers
     {
         private readonly string Name;
 
-        public DebugSpell(string name, float maxRange = int.MaxValue, bool ignoresGlobal = false)
+        public DebugSpell(string name, float maxRange = int.MaxValue)
         {
             Name = name;
             MaxRange = maxRange;
-            IgnoresGlobal = ignoresGlobal;
         }
 
         public bool Execute(WoWUnit target, bool force = false)
@@ -21,7 +20,6 @@ namespace AIO.Helpers
         }
 
         public float MaxRange { get; }
-        public bool IgnoresGlobal { get; }
 
         public (bool, bool) Should(WoWUnit target)
         {

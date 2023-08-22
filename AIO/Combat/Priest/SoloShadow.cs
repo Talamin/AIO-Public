@@ -38,8 +38,8 @@ namespace AIO.Combat.Priest
         }
 
         protected sealed override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0f,
-                (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0f,
+                (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true, ignoreGCD: true),
 
             new RotationStep(new RotationSpell("Power Word: Shield"), 1f,
                 (s, t) => (Settings.Current.SoloShadowUseHeaInGrp || !Me.CIsInGroup()) &&

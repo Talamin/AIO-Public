@@ -15,7 +15,9 @@ namespace AIO.Combat.Shaman
     {
         private static WoWUnit _tank => RotationCombatUtil.FindTank(unit => true);
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        protected override List<RotationStep> Rotation => new List<RotationStep> 
+        {
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Nature's Swiftness"), 4f, RotationCombatUtil.Always, s => Me.InCombat && RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.NatureSwiftness && o.GetDistance <= 40) >= 1, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Healing Wave"), 5f, (s,t) => t.HealthPercent <= 25, s => Me.HaveBuff("Nature's Swiftness"), RotationCombatUtil.FindPartyMember),
@@ -23,8 +25,12 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationBuff("Mana Spring Totem"), 6.5f, (s,t) => !Me.HaveBuff("Mana Spring") && !SpellManager.KnowSpell("Call of the Elements"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tidal Force"), 7f, RotationCombatUtil.Always, s => RotationFramework.AllUnits.Count(o => o.IsAlive && o.Target == _tank?.Guid && o.GetDistance <= 40) >= 3 && _tank?.HealthPercent < 70 || _tank?.HealthPercent < 25, RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Tidal Force"), 8f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= 80 && o.GetDistance <= 40) >= 3, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Cleanse Spirit"), 9f, (s,t) => !Me.IsInGroup && t.HasDebuffType("Disease", "Poison", "Curse"), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Cleanse Spirit"), 9.1f, (s,t) => Me.IsInGroup && (t.HaveImportantCurse() || t.HaveImportantDisease() || t.HaveImportantPoison()), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
+            
+            new RotationStep(new RotationSpell("Cleanse Spirit"), 9f, (s,t) => 
+                Me.ManaPercentage > 25, 
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison, DebuffType.Curse }, true, 30)),
+            new RotationStep(new RotationSpell("Cleanse Spirit"), 9.1f, (s,t) => t.HaveImportantCurse() || t.HaveImportantDisease() || t.HaveImportantPoison(), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
+            
             new RotationStep(new RotationSpell("Riptide"), 11f, (s,t) => t.HealthPercent <= Settings.Current.RestorationRiptideGroup, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Chain Heal"), 12f, RotationCombatUtil.Always, s => RotationFramework.PartyMembers.Count(o => o.IsAlive && o.HealthPercent <= Settings.Current.RestorationChainHealGroup && o.GetDistance <= 40) >= Settings.Current.RestorationChainHealCountGroup && _tank?.HealthPercent >= 50.0, RotationCombatUtil.FindPartyMember),
             new RotationStep(new RotationSpell("Lesser Healing Wave"), 13f, (s,t) => t.HealthPercent <= Settings.Current.RestorationLesserHealingWaveGroup, RotationCombatUtil.FindPartyMember, checkLoS: true),
@@ -33,17 +39,14 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationSpell("Cure Toxins"), 14.1f, (s,t) => t.HaveImportantPoison() || t.HaveImportantDisease(), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
             
             new RotationStep(new RotationSpell("Cure Toxins"), 15f, (s,t) =>
-                (RotationCombatUtil.IHaveCachedDebuff(DebuffType.Poison) || RotationCombatUtil.IHaveCachedDebuff(DebuffType.Disease))
-                && (Settings.Current.CureToxin == "Group" || Settings.Current.CureToxin == "Self"),
+            Settings.Current.CureToxin == "Self"
+                && RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }),
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cure Toxins"), 16f, (s,t) =>
                 Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Poison, true, 30).FirstOrDefault()),
-            new RotationStep(new RotationSpell("Cure Toxins"), 17f, (s,t) =>
-                Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, true, 30).FirstOrDefault()),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }, true, 30)),
 
-            new RotationStep(new RotationSpell("Earth Shock"), 19f, (s,t) => !Me.IsInGroup && !t.HaveMyBuff("Earth Shock"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Earth Shock"), 19f, (s,t) => !t.HaveMyBuff("Earth Shock"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lightning Bolt"), 20f, (s,t) => !Me.IsInGroup, RotationCombatUtil.BotTarget),
         };
 

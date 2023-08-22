@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using wManager.Wow.Helpers;
+using wManager.Wow.Class;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -16,13 +16,14 @@ namespace AIO.Combat.Warrior
     using Settings = WarriorLevelSettings;
     internal class GroupFury : BaseRotation
     {
-        private static readonly string Intercept = "Intercept";
-        private readonly bool KnowIntercept = SpellManager.KnowSpell(Intercept);
+        private readonly Spell _battleStanceSpell = new Spell("Battle Stance");
+        private readonly Spell _berserkerStanceSpell = new Spell("Berserker Stance");
 
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange : false, forceCast : true, ignoreGCD : true),
+            new RotationStep(new RotationAction("Check stance", CheckStance), 0f, 5000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Charge"), 1.5f, (s,t) => Settings.Current.GroupFuryCharge && t.CGetDistance() > 7 && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Intercept"), 1.5f, (s,t) => Settings.Current.GroupFuryIntercept && t.CGetDistance() > 7 && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7), RotationCombatUtil.BotTarget),
@@ -43,6 +44,16 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Enraged Regeneration"), 17f, (s,t) => Me.HealthPercent < 40 && (Me.HaveBuff("Berserker Rage") || Me.HaveBuff("Bloodrage")), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heroic Strike"), 18f, (s,t) => Me.CRage() > 40, RotationCombatUtil.BotTarget),
         };
+
+        private bool CheckStance()
+        {
+            if (!_berserkerStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Battle Stance")
+                _battleStanceSpell.Launch();
+            if (_berserkerStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Berserker Stance")
+                _berserkerStanceSpell.Launch();
+            return false;
+        }
+
         private bool DoPreCalculations()
         {
             if (LimitExecutionSpeed(100))

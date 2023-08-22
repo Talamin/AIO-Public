@@ -31,7 +31,7 @@ namespace AIO.Combat.Druid
             // Aggro section
             new RotationStep(new RotationSpell("Challenging Roar"), 4f, (s, t) => RotationFramework.Enemies.Count(o => o.HasTarget && !o.IsTargetingMe && o.Position.DistanceTo(Me.Position) <= 10) >= 3, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Growl"), 5f, (s, t) => t.HasTarget && !t.IsTargetingMe, RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Swipe (Bear)"), 5.5f, (s, t) => RotationFramework.Enemies.Count(o => o.HasTarget && !o.IsTargetingMe && o.Position.DistanceTo(Me.Position) <= 8) >= 2, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Swipe (Bear)"), 5.5f, (s, t) => RotationFramework.Enemies.Count(o => Me.IsFacing(o.Position, 3) && o.HasTarget && !o.IsTargetingMe && o.Position.DistanceTo(Me.Position) <= 8) >= 2, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Maul"), 6f, (s, t) => t.GetDistance < 8 && !RotationCombatUtil.IsCurrentSpell("Maul") && (Me.Rage > 30 || !t.IsTargetingMe), RotationCombatUtil.BotTargetFast),
 
             new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 7f, (s, t) => !t.CHaveBuff("Faerie Fire (Feral)") && Settings.Current.GroupFeralFaerieFire, RotationCombatUtil.BotTargetFast),
@@ -40,7 +40,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationSpell("Enrage"), 9f, (s, t) => t.GetDistance < 8 && t.HealthPercent >= 35, RotationCombatUtil.FindMe),
             
             // Rage dump
-            new RotationStep(new RotationSpell("Swipe (Bear)"), 10f, (s, t) => RotationFramework.Enemies.Count(o => o.HasTarget && o.Position.DistanceTo(Me.Position) <= 8) >= 3, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Swipe (Bear)"), 10f, (s, t) => RotationFramework.Enemies.Count(o => Me.IsFacing(o.Position, 3) && o.HasTarget && o.Position.DistanceTo(Me.Position) <= 8) >= 3, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Mangle (Bear)"), 11f, (s, t) => Me.Rage > 50, RotationCombatUtil.BotTargetFast),
         };
 

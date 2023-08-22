@@ -3,7 +3,6 @@ using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
-using wManager.Wow.Enums;
 using static AIO.Constants;
 
 namespace AIO.Combat.Rogue

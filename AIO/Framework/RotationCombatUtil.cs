@@ -3,7 +3,6 @@ using AIO.Lists;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using wManager;
 using wManager.Wow;
@@ -18,15 +17,28 @@ namespace AIO.Framework
 {
     public static class RotationCombatUtil
     {
+        // Useful to get current active warrior stance
+        public static string GetLUAActiveShapeshiftName()
+        {
+            return Lua.LuaDoString<string>($@"
+                for i=1,10 do
+                    local _, name, isActive, _ = GetShapeshiftFormInfo(i);
+                    if name ~= nil and isActive then
+                        return name;
+                    end
+                end
+                return '';
+            ");
+        }
+
         private static Dictionary<DebuffType, List<WoWUnit>> _cachedDebuffedPlayers = new Dictionary<DebuffType, List<WoWUnit>>();
-        private static List<WoWUnit> _enemiesToInterrupt = new List<WoWUnit>();
         public static bool CacheLUADebuffedPartyMembersStep()
         {
             _cachedDebuffedPlayers = LuaCache.GetLUADebuffedPartyMembers();
             return false;
         }
 
-        // Remember to call CacheLUADebuffedPartyMembersStep() before this method in your rotation
+        // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
         public static bool IHaveCachedDebuff(DebuffType debuffType)
         {
             if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
@@ -34,7 +46,29 @@ namespace AIO.Framework
             return false;
         }
 
-        // Remember to call CacheLUADebuffedPartyMembersStep() before this method in your rotation
+        // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
+        public static bool IHaveCachedDebuff(List<DebuffType> debuffTypes)
+        {
+            foreach (DebuffType debuffType in debuffTypes)
+            {
+                if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
+                    return players.Exists(p => p.Guid == Me.Guid);
+            }
+            return false;
+        }
+
+        // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
+        public static WoWUnit GetPartyMemberWithCachedDebuff(DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
+        {
+            if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
+            {
+                return players
+                    .FirstOrDefault(m => m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position)));
+            }
+            return null;
+        }
+
+        // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
         public static List<WoWUnit> GetPartyMembersWithCachedDebuff(DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
         {
             if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
@@ -44,6 +78,24 @@ namespace AIO.Framework
                     .ToList();
             }
             return new List<WoWUnit>();
+        }
+
+        // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
+        public static WoWUnit GetPartyMemberWithCachedDebuff(List<DebuffType> debuffTypes, bool checkLos, float maxDistance = float.MaxValue)
+        {
+            foreach (DebuffType debuffType in debuffTypes)
+            {
+                if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
+                {
+                    foreach (WoWUnit player in players)
+                    {
+                        if (player.GetDistance < maxDistance
+                            && (!checkLos || !TraceLine.TraceLineGo(player.Position)))
+                            return player;
+                    }
+                }
+            }
+            return null;
         }
 
         private static readonly List<string> AreaSpells = new List<string> {

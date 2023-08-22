@@ -9,7 +9,7 @@ namespace AIO.Combat.Priest
     using Settings = PriestLevelSettings;
     internal class PriestBehavior : BaseCombatClass
     {
-        public override float Range => 29.0f;
+        public override float Range => 27f;
 
         internal PriestBehavior() : base(
             Settings.Current,

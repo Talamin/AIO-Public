@@ -1,75 +1,93 @@
-﻿using wManager.Wow.Helpers;
+﻿using System.Threading;
+using wManager.Wow.Helpers;
+using static AIO.Constants;
 
 public static class PetManager
 {
-    #region Pet
-
-    // Returns the index of the pet spell passed as argument
-    public static int GetPetSpellIndex(string spellName)
+    // Casts the pet spell if it's ready in one single call. Does not check for focus/mana
+    public static void CastPetSpellIfReady(string spellName, bool onFocus = false)
     {
-        int spellindex = Lua.LuaDoString<int>
-            ($"for i=1,10 do " +
-                "local name, _, _, _, _, _, _ = GetPetActionInfo(i); " +
-                "if name == '" + spellName + "' then " +
-                "return i " +
-                "end " +
-            "end");
+        string onFocusLua = onFocus ? "1" : "0";
+        string lua = $@"
+            local petSpellIndex = 0;
+            for i=1, 10 do
+                local name, _, _, _, _, _, _ = GetPetActionInfo(i);
+                if name == ""{spellName}"" then
+                    petSpellIndex = i;
+                end
+            end
+            if petSpellIndex > 0 then
+                local startTime, duration, enable = GetPetActionCooldown(petSpellIndex); 
+                local coolDown = duration - (GetTime() - startTime)
+                if coolDown <= 0 then
+                    if {onFocusLua} == 1 then
+                        CastPetAction(petSpellIndex, 'focus');
+                    else
+                        CastPetAction(petSpellIndex);
+                    end
+                    return true;
+                end
+            end
+            return false;
+        ";
+        bool spellCast = Lua.LuaDoString<bool>(lua);
 
-        return spellindex;
-    }
-
-    // Returns the cooldown of the pet spell passed as argument
-    public static int GetPetSpellCooldown(string spellName)
-    {
-        int _spellIndex = GetPetSpellIndex(spellName);
-        return Lua.LuaDoString<int>("local startTime, duration, enable = GetPetActionCooldown(" + _spellIndex + "); return duration - (GetTime() - startTime)");
-    }
-
-    // Returns whether a pet spell is available (off cooldown)
-    public static bool GetPetSpellReady(string spellName)
-    {
-        return GetPetSpellCooldown(spellName) <= 0;
-    }
-
-    // Casts the pet spell passed as argument
-    public static void PetSpellCast(string spellName)
-    {
-        int spellIndex = GetPetSpellIndex(spellName);
-        if (GetPetSpellReady(spellName))
+        if (spellCast)
         {
-            Lua.LuaDoString("CastPetAction(" + spellIndex + ");");
-        }
-    }
-
-    public static void PetSpellCastFocus(string spellName)
-    {
-        int spellIndex = GetPetSpellIndex(spellName);
-        if (GetPetSpellReady(spellName))
-        {
-            Lua.LuaDoString($"CastPetAction({spellIndex}, \'focus\');");
+            Main.LogFight($"[Pet] {spellName}");
         }
     }
 
     // Toggles Pet spell autocast (pass true as second argument to toggle on, or false to toggle off)
     public static void TogglePetSpellAuto(string spellName, bool toggle)
     {
-        string spellIndex = GetPetSpellIndex(spellName).ToString();
+        string toggleLua = toggle ? "1" : "0";
+        string lua = $@"
+                local petSpellIndex = 0;
+                local shouldToggleOn = {toggleLua} == 1;
+                for i=1, 10 do
+                    local name, _, _, _, _, _, _ = GetPetActionInfo(i);
+                    if name == ""{spellName}"" then
+                        petSpellIndex = i;
+                    end
+                end
+                if petSpellIndex > 0 then
+                    local _, autostate = GetSpellAutocast(""{spellName}"", 'pet');
+                    if shouldToggleOn and not autostate then
+                        ToggleSpellAutocast(""{spellName}"", 'pet');
+                        return true;
+                    end
+                    if not shouldToggleOn and autostate then
+                        ToggleSpellAutocast(""{spellName}"", 'pet');
+                        return true;
+                    end
+                end
+                return false;
+            ";
+        bool toggled = Lua.LuaDoString<bool>(lua);
 
-        if (!spellIndex.Equals("0"))
+        if (toggled)
         {
-            bool autoCast = Lua.LuaDoString<bool>("local _, autostate = GetSpellAutocast(" + spellIndex + ", 'pet'); " +
-                "return autostate == 1") || Lua.LuaDoString<bool>("local _, autostate = GetSpellAutocast('" + spellName + "', 'pet'); " +
-                "return autostate == 1");
+            Main.LogFight($"Toggled pet spell {spellName}");
+        }
+    }
 
-            if ((toggle && !autoCast) || (!toggle && autoCast))
+    public static void PreventPetDoubleSummon()
+    {
+        Thread.Sleep(500);
+        // Avoid occasional double summon
+        while (Me.IsCast)
+        {
+            Thread.Sleep(500);
+            if (Pet.IsAlive)
             {
-                Lua.LuaDoString("ToggleSpellAutocast(" + spellIndex + ", 'pet');");
-                Lua.LuaDoString("ToggleSpellAutocast('" + spellName + "', 'pet');");
+                Lua.LuaDoString("SpellStopCasting();");
+                break;
             }
         }
     }
-    public static string GetCurrentWarlockPetLUA => Lua.LuaDoString<string>
-        ($@"
+
+    public static string GetCurrentWarlockPetLUA => Lua.LuaDoString<string>($@"
             for i=1,10 do
                 local name, _, _, _, _, _, _ = GetPetActionInfo(i);
                 if name == 'Firebolt' then
@@ -85,7 +103,7 @@ public static class PetManager
                     return 'Felhunter';
                 end
             end
-            return 'None';");
-    #endregion
+            return 'None';
+        ");
 }
 

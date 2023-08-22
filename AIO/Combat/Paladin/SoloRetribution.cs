@@ -2,6 +2,7 @@
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
+using AIO.Lists;
 using AIO.Settings;
 using robotManager.Helpful;
 using System;
@@ -21,14 +22,19 @@ namespace AIO.Combat.Paladin
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
 
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        protected override List<RotationStep> Rotation => new List<RotationStep> 
+        {
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Divine Plea"), 1.1f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hand of Freedom"), 1.2f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => Settings.Current.DivineProtection && RotationFramework.Enemies.Count(u=> u.IsTargetingMe) >=2, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Purify"), 2f, (s,t) => !Me.IsInGroup && (Me.HasDebuffType("Disease") || Me.HasDebuffType("Poison")), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Purify"), 3f, (s,t) => (t.HasDebuffType("Disease") || t.HasDebuffType("Poison")) &&  Settings.Current.SoloRetributionPurify, RotationCombatUtil.FindPartyMember),
+
+            new RotationStep(new RotationSpell("Purify"), 2f, (s,t) =>
+                RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison }),
+                RotationCombatUtil.FindMe),
+
             new RotationStep(new RotationSpell("Divine Plea"), 3.5f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Flash of Light"), 4f, (s,t) => (!Me.IsInGroup &&  Me.HaveBuff("The Art of War") && Me.HealthPercent <= 60) || (Me.IsInGroup &&  Me.HaveBuff("The Art of War") && Me.HealthPercent <= 60 && Settings.Current.SoloRetributionHealInCombat) , RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Flash of Light"), 4.1f, (s,t) => Settings.Current.SoloRetributionHealGroup &&  Me.HaveBuff("The Art of War") && t.HealthPercent <= 60 && Settings.Current.SoloRetributionHealInCombat , RotationCombatUtil.FindMe),

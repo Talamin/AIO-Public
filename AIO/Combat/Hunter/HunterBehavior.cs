@@ -20,9 +20,10 @@ namespace AIO.Combat.Hunter
     internal class HunterBehavior : BaseCombatClass
     {
         public override float Range => Settings.Current.CombatRange;
-        private readonly Timer _petFeedTimer = new Timer();
+        private readonly Timer _petFeedTimer = new Timer(1000 * 5);
         private readonly Spell _revivePetSpell = new Spell("Revive Pet");
         private readonly Spell _callPetSpell = new Spell("Call Pet");
+        private readonly Timer _petCastTimer = new Timer(300);
 
         internal HunterBehavior() : base(
             Settings.Current,
@@ -54,6 +55,7 @@ namespace AIO.Combat.Hunter
             FightEvents.OnFightStart += OnFightStart;
             FightEvents.OnFightEnd += OnFightEnd;
             MovementEvents.OnMovementPulse += OnMovementPulse;
+            RefreshPet();
             base.Initialize();
         }
 
@@ -110,20 +112,16 @@ namespace AIO.Combat.Hunter
 
         private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
         {
-            if (ObjectManager.Pet.HealthPercent <= 40 
-                && PetManager.GetPetSpellReady("Cower")
-                && PetManager.GetPetSpellCooldown("Cower") <= 0 
-                && ObjectManager.Pet.InCombat)
-            {
-                PetManager.PetSpellCast("Cower");
-            }
+            if (!_petCastTimer.IsReady) return;
+            _petCastTimer.Reset();
 
-            if (PetManager.GetPetSpellReady("Bite")
-                && PetManager.GetPetSpellCooldown("Bite") <= 0
-                && ObjectManager.Pet.Focus >= 40
-                && ObjectManager.Pet.Position.DistanceTo(ObjectManager.Target.Position) <= 7)
+            if (ObjectManager.Pet.HealthPercent <= 40)
+                PetManager.CastPetSpellIfReady("Cower");
+
+            if (ObjectManager.Pet.Focus >= 50
+                && ObjectManager.Pet.Position.DistanceTo(ObjectManager.Pet.TargetObject.Position) <= 7)
             {
-                PetManager.PetSpellCast("Bite");
+                PetManager.CastPetSpellIfReady("Bite");
             }
 
             RefreshPet();
@@ -146,8 +144,8 @@ namespace AIO.Combat.Hunter
                 && Pet.IsDead
                 && !Me.IsMounted)
             {
-                _revivePetSpell.Launch();
-                Usefuls.WaitIsCasting();
+                _revivePetSpell.Launch(true, false);
+                PetManager.PreventPetDoubleSummon();
             }
 
             if (_callPetSpell.IsSpellUsable
@@ -155,21 +153,21 @@ namespace AIO.Combat.Hunter
                 && !Pet.IsValid
                 && !Me.IsMounted)
             {
-                _callPetSpell.Launch();
-                Usefuls.WaitIsCasting();
+                _callPetSpell.Launch(true, false);
+                PetManager.PreventPetDoubleSummon();
             }
         }
 
         private void FeedPet()
         {
+            if (!_petFeedTimer.IsReady) return;
+            _petFeedTimer.Reset();
+
             if (Pet.IsAlive &&
-                _petFeedTimer.IsReady &&
                 PetHelper.Happiness < 3)
             {
                 PetHelper.Feed();
             }
-
-            _petFeedTimer.Reset(1000 * 5);
         }
     }
 }

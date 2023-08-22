@@ -21,7 +21,7 @@ namespace AIO.Combat.Priest
         private List<WoWPlayer> _hurtPartyMembers = new List<WoWPlayer>(0);
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange : false, forceCast : true, ignoreGCD : true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Power Word: Shield"), 2f, (action,tank)  => !tank.CHaveBuff("Power Word: Shield") && !tank.CHaveBuff("Weakened Soul") && tank.InCombat, RotationCombatUtil.FindTank, checkLoS: true),
             new RotationStep(new RotationSpell("Power Word: Shield"), 2.1f, (action,me)  => !me.CHaveBuff("Power Word: Shield") && !me.CHaveBuff("Weakened Soul") && me.CHealthPercent() < 100, RotationCombatUtil.FindMe, checkLoS: true),

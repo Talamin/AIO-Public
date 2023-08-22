@@ -2,6 +2,7 @@
 using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
+using AIO.Lists;
 using AIO.Settings;
 using System;
 using System.Collections.Generic;
@@ -21,22 +22,30 @@ namespace AIO.Combat.Paladin
 
         protected override List<RotationStep> Rotation => new List<RotationStep> 
         {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true, ignoreGCD: true),
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Divine Plea"), 1.1f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe, checkLoS: false),
-            new RotationStep(new RotationSpell("Hand of Freedom"), 1.2f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe, checkLoS: false),
-            new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => Settings.Current.DivineProtection && EnemiesAttackingGroup.ContainsAtLeast(enem=> enem.CIsTargetingMe(), 2), RotationCombatUtil.FindMe, checkLoS: false),
-            new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.CHaveBuff("Sacred Shield"), RotationCombatUtil.FindMe, checkLoS: false),
-            new RotationStep(new RotationSpell("Purify"), 2f, (s,t) => Me.HasDebuffType("Disease") || Me.HasDebuffType("Poison") && Settings.Current.GroupRetributionPurify, RotationCombatUtil.FindMe, checkLoS: false),
-            new RotationStep(new RotationSpell("Purify"), 2.1f, (s,t) => t.HasDebuffType("Disease") || t.HasDebuffType("Poison") && Settings.Current.GroupRetributionPurifyMember, RotationCombatUtil.CFindPartyMember, checkLoS: true),
-            new RotationStep(new RotationSpell("Divine Plea"), 3.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe, checkLoS: false),
+            new RotationStep(new RotationSpell("Divine Plea"), 1.1f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Hand of Freedom"), 1.2f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Divine Protection"), 1.3f,  (s,t) => Settings.Current.DivineProtection && EnemiesAttackingGroup.ContainsAtLeast(enem=> enem.CIsTargetingMe(), 2), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.CHaveBuff("Sacred Shield"), RotationCombatUtil.FindMe),
+            
+            new RotationStep(new RotationSpell("Purify"), 2f, (s,t) => 
+                Settings.Current.GroupRetributionPurify 
+                && RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison }), 
+                RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Purify"), 2.1f, (s,t) => 
+                Settings.Current.GroupRetributionPurifyMember,
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison }, true, 30)),
+            
+            new RotationStep(new RotationSpell("Divine Plea"), 3.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Flash of Light"), 4f, (s,t) => Me.HaveBuff("The Art of War") && Me.HealthPercent <= 60 && Settings.Current.GroupRetributionHealInCombat , RotationCombatUtil.FindMe, checkLoS: false),
+            new RotationStep(new RotationSpell("Flash of Light"), 4f, (s,t) => Me.HaveBuff("The Art of War") && Me.HealthPercent <= 60 && Settings.Current.GroupRetributionHealInCombat , RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hammer of Justice"), 5f, (s, t) => t.CIsCast() && t.CGetDistance() >= 10, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Hammer of Justice"), 5.1f, (s,t) => t.Fleeing, RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Hammer of Wrath"), 7f, (s,t) => t.CHealthPercent() <20 , RotationCombatUtil.FindEnemy, checkLoS: true),
 
-            new RotationStep(new RotationSpell("Holy Light"), 9f, (s,t) => Me.CHealthPercent() <=  Settings.Current.GroupRetributionHL && Settings.Current.GroupRetributionHealInCombat, RotationCombatUtil.FindMe, checkLoS: false),      
+            new RotationStep(new RotationSpell("Holy Light"), 9f, (s,t) => Me.CHealthPercent() <=  Settings.Current.GroupRetributionHL && Settings.Current.GroupRetributionHealInCombat, RotationCombatUtil.FindMe),      
 
             new RotationStep(new RotationSpell("Avenging Wrath"), 13f, (s,t) => EnemiesAttackingGroup.ContainsAtLeast(enem=> enem.CGetDistance() <= 20, 3) &&  Settings.Current.GroupAvengingWrathRetribution, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Judgement of Light"), 14f, (s,t) => !SpellManager.KnowSpell("Judgement of Wisdom"), RotationCombatUtil.BotTargetFast, checkLoS: true),

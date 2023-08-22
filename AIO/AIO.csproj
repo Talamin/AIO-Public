@@ -321,11 +321,12 @@
     <Compile Include="Combat\Priest\LowLevel.cs" />
     <Compile Include="Combat\Priest\PriestBehavior.cs" />
     <Compile Include="Combat\Priest\GroupShadow.cs" />
+    <Compile Include="Combat\Rogue\ApplyPoison.cs" />
     <Compile Include="Combat\Rogue\GroupCombat.cs" />
+    <Compile Include="Combat\Rogue\GroupAssassination.cs" />
     <Compile Include="Combat\Rogue\SoloAssassination.cs" />
     <Compile Include="Combat\Rogue\SoloCombat.cs" />
     <Compile Include="Combat\Rogue\LowLevel.cs" />
-    <Compile Include="Combat\Rogue\PoisonHelper.cs" />
     <Compile Include="Combat\Rogue\RogueBehavior.cs" />
     <Compile Include="Combat\Shaman\CombatBuffs.cs" />
     <Compile Include="Combat\Shaman\SoloElemental.cs" />
@@ -347,6 +348,7 @@
     <Compile Include="Combat\Warlock\LowLevel.cs" />
     <Compile Include="Combat\Warlock\SpellstoneHelper.cs" />
     <Compile Include="Combat\Warlock\WarlockBehavior.cs" />
+    <Compile Include="Combat\Warrior\GroupArms.cs" />
     <Compile Include="Combat\Warrior\SoloArms.cs" />
     <Compile Include="Combat\Warrior\CombatBuffs.cs" />
     <Compile Include="Combat\Warrior\SoloFury.cs" />

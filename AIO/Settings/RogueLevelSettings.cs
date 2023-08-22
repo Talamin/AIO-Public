@@ -10,7 +10,7 @@ namespace AIO.Settings
     public class RogueLevelSettings : BasePersistentSettings<RogueLevelSettings>
     {
         //Lists
-        [TriggerDropdown("RogueTriggerDropdown",new string[] { nameof(Spec.Rogue_SoloCombat), nameof(Spec.Rogue_GroupCombat) })]
+        [TriggerDropdown("RogueTriggerDropdown",new string[] { nameof(Spec.Rogue_SoloCombat), nameof(Spec.Rogue_GroupCombat), nameof(Spec.Rogue_GroupAssassination) })]
         public override string ChooseRotation { get; set; }
 
         [Setting]
@@ -28,7 +28,6 @@ namespace AIO.Settings
         //public bool Distract { get; set; }
 
         //SoloCombat
-
 
         [Setting]
         [DefaultValue(false)]
@@ -118,6 +117,39 @@ namespace AIO.Settings
         [Description("Combopoints for using Eviscarate?")]
         public int GroupCombatEviscarate { get; set; }
 
+        // Group Assassination
+        [DefaultValue(50)]
+        [Percentage(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupAssassination))]
+        [DisplayName("Evasion")]
+        [Description("Treshhold of own Health for using Evasion")]
+        public int GroupAssassEvasionHealth { get; set; }
+
+        [DefaultValue(50)]
+        [Percentage(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupAssassination))]
+        [DisplayName("Cloak of Shadows")]
+        [Description("Treshhold of own Health for using Cloak of Shadows")]
+        public int GroupAssassCoSHealth { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupAssassination))]
+        [DisplayName("Blind")]
+        [Description("Use Blind to interrupt enemies")]
+        public bool GroupAssassBlind { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("RogueTriggerDropdown", nameof(Spec.Rogue_GroupAssassination))]
+        [DisplayName("Fan of Knives")]
+        [Description("Use Fan of Knives when at least X enemies are around you")]
+        public int GroupAssassFanOfKnives { get; set; }
+
         public RogueLevelSettings()
         {
             PullRanged = true;
@@ -138,6 +170,12 @@ namespace AIO.Settings
             GroupCombatKillingSpree = 2;
             GroupCombatAdrenalineRush = 3;
             GroupCombatEviscarate = 3;
+
+            // Group Assassination
+            GroupAssassEvasionHealth = 50;
+            GroupAssassCoSHealth = 50;
+            GroupAssassBlind = true;
+            GroupAssassFanOfKnives = 3;
         }
     }
 }

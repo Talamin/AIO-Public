@@ -33,8 +33,8 @@ namespace AIO.Combat.Shaman
         }
 
         public List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new RotationAction("Weapons Enchants", EnchantStep), 1f, 5000),
-            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 1f, 500),
+            new RotationStep(new RotationAction("Weapons Enchants", EnchantStep), 0f, 5000),
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
 
             new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => !Me.IsMounted && (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
             new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
@@ -68,9 +68,9 @@ namespace AIO.Combat.Shaman
                 Me.ManaPercentage > 30, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Cleansing Totem"), 50f, (s,t) =>
-                Settings.Current.UseCleansingTotem &&
-                (RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Poison, false, 30).Count > 0 || RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, false, 30).Count > 0) &&
-                !Totems.HasAny("Cleansing Totem"), RotationCombatUtil.FindMe),
+                Settings.Current.UseCleansingTotem
+                && RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, false, 30) != null
+                && !Totems.HasAny("Cleansing Totem"), RotationCombatUtil.FindMe),
             /*
              * There is no "Fear","Charm","Sleep" in debuffTypes
             new RotationStep(new RotationSpell("Tremor Totem"), 51f, (s,t) =>

@@ -21,6 +21,7 @@ namespace AIO.Framework
         private Timer _forcedTimer;
         private readonly int _forcedTimerMs;
         private readonly bool _preventDoubleCast;
+        private readonly bool _ignoreGCD;
 
         public RotationStep(IRotationAction action,
             float priority,
@@ -32,7 +33,8 @@ namespace AIO.Framework
             bool checkRange = true,
             bool checkLoS = false,
             int forcedTimerMS = 0,
-            bool preventDoubleCast = false)
+            bool preventDoubleCast = false,
+            bool ignoreGCD = false)
         {
             _action = action;
             _priority = priority;
@@ -55,6 +57,7 @@ namespace AIO.Framework
             {
                 _name = rCode.Name;
             }
+            _ignoreGCD = ignoreGCD;
         }
 
         public RotationStep(IRotationAction action,
@@ -66,16 +69,18 @@ namespace AIO.Framework
             bool checkRange = true,
             bool checkLoS = false,
             int forcedTimerMS = 0,
-            bool preventDoubleCast = false) :
+            bool preventDoubleCast = false,
+            bool ignoreGCD = false) :
             this(action, priority, targetPredicate, (_) => true, targetFinder, exclusive, forceCast, checkRange,
-                checkLoS, forcedTimerMS, preventDoubleCast)
+                checkLoS, forcedTimerMS, preventDoubleCast, ignoreGCD)
         { }
 
-        // For code execution
+        // For code execution, ignores GCD by default
         public RotationStep(IRotationAction action,
             float priority,
-            int forcedTimerMS = 0) :
-            this(action, priority, (a, t) => true, (_) => true, RotationCombatUtil.FindMe, null, false, false, false, forcedTimerMS)
+            int forcedTimerMS = 0,
+            bool ignoreGCD = true) :
+            this(action, priority, (a, t) => true, (_) => true, RotationCombatUtil.FindMe, null, false, false, false, forcedTimerMS, false, ignoreGCD)
         { }
 
         public int CompareTo(RotationStep other) => _priority.CompareTo(other._priority);
@@ -134,7 +139,7 @@ namespace AIO.Framework
             }
         };
 
-        public bool Execute(bool globalActive, Exclusives exclusives)
+        public bool Execute(Exclusives exclusives)
         {
             try
             {
@@ -144,11 +149,10 @@ namespace AIO.Framework
                     return false;
                 }
 
-                //can't execute this, because global is still active
                 //can't execute this because we can't stop the current cast to execute this
-                if ((globalActive && !_action.IgnoresGlobal) || !_forceCast && Me.IsCast)
+                if (!_forceCast && Me.IsCast)
                 {
-                    RotationLogger.Trace($"{_name} false because of GCD or IsCast.");
+                    RotationLogger.Trace($"{_name} false because of IsCast.");
                     return false;
                 }
 
@@ -210,5 +214,6 @@ namespace AIO.Framework
 
         public Exclusive Exclusive { get; }
         public bool PreventDoubleCast => _preventDoubleCast;
+        public bool IgnoreGCD => _ignoreGCD;
     }
 }

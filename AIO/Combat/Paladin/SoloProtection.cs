@@ -1,5 +1,6 @@
 ﻿using AIO.Combat.Common;
 using AIO.Framework;
+using AIO.Lists;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,26 @@ namespace AIO.Combat.Paladin
     using Settings = PaladinLevelSettings;
     internal class SoloProtection : BaseRotation
     {
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        protected override List<RotationStep> Rotation => new List<RotationStep>
+        {
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lay on Hands"), 1.1f, (s,t) => t.HealthPercent <= Settings.Current.ProtectionLoH && !Me.HaveBuff("Forbearance"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Sacred Shield"), 1.5f, (s,t) => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Consecration"), 2f, (s,t) => t.HealthPercent > 25 && RotationFramework.Enemies.Count(o => o.GetDistance <=15) >= Settings.Current.ProtConsecration, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Righteous Defense"), 3f, (s,t) => t.Name != Me.Name && RotationFramework.Enemies.Count(o => o.IsAttackable && !o.IsTargetingMe && o.IsTargetingPartyMember) >=2,RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Hand of Reckoning"), 4f, (s,t) => t.GetDistance <= 25 && !t.IsTargetingMe && !Me.IsInGroup && Settings.Current.SoloRetributionHOR, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Hand of Reckoning"), 4f, (s,t) => t.GetDistance <= 25 && !t.IsTargetingMe && !Me.IsInGroup && Settings.Current.SoloRetributionHOR, RotationCombatUtil.BotTarget),        
             new RotationStep(new RotationSpell("Hand of Reckoning"), 4.5f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsAttackable && !o.IsTargetingMe && o.IsTargetingPartyMember) >= 1,RotationCombatUtil.FindEnemyAttackingGroup),
-            new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => Settings.Current.ProtectionCleanse == "Group" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindPartyMember),
-            new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => Settings.Current.ProtectionCleanse == "Me" && t.HasDebuffType("Poison","Disease","Magic"), RotationCombatUtil.FindMe),
+            
+            new RotationStep(new RotationSpell("Cleanse"), 4.6f, (s,t) => 
+                Settings.Current.ProtectionCleanse == "Group",
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison, DebuffType.Magic }, true, 30)),
+            new RotationStep(new RotationSpell("Cleanse"), 4.7f, (s,t) => 
+                Settings.Current.ProtectionCleanse == "Me"
+                && RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison, DebuffType.Magic }),
+                RotationCombatUtil.FindMe),
+            
             new RotationStep(new RotationSpell("Divine Plea"), 5f, (s, t) => Me.ManaPercentage < Settings.Current.GeneralDivinePlea, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Hand of Freedom"), 5.5f, (s, t) => Me.Rooted, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Holy Light"), 6f, (s,t) => !Me.IsInGroup && Me.HealthPercent <= 50 && Settings.Current.ProtectionHolyLight, RotationCombatUtil.FindMe),

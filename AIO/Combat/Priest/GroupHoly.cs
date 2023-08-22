@@ -49,6 +49,7 @@ namespace AIO.Combat.Priest
 
             new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f, (action, me) => DoPreCalculations(),
                 RotationCombatUtil.FindMe),
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
 
             /*
              * Critical section
@@ -337,49 +338,49 @@ namespace AIO.Combat.Priest
                 RotationCombatUtil.Always,
                 action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || _shouldCastOffTank) &&
-                          RotationFramework.PartyMembers.Count(partyMember =>
-                              partyMember.HasDebuffType("Magic")) >= 3,
+                          RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Magic, false).Count >= 3,
                 predicate => RotationCombatUtil.GetBestAoETarget(predicate, 30, 15,
-                    RotationFramework.PartyMembers.Where(partyMember => partyMember.HasDebuffType("Magic")), 3)),
+                    RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Magic, false), 3)),
 
             // Dispel Magic from me
             new RotationStep(new RotationSpell("Dispel Magic"), 7.1f,
-                (action, me) => me.HasDebuffType("Magic"),
+                (action, me) => RotationCombatUtil.IHaveCachedDebuff(DebuffType.Magic),
                 action => Settings.Current.GroupHolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
                 RotationCombatUtil.FindMe),
 
             // Remove Disease from me
             new RotationStep(_diseaseSpell, 7.2f,
-                (action, me) => !Me.CHaveBuff("Abolish Disease") && me.HasDebuffType("Disease"),
+                (action, me) => !Me.CHaveBuff("Abolish Disease") && RotationCombatUtil.IHaveCachedDebuff(DebuffType.Disease),
                 action => Settings.Current.GroupHolyDeDeBuff && (_ignoreManaManagementOoc || Me.CManaPercentage() > 30),
                 RotationCombatUtil.FindMe),
 
             // Dispel Magic from the tank
             new RotationStep(new RotationSpell("Dispel Magic"), 7.3f,
-                (action, tank) => tank.HasDebuffType("Magic"),
+                (action, tank) => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Magic, true).Exists(p => tank != null && p.Name == tank.Name),
                 action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || Me.CManaPercentage() > 40), FindTank),
 
             // Remove Disease from tank
             new RotationStep(_diseaseSpell, 7.4f,
-                (action, tank) => !tank.CHaveBuff("Abolish Disease") && tank.HasDebuffType("Disease"),
+                (action, tank) => 
+                    !tank.CHaveBuff("Abolish Disease") 
+                    && RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, true).Exists(p => tank != null && p.Name == tank.Name),
                 action => Settings.Current.GroupHolyDeDeBuff &&
                           (_isSpirit || _ignoreManaManagementOoc || Me.CManaPercentage() > 40), FindTank),
 
             // Dispel Magic from party members
             new RotationStep(new RotationSpell("Dispel Magic"), 7.5f,
-                (action, partyMember) => partyMember.HasDebuffType("Magic"),
+                RotationCombatUtil.Always,
                 action => Settings.Current.GroupHolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
                                                             _shouldCastOffTank && Me.CManaPercentage() > 40),
-                RotationCombatUtil.FindExplicitPartyMember),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(DebuffType.Magic, true, 30)),
 
             // Remove Disease from party members
             new RotationStep(_diseaseSpell, 7.6f,
-                (action, partyMember) =>
-                    !partyMember.CHaveBuff("Abolish Disease") && partyMember.HasDebuffType("Disease"),
+                RotationCombatUtil.Always,
                 action => Settings.Current.GroupHolyDeDeBuff && (_isSpirit || _ignoreManaManagementOoc ||
                                                             _shouldCastOffTank && Me.CManaPercentage() > 40),
-                RotationCombatUtil.FindExplicitPartyMember)
+                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, true).FirstOrDefault(t => t.CHaveBuff("Abolish Disease")))
         };
 
         private static WoWUnit FindTank(Func<WoWUnit, bool> predicate) =>

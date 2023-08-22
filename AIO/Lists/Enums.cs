@@ -46,9 +46,10 @@
         Priest_SoloShadow,
         Priest_GroupShadow,
         // Rogue
+        Rogue_SoloCombat,
         Rogue_GroupCombat,
         Rogue_SoloAssassination,
-        Rogue_SoloCombat,
+        Rogue_GroupAssassination,
         // Shaman
         Shaman_SoloElemental,
         Shaman_SoloEnhancement,
@@ -63,6 +64,7 @@
         Warrior_SoloArms,
         Warrior_SoloFury,
         Warrior_GroupFury,
-        Warrior_GroupProtection
+        Warrior_GroupProtection,
+        Warrior_GroupArms,
     }
 }

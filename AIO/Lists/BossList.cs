@@ -7,6 +7,9 @@ public class BossList
 
     public static readonly HashSet<int> BossListInt = new HashSet<int>
     {
+        // Heroic Training dummy
+        31146,
+
         //Ragefire Chasm
         11517, //Oggleflint
         11520, //Taragaman the Hungerer

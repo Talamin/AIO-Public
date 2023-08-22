@@ -13,20 +13,18 @@ namespace AIO.Combat.Shaman
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.1f, (s,t) => Settings.Current.GroupEnhancementFeralSpirit =="+2 and Elite" && ((RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=20) >= 2) || t.IsElite), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.2f, (s,t) => Settings.Current.GroupEnhancementFeralSpirit =="+3 and Elite" && ((RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=20) >= 3) || t.IsElite), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.3f, (s,t) => Settings.Current.GroupEnhancementFeralSpirit =="only Elite" && t.IsElite, RotationCombatUtil.BotTargetFast),
 
             new RotationStep(new RotationSpell("Cure Toxins"), 2f, (s,t) =>
-                (RotationCombatUtil.IHaveCachedDebuff(DebuffType.Poison) || RotationCombatUtil.IHaveCachedDebuff(DebuffType.Disease))
-                && (Settings.Current.CureToxin == "Group" || Settings.Current.CureToxin == "Self"),
+                Settings.Current.CureToxin == "Self"
+                && RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }),
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cure Toxins"), 2.1f, (s,t) =>
                 Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Poison, true, 30).FirstOrDefault()),
-            new RotationStep(new RotationSpell("Cure Toxins"), 2.1f, (s,t) =>
-                Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMembersWithCachedDebuff(DebuffType.Disease, true, 30).FirstOrDefault()),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, true, 30)),
 
             new RotationStep(new RotationSpell("Wind Shear"), 3f, (s,t) => t.IsTargetingMeOrMyPetOrPartyMember && t.GetDistance < 20, RotationCombatUtil.FindEnemyCastingWithLoS),
             new RotationStep(new RotationSpell("Lightning Bolt"), 4f, (s,t) => Me.BuffStack(53817) >= 5 && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 10) == 1, RotationCombatUtil.BotTargetFast),

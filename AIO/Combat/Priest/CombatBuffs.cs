@@ -1,7 +1,8 @@
 ﻿using AIO.Combat.Addons;
 using AIO.Framework;
+using AIO.Helpers.Caching;
 using System.Collections.Generic;
-using wManager.Wow.Helpers;
+using static AIO.Constants;
 
 namespace AIO.Combat.Priest
 {
@@ -11,8 +12,9 @@ namespace AIO.Combat.Priest
         public bool RunInCombat => true;
 
         public List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new RotationBuff("Inner Fire", minimumStacks: 2), 7f, (s, t) => !t.IsMounted, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Shadow Form"), 8f, (s, t) => SpellManager.KnowSpell("Shadow Form") && !t.IsMounted, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Inner Fire", minimumStacks: 2), 1f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Shadow Form"), 2f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Vampiric Embrace"), 7f, (s, t) => !Me.IsMounted && !Me.HaveBuff("Vampiric Embrace"), RotationCombatUtil.FindMe),
         };
 
         public void Initialize() { }

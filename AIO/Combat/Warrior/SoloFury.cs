@@ -3,6 +3,7 @@ using AIO.Framework;
 using AIO.Settings;
 using System.Collections.Generic;
 using System.Linq;
+using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using static AIO.Constants;
 
@@ -13,7 +14,11 @@ namespace AIO.Combat.Warrior
     {
         private static readonly string Intercept = "Intercept";
         private readonly bool KnowIntercept = SpellManager.KnowSpell(Intercept);
-        protected override List<RotationStep> Rotation => new List<RotationStep> {
+        private readonly Spell _battleStanceSpell = new Spell("Battle Stance");
+        private readonly Spell _berserkerStanceSpell = new Spell("Berserker Stance");
+        protected override List<RotationStep> Rotation => new List<RotationStep>
+        {
+            new RotationStep(new RotationAction("Check stance", CheckStance), 0f, 5000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Pummel"), 2f, (s,t) => t.IsCasting(), RotationCombatUtil.FindEnemyCasting),
             new RotationStep(new RotationSpell("Hamstring"), 3f, (s,t) => !t.HaveBuff("Hamstring") && t.HealthPercent < 40 && t.CreatureTypeTarget=="Humanoid" && !BossList.MyTargetIsBoss && Settings.Current.Hamstring, RotationCombatUtil.BotTarget),
@@ -32,5 +37,14 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Cleave"), 16f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <=10) >=2, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Heroic Strike"), 17f, (s,t) => Me.Rage > 40, RotationCombatUtil.BotTarget),
         };
+
+        private bool CheckStance()
+        {
+            if (!_berserkerStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Battle Stance")
+                _battleStanceSpell.Launch();
+            if (_berserkerStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Berserker Stance")
+                _berserkerStanceSpell.Launch();
+            return false;
+        }
     }
 }

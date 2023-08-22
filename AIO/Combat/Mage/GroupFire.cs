@@ -25,7 +25,7 @@ namespace AIO.Combat.Mage
 
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true, ignoreGCD: true),
             new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && Me.ManaPercentage < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
             new RotationStep(new RotationSpell("Flamestrike"), 6f, (s,t) => Me.HaveBuff("Firestarter") && Settings.Current.GroupFireUseAOE, RotationCombatUtil.BotTargetFast, checkLoS: true),

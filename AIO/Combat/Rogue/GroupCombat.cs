@@ -20,7 +20,7 @@ namespace AIO.Combat.Rogue
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange : false, forceCast : true, ignoreGCD : true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Sprint"), 2f, RotationCombatUtil.Always, _ => !EnemiesAttackingGroup.Any(unit => unit.CGetDistance() <=10), RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Kick"), 3f, (s,t) => t.CIsCast() && t.CGetDistance() < 7, RotationCombatUtil.BotTargetFast),

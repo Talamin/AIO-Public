@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using wManager.Wow.Class;
 using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
@@ -17,10 +18,13 @@ namespace AIO.Combat.Warrior
     {
         private WoWUnit[] EnemiesAttackingGroup = new WoWUnit[0];
         private Stopwatch watch = Stopwatch.StartNew();
+        private readonly Spell _battleStanceSpell = new Spell("Battle Stance");
+        private readonly Spell _defensiveStanceSpell = new Spell("Defensive Stance");
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,
-                (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,
+                (action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true, ignoreGCD: true),
+            new RotationStep(new RotationAction("Check stance", CheckStance), 0f, 5000),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Last Stand"), 1.1f, RotationCombatUtil.Always, _ => Me.CHealthPercent() < 15, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Shield Wall"), 2.11f, RotationCombatUtil.Always, _ => Me.CInCombat() && Me.CHealthPercent() < 65, RotationCombatUtil.FindMe, checkRange: false),
@@ -62,6 +66,15 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Heroic Strike"), 22f, RotationCombatUtil.Always, _ => Me.CRage() >= 40 && Me.Level < 40 && !RotationCombatUtil.IsCurrentSpell("Heroic Strike"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Heroic Strike"), 23f, RotationCombatUtil.Always, _ => Me.CRage() >= 80 && Me.Level >= 40 && !RotationCombatUtil.IsCurrentSpell("Heroic Strike"), RotationCombatUtil.BotTargetFast),
         };
+
+        private bool CheckStance()
+        {
+            if (!_defensiveStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Battle Stance")
+                _battleStanceSpell.Launch();
+            if (_defensiveStanceSpell.KnownSpell && RotationCombatUtil.GetLUAActiveShapeshiftName() != "Defensive Stance")
+                _defensiveStanceSpell.Launch();
+            return false;
+        }
 
 
         private bool DoPreCalculations()

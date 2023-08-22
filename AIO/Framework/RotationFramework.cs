@@ -55,10 +55,7 @@ namespace AIO.Framework
             ObjectManagerEvents.OnObjectManagerPulsed += OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs += OnEventsLuaStringWithArgs;
             if (_devMode)
-            {
-                if (!Radar3D.IsLaunched) Radar3D.Pulse();
                 Radar3D.OnDrawEvent += Draw;
-            }
         }
 
         private void Draw()
@@ -92,11 +89,7 @@ namespace AIO.Framework
         {
             ObjectManagerEvents.OnObjectManagerPulsed -= OnObjectManagerPulsed;
             EventsLuaWithArgs.OnEventsLuaStringWithArgs -= OnEventsLuaStringWithArgs;
-            if (_devMode)
-            {
-                Radar3D.OnDrawEvent -= Draw;
-                Radar3D.Stop();
-            }
+            Radar3D.OnDrawEvent -= Draw;
         }
 
         private readonly TimeSpan UpdateCacheMaxDelay = new TimeSpan(hours: 0, minutes: 0, seconds: 3);
@@ -284,7 +277,7 @@ namespace AIO.Framework
             var gcdEnabled = globalCd != 0;
 
             var watch = Stopwatch.StartNew();
-            Run(() => RunRotation(rotation, gcdEnabled, caller), alreadyLocked);
+            Run(() => RunRotation(rotation, caller), alreadyLocked);
             watch.Stop();
 
             //if (watch.ElapsedMilliseconds > 64)
@@ -359,7 +352,7 @@ namespace AIO.Framework
                           $"has the highest maximum.");
         }
 
-        private static void RunRotation(IReadOnlyList<RotationStep> rotation, bool gcdEnabled, string caller)
+        private static void RunRotation(IReadOnlyList<RotationStep> rotation, string caller)
         {
             try
             {
@@ -367,8 +360,7 @@ namespace AIO.Framework
                 // if(_ticks % 500 == 0) PrintStats();
 
                 var exclusives = new Exclusives();
-
-                if (GCDIsActive()) return;
+                bool gcdActive = GCDIsActive();
 
                 if (_shouldPreventDoubleCast)
                 {
@@ -380,15 +372,15 @@ namespace AIO.Framework
 
                 Stopwatch rotationWatch = Stopwatch.StartNew();
                 Dictionary<string, double> stepTimes = new Dictionary<string, double>();
-                // var watch = new Stopwatch();
                 for (ushort i = 0; i < rotation.Count; i++)
                 {
                     RotationStep step = rotation[i];
                     Stopwatch stepWatch = Stopwatch.StartNew();
-                    // watch.Restart();
                     try
                     {
-                        if (step.Execute(gcdEnabled, exclusives))
+                        if (gcdActive && !step.IgnoreGCD) continue;
+
+                        if (step.Execute(exclusives))
                         {
                             _shouldPreventDoubleCast = step.PreventDoubleCast;
                             break;
@@ -439,7 +431,7 @@ namespace AIO.Framework
 
             return 0;
         }
-        
+
         public static bool SpellReady(uint spellid)
         {
             return SpellCooldownTimeLeft(spellid) <= 0;
@@ -455,7 +447,7 @@ namespace AIO.Framework
 
             return 0;
         }
-        
+
         public struct SpellCooldown
         {
             public uint SpellId;
@@ -471,7 +463,7 @@ namespace AIO.Framework
                 Duration = duration;
             }
         }
-
+        /*
         public static bool GCDIsActiveLUA()
         {
             int gcd = Lua.LuaDoString<int>($@"
@@ -480,7 +472,7 @@ namespace AIO.Framework
                     ");
             return gcd > 0;
         }
-
+        */
         public static bool GCDIsActive()
         {
             // based on https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/248891-3-1-3-info-getting-spell-cooldowns-3.html#post1780758
@@ -503,7 +495,7 @@ namespace AIO.Framework
             }
             return false;
         }
-        
+
         public static IEnumerable<SpellCooldown> SpellCooldownTimeLeft()
         {
             // based on https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/248891-3-1-3-info-getting-spell-cooldowns-3.html#post1780758

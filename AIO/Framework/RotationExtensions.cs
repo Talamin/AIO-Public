@@ -1,4 +1,5 @@
 ﻿using AIO.Lists;
+using robotManager.Helpful;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,10 @@ namespace AIO.Framework
     public static class Extensions
     {
         private static readonly ConcurrentDictionary<int, string> CreatureTypeCache = new ConcurrentDictionary<int, string>();
-
+        /*
+         * The reason I removed this is because it was oftentime used repeatedly
+         * in a loop on group members, severely slowing down the entire rotation
+         * Check RotationCombatUtils _cachedDebuffedPlayers instead
         public static bool HasDebuffType(this WoWUnit unit, params string[] types)
         {
             return RotationCombatUtil.ExecuteActionOnUnit(unit, (luaUnitId) =>
@@ -30,7 +34,7 @@ namespace AIO.Framework
                 return Lua.LuaDoString<bool>(luaString);
             });
         }
-
+        */
         public static bool IsCasting(this WoWUnit unit)
         {
             return RotationCombatUtil.ExecuteActionOnUnit(unit, (luaUnitId) =>

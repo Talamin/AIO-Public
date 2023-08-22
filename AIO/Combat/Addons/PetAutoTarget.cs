@@ -1,37 +1,39 @@
 ﻿using AIO.Framework;
 using robotManager.Helpful;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using wManager.Events;
 using wManager.Wow.Helpers;
-using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
 namespace AIO.Combat.Addons
 {
     internal class PetAutoTarget : IAddon
     {
-        private readonly string tauntSpellName;
+        private readonly string _tauntSpellName;
+        private readonly bool _IAmHunter = Me.WowClass == wManager.Wow.Enums.WoWClass.Hunter;
+
         public bool RunOutsideCombat => false;
         public bool RunInCombat => true;
 
-        public List<RotationStep> Rotation => new List<RotationStep>();
-
         public PetAutoTarget(string taunt)
         {
-            tauntSpellName = taunt;
+            _tauntSpellName = taunt;
         }
 
-        public void Initialize() => FightEvents.OnFightLoop += OnFightLoop;
+        public List<RotationStep> Rotation => new List<RotationStep>
+        {
+            new RotationStep(new RotationAction("Auto Pet Target", AutoTarget), 0f, 500),
+        };
 
-        public void Dispose() => FightEvents.OnFightLoop -= OnFightLoop;
+        public void Initialize() { }
 
-        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable)
+        public void Dispose() { }
+
+        private bool AutoTarget()
         {
             if (!Pet.IsAlive || !Pet.IsValid || Me.IsInGroup)
             {
-                return;
+                return false;
             }
 
             var validTargets = RotationFramework.Enemies.OrderBy(uu => uu.HealthPercent);
@@ -50,7 +52,7 @@ namespace AIO.Combat.Addons
             var petTarget = targets.FirstOrDefault();
             if (petTarget == null)
             {
-                return;
+                return false;
             }
 
             if (!petTarget.IsMyPetTarget)
@@ -64,10 +66,12 @@ namespace AIO.Combat.Addons
 
             if (Me.IsInGroup)
             {
-                return;
+                return false;
             }
 
-            PetManager.PetSpellCast(tauntSpellName);
+            if (_IAmHunter && Pet.Focus < 20) return false;
+            PetManager.CastPetSpellIfReady(_tauntSpellName);
+            return false;
         }
     }
 }

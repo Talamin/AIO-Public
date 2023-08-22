@@ -47,7 +47,7 @@ namespace AIO.Combat.Warlock
                 && RotationFramework.Enemies.Count(o => o.Position.DistanceTo(Pet.Position) <= 8) > 1
                 && _currentPet == "Voidwalker")
             {
-                PetManager.PetSpellCast("Suffering");
+                PetManager.CastPetSpellIfReady("Suffering");
             }
 
             if (Me.InCombat
@@ -62,7 +62,7 @@ namespace AIO.Combat.Warlock
                     Me.FocusGuid = unitToDevour.Guid;
                     if (Pet.Position.DistanceTo(Target.Position) <= 30)
                     {
-                        PetManager.PetSpellCastFocus("Devour Magic");
+                        PetManager.CastPetSpellIfReady("Devour Magic", true);
                         Thread.Sleep(50);
                         Lua.LuaDoString("ClearFocus();");
                     }
@@ -84,7 +84,7 @@ namespace AIO.Combat.Warlock
                     if (Pet.Target == unitToInterrupt.Guid)
                     {
                         if (Pet.Position.DistanceTo(unitToInterrupt.Position) <= 30)
-                            PetManager.PetSpellCast("Spell Lock");
+                            PetManager.CastPetSpellIfReady("Spell Lock");
                     }
                 }
             }
@@ -96,7 +96,7 @@ namespace AIO.Combat.Warlock
                 && _currentPet == "Voidwalker"
                 && !Pet.HaveBuff("Consume Shadows"))
             {
-                PetManager.PetSpellCast("Consume Shadows");
+                PetManager.CastPetSpellIfReady("Consume Shadows");
             }
 
             if (Me.IsInGroup
@@ -112,14 +112,9 @@ namespace AIO.Combat.Warlock
         private bool SummonPet(Spell spell)
         {
             if (!spell.KnownSpell || !spell.IsSpellUsable) return false;
-            MovementManager.StopMove();
-            spell.Launch();
-            Thread.Sleep(200);
-            while (Me.IsCast)
-            {
-                Thread.Sleep(100);
-                if (Pet.IsAlive) break; // Avoid occasional double summon
-            }
+            spell.Launch(true, false);
+            PetManager.PreventPetDoubleSummon();
+
             Thread.Sleep(200);
             _currentPet = PetManager.GetCurrentWarlockPetLUA;
 

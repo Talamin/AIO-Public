@@ -13,14 +13,12 @@ namespace AIO.Framework
         private readonly Func<WoWUnit, bool> CancelPred;
         private WoWUnit Target;
 
-        public CancelableSpell(string name, Func<WoWUnit, bool> cancelPred, bool ignoresGlobal = false) : base(name,
-            ignoresGlobal)
+        public CancelableSpell(string name, Func<WoWUnit, bool> cancelPred, bool ignoresGlobal = false) : base(name)
         {
             CancelPred = cancelPred;
         }
 
-        public CancelableSpell(Spell spell, Func<WoWUnit, bool> cancelPred, bool ignoresGlobal = false) : base(spell,
-            ignoresGlobal)
+        public CancelableSpell(Spell spell, Func<WoWUnit, bool> cancelPred, bool ignoresGlobal = false) : base(spell)
         {
             CancelPred = cancelPred;
         }

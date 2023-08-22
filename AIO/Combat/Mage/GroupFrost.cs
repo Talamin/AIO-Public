@@ -25,16 +25,6 @@ namespace AIO.Combat.Mage
             new RotationStep(new RotationAction("Pre-Calculations", DoPreCalculations), 0f, 500),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.CIsCast() && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Mana Shield"), 1.1f, (s,t) => Me.CHealthPercent() <= 40 && Me.CManaPercentage() >= 30 && !Me.HaveBuff("Mana Shield"), RotationCombatUtil.FindMe),
-            //// Only cast Polymorph if Sheep is enabled in settings
-            //new RotationStep(new RotationSpell("Polymorph"), 2.1f, (s,t) => Settings.Current.Sheep 
-            //// Only cast Polymorph if more than one enemy is targeting the Mage
-            //&& !t.IsMyTarget && RotationFramework.Enemies.Count(o => o.IsTargetingMe) > 1 
-            //// Make sure no enemies in 30 yard casting range are polymorphed right now
-            //&& RotationFramework.Enemies.Count(o => o.GetDistance <= 30 && o.HaveBuff("Polymorph")) < 1
-            //// Only polymorph a valid target
-            //&& (t.IsCreatureType("Humanoid") || t.IsCreatureType("Beast") || t.IsCreatureType("Critter")),
-            //    RotationCombatUtil.FindEnemyTargetingMe),
-            //new RotationStep(new RotationSpell("Frost Nova"), 2.2f, (s,t) => t.GetDistance <= 6 && t.HealthPercent > 30 && !Me.IsInGroup, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationBuff("Ice Barrier"), 3f, (s,t) => t.CHealthPercent() < 60, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cold Snap"), 3.5f, (s,t) => !Me.CHaveBuff("Ice Barrier") && Me.CHealthPercent() < 60, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Ice Block"), 4f, (s,t) =>  Me.CHealthPercent() < 30 && _enemiesAttackingGroup.ContainsAtLeast(u => u.CGetDistance() < 10 && u.CIsTargetingMe(), 1), RotationCombatUtil.FindMe),

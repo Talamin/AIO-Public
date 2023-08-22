@@ -10,8 +10,8 @@ namespace AIO.Framework
         private readonly int MinimumStacks;
         private readonly int MinimumRefreshTimeLeft;
 
-        public RotationBuff(string name, bool ignoresGlobal = false, int minimumStacks = 0, int minimumRefreshTimeLeft = 0) :
-            base(name, ignoresGlobal)
+        public RotationBuff(string name, int minimumStacks = 0, int minimumRefreshTimeLeft = 0) :
+            base(name)
         {
             MinimumStacks = minimumStacks;
             MinimumRefreshTimeLeft = minimumRefreshTimeLeft;

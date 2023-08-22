@@ -21,8 +21,7 @@ namespace AIO.Combat.Warlock
         private List<WoWUnit> _enemiesWithoutMyCorr = new List<WoWUnit>();
 
         protected override List<RotationStep> Rotation => new List<RotationStep> {
-            new RotationStep(new DebugSpell("Pre-Calculations", ignoresGlobal: true), 0.0f,(action,unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange: false, forceCast: true),
-            new RotationStep(new RotationSpell("Shoot"), 0.9f, (s,t) => Settings.Current.UseWand && t.CHealthPercent() < Settings.Current.UseWandTresh && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
+            new RotationStep(new DebugSpell("Pre-Calculations"), 0.0f,(action, unit) => DoPreCalculations(), RotationCombatUtil.FindMe, checkRange : false, forceCast : true, ignoreGCD : true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking() && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => !BossList.MyTargetIsBoss && t.HealthPercent <= 25 && ItemsHelper.GetItemCount("Soul Shard") <= 3, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demonic Empowerment"), 3f, (s,t) => !Pet.CHaveBuff("Demonic Empowerment") && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
@@ -37,7 +36,6 @@ namespace AIO.Combat.Warlock
 
             new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.CHaveBuff("Health Funnel") && Pet.CHealthPercent() < Settings.Current.GroupAfflictionHealthfunnelPet && Me.CHealthPercent() > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
-            //new RotationStep(new RotationSpell("Haunt"), 7.5f, (s,t) => t.IsElite && t.HealthPercent > 50 && !t.CHaveMyBuff("Haunt"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Haunt"), 7.6f, (s,t) => BossList.MyTargetIsBoss && !t.CHaveMyBuff("Haunt"), RotationCombatUtil.BotTargetFast),
 
             // DoT spread
@@ -58,9 +56,10 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Curse of Exhaustion"), 10.4f, (s,t) => !t.CHaveMyBuff("Curse of Exhaustion") && Settings.Current.GroupAfflictionAfflCurse == "Exhaustion", RotationCombatUtil.BotTargetFast),
 
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => Me.HealthPercent < Settings.Current.GroupAfflictionDrainlife, RotationCombatUtil.BotTargetFast),
-            //new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.CHaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Shadow Bolt"), 15f ,(s,t) => Settings.Current.GroupAfflictionShadowboltOverWand, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => t.CHealthPercent() > Settings.Current.UseWandTresh && !Settings.Current.GroupAfflictionShadowboltOverWand, RotationCombatUtil.BotTargetFast),
+
+            new RotationStep(new RotationSpell("Shoot"), 25f, (s,t) => Me.CManaPercentage() < 5 && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
         };
 
         private bool SearchForEnemiesToDoT()

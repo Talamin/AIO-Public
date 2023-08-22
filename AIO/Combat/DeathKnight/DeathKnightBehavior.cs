@@ -74,11 +74,11 @@ namespace AIO.Combat.DeathKnight
                 {
                     if (Target.IsCast && Pet.Position.DistanceTo(Target.Position) <= 6)
                     {
-                        PetManager.PetSpellCast("Gnaw");
+                        PetManager.CastPetSpellIfReady("Gnaw");
                     }
                     if (Pet.Position.DistanceTo(Target.Position) >= 7)
                     {
-                        PetManager.PetSpellCast("Leap");
+                        PetManager.CastPetSpellIfReady("Leap");
                     }
                 }
             }

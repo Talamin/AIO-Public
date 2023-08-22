@@ -8,16 +8,14 @@ namespace AIO.Framework
     {
         public readonly Spell Spell;
 
-        public RotationSpell(string name, bool ignoresGlobal = false)
+        public RotationSpell(string name)
         {
             Spell = new Spell(name);
-            IgnoresGlobal = ignoresGlobal;
         }
         
-        public RotationSpell(Spell spell, bool ignoresGlobal = false)
+        public RotationSpell(Spell spell)
         {
             Spell = spell;
-            IgnoresGlobal = ignoresGlobal;
         }
 
         public string Name => Spell.Name;
@@ -33,8 +31,6 @@ namespace AIO.Framework
         public virtual bool Execute(WoWUnit target, bool force = false) => RotationCombatUtil.CastSpell(this, target, force);
 
         public virtual (bool, bool) Should(WoWUnit target) => (true, true);
-
-        public bool IgnoresGlobal { get; }
 
         //
         public static int GetSpellCost(string spellName)

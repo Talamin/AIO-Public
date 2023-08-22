@@ -46,105 +46,47 @@ namespace AIO.Settings
 
         #region GroupShadow
         [Setting]
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("ShadowForm?")]
-        [Description("Use ShadowForm in General?")]
-        public bool GroupShadowShadowForm { get; set; }
-
-        [Setting]
         [DefaultValue(30)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Shadowfiend")]
-        [Description("% when use Shadowfiend in General?")]
+        [Description("Use Shadowfiend when under X% mana")]
+        [Percentage(true)]
         public int GroupShadowShadowfiend { get; set; }
 
         [Setting]
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Dot on Offtargets?")]
-        [Description("Use Dot on Adds?")]
-        public bool GroupShadowDotOff { get; set; }
-
-        [Setting]
-        [DefaultValue(true)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Devouring Plague?")]
-        [Description("Use DP up to level 80?")]
-        public bool GroupShadowDPUse { get; set; }
-
-        [Setting]
         [DefaultValue(60)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Shield Treshold?")]
-        [Description("Own life for Shield Usage?")]
+        [DisplayName("PW: Shield")]
+        [Description("Use Power Word Shield when under X% health")]
         [Percentage(true)]
         public int GroupShadowUseShieldTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(90)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Renew Treshold?")]
-        [Description("Treshold for Renew Usage?")]
-        [Percentage(true)]
-        public int GroupShadowUseRenewTresh { get; set; }
-
-        [Setting]
-        [DefaultValue(40)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Heal Treshold?")]
-        [Description("Treshold for Heal Usage?")]
-        [Percentage(true)]
-        public int GroupShadowUseHealTresh { get; set; }
-        
-        [Setting]
-        [DefaultValue(60)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Flash Heal Treshold?")]
-        [Description("Treshold for Flash Heal Usage?")]
-        [Percentage(true)]
-        public int GroupShadowUseFlashTresh { get; set; }
 
         [Setting]
         [DefaultValue(30)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
         [DisplayName("Dispersion")]
-        [Description("Treshold for Dispersion Usage?")]
+        [Description("Use Dispersion when under X% mana")]
         [Percentage(true)]
         public int GroupShadowDispersion { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Mindflay?")]
-        [Description("Use Mindflay in General?")]
-        public bool GroupShadowUseMindflay { get; set; }
-
-        [Setting]
-        [DefaultValue(false)]
-        [Category("Rotation")]
-        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("Use Heal in Group?")]
-        [Description("Use Heal in Group?")]
-        public bool GroupShadowUseHeaInGrp { get; set; }
 
         [Setting]
         [DefaultValue(true)]
         [Category("Rotation")]
         [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
-        [DisplayName("PW Shield?")]
-        [Description("Use Shield on Partymembers in Shadow Spec?")]
-        public bool GroupShadowUseShieldParty { get; set; }
+        [DisplayName("Cure Disease")]
+        [Description("Cure party diseases")]
+        public bool GroupShadowCureDisease { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
+        [DisplayName("Dispel Magic")]
+        [Description("Dispel party magic debuffs")]
+        public bool GroupShadowDispelMagic { get; set; }
 
         #endregion
 
@@ -411,18 +353,11 @@ namespace AIO.Settings
             SoloShadowUseShieldParty = true;
             SoloShadowDispersion = 30;
 
-            GroupShadowShadowForm = true;
             GroupShadowShadowfiend = 30;
-            GroupShadowUseHeaInGrp = false;
             GroupShadowUseShieldTresh = 60;
-            GroupShadowUseRenewTresh = 90;
-            GroupShadowUseFlashTresh = 60;
-            GroupShadowUseHealTresh = 40;
-            GroupShadowUseMindflay = false;
-            GroupShadowDPUse = true;
-            GroupShadowDotOff = true;
-            GroupShadowUseShieldParty = true;
             GroupShadowDispersion = 30;
+            GroupShadowCureDisease = true;
+            GroupShadowDispelMagic = true;
 
             GroupHolyGuardianSpiritTresh = 25;
             GroupHolyBigSingleTargetHeal = 65;

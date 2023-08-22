@@ -11,7 +11,7 @@ namespace AIO.Settings
     {
 
         #region Lists
-        [TriggerDropdown("WarriorTriggerDropdown", new string[] { nameof(Spec.Warrior_GroupFury), nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury) })]
+        [TriggerDropdown("WarriorTriggerDropdown", new string[] { nameof(Spec.Warrior_GroupFury), nameof(Spec.Warrior_GroupProtection), nameof(Spec.Warrior_GroupArms), nameof(Spec.Warrior_SoloArms), nameof(Spec.Warrior_SoloFury) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -136,6 +136,57 @@ namespace AIO.Settings
         public bool GroupFuryIntercept { get; set; }
         #endregion
 
+        #region GroupArms
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("Slam")]
+        [Description("Use Slam (recommended if tier bonus)")]
+        public bool GroupArmsSlam { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("AoE Rotation")]
+        [Description("Use AoE Rotation when at least X numbers on enemies at close range")]
+        public int GroupArmsAoe { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("Spread Rend")]
+        [Description("Use Rend on all targets around you")]
+        public bool GroupArmsSpreadRend { get; set; }
+
+        [Setting]
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("Enraged Regeneration")]
+        [Description("Use Enraged Regeneration when under X% Health")]
+        public int GroupArmsEnragedRegen { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("Demoralizing Shout")]
+        [Description("Use Demoralizing Shout")]
+        public bool GroupArmsDemoShout { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_GroupArms))]
+        [DisplayName("Intimidating Shout")]
+        [Description("Use Intimidating Shout to try and interrupt enemies around you")]
+        public bool GroupArmsIntimShout { get; set; }
+        #endregion
+
         public WarriorLevelSettings()
         {
             PullRanged = true;
@@ -155,6 +206,13 @@ namespace AIO.Settings
             GroupProtectionTauntGroup = true;
             GroupProtectionShockwaveCount = 2;
             GroupProtectionEnragedRegeneration = 65;
+            // Group Arms
+            GroupArmsSlam = false;
+            GroupArmsAoe = 3;
+            GroupArmsEnragedRegen = 50;
+            GroupArmsDemoShout = true;
+            GroupArmsIntimShout = false;
+            GroupArmsSpreadRend = true;
         }
     }
 }

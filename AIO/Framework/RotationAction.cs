@@ -22,7 +22,5 @@ namespace AIO.Framework
         }
 
         public virtual (bool, bool) Should(WoWUnit target) => (true, true);
-
-        public bool IgnoresGlobal { get; }
     }
 }

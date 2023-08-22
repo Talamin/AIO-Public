@@ -23,13 +23,17 @@ namespace AIO.Combat.Warrior
                 { Spec.Warrior_GroupProtection, new GroupProtection() },
                 { Spec.Warrior_SoloFury, new SoloFury() },
                 { Spec.Warrior_GroupFury, new GroupFury() },
+                { Spec.Warrior_GroupArms, new GroupArms() },
                 { Spec.Fallback, new SoloFury() },
             })
         {
             SetDefaultRange();
             Addons.Add(new Racials());
             Addons.Add(new CombatBuffs(this));
-            if (Specialisation != Spec.Warrior_GroupProtection && Settings.Current.PullRanged)
+            if (Specialisation != Spec.Warrior_GroupProtection 
+                && Specialisation != Spec.Warrior_GroupArms
+                && Specialisation != Spec.Warrior_GroupFury
+                && Settings.Current.PullRanged)
                 Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
             if (Specialisation == Spec.Warrior_GroupProtection)
                 Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
