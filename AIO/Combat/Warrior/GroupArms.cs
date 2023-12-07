@@ -39,8 +39,8 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Heroic Strike"), 5f, (s,t) => Me.CRage() > 50 && !_cleaveOn &&  !_heroicStrikeOn, RotationCombatUtil.BotTargetFast, ignoreGCD: true),
 
             // AOE
-            new RotationStep(new RotationSpell("Rend"), 6f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.GroupArmsAoe && !t.CHaveMyBuff("Rend"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Sweeping Strikes"), 7f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.GroupArmsAoe, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Sweeping Strikes"), 6f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.GroupArmsAoe, RotationCombatUtil.BotTargetFast, ignoreGCD: true),
+            new RotationStep(new RotationSpell("Rend"), 7f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.GroupArmsAoe && !t.CHaveMyBuff("Rend"), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Bladestorm"), 8f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.GroupArmsAoe, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Rend"), 8.5f, (s,t) => Settings.Current.GroupArmsSpreadRend, p => _enemiesAroundWithoutMyRend.FirstOrDefault()),
 

@@ -34,9 +34,9 @@ namespace AIO.Combat.Warrior
                 && Specialisation != Spec.Warrior_GroupArms
                 && Specialisation != Spec.Warrior_GroupFury
                 && Settings.Current.PullRanged)
-                Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
+                Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
             if (Specialisation == Spec.Warrior_GroupProtection)
-                Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
+                Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
         }
     }
 }

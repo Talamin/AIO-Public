@@ -36,7 +36,7 @@ namespace AIO.Combat.Paladin
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Purify"), 2.1f, (s,t) => 
                 Settings.Current.GroupRetributionPurifyMember,
-                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison }, true, 30)),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison }, true, 30)),
             
             new RotationStep(new RotationSpell("Divine Plea"), 3.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
 

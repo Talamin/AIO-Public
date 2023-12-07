@@ -69,7 +69,7 @@ namespace AIO.Combat.Shaman
 
             new RotationStep(new RotationSpell("Cleansing Totem"), 50f, (s,t) =>
                 Settings.Current.UseCleansingTotem
-                && RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, false, 30) != null
+                && RotationCombatUtil.GetPartyMemberWithCachedDebuff((p) => true, new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, false, 30) != null
                 && !Totems.HasAny("Cleansing Totem"), RotationCombatUtil.FindMe),
             /*
              * There is no "Fear","Charm","Sleep" in debuffTypes

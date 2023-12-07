@@ -22,7 +22,7 @@ namespace AIO.Combat.Shaman
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cure Toxins"), 2.1f, (s,t) =>
                 Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, true, 30)),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, true, 30)),
 
             new RotationStep(new RotationSpell("Healing Wave"), 4f, (s,t) => !Me.IsInGroup && Me.HealthPercent < 40 && t.HealthPercent > 10, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Wind Shear"), 15f, (s,t) => t.IsTargetingMeOrMyPetOrPartyMember && t.GetDistance < 20, RotationCombatUtil.FindEnemyCasting),

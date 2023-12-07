@@ -25,7 +25,7 @@ namespace AIO.Combat.Shaman
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cure Toxins"), 2.1f, (s,t) =>
                 Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }, true, 30)),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }, true, 30)),
 
             new RotationStep(new RotationSpell("Lightning Bolt"), 4f, (s,t) => Me.ManaPercentage >= Settings.Current.SoloEnhancementManaSavedForHeals && Me.BuffStack(53817) >=5 && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 10) == 1, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Chain Lightning"), 5f, (s,t) => Me.ManaPercentage >= Settings.Current.SoloEnhancementManaSavedForHeals && Me.BuffStack(53817) >=5 && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 10) >= 2, RotationCombatUtil.BotTarget),

@@ -58,30 +58,30 @@ namespace AIO.Framework
         }
 
         // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
-        public static WoWUnit GetPartyMemberWithCachedDebuff(DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
+        public static WoWUnit GetPartyMemberWithCachedDebuff(Func<WoWUnit, bool> predicate, DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
         {
             if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
             {
                 return players
-                    .FirstOrDefault(m => m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position)));
+                    .FirstOrDefault(m => predicate(m) && m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position)));
             }
             return null;
         }
 
         // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
-        public static List<WoWUnit> GetPartyMembersWithCachedDebuff(DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
+        public static List<WoWUnit> GetPartyMembersWithCachedDebuff(Func<WoWUnit, bool> predicate, DebuffType debuffType, bool checkLos, float maxDistance = float.MaxValue)
         {
             if (_cachedDebuffedPlayers.TryGetValue(debuffType, out List<WoWUnit> players))
             {
                 return players
-                    .Where(m => m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position)))
+                    .Where(m => m.GetDistance < maxDistance && (!checkLos || !TraceLine.TraceLineGo(m.Position) && predicate(m)))
                     .ToList();
             }
             return new List<WoWUnit>();
         }
 
         // Remember to call CacheLUADebuffedPartyMembersStep() as a step in your rotation
-        public static WoWUnit GetPartyMemberWithCachedDebuff(List<DebuffType> debuffTypes, bool checkLos, float maxDistance = float.MaxValue)
+        public static WoWUnit GetPartyMemberWithCachedDebuff(Func<WoWUnit, bool> predicate, List<DebuffType> debuffTypes, bool checkLos, float maxDistance = float.MaxValue)
         {
             foreach (DebuffType debuffType in debuffTypes)
             {
@@ -90,7 +90,8 @@ namespace AIO.Framework
                     foreach (WoWUnit player in players)
                     {
                         if (player.GetDistance < maxDistance
-                            && (!checkLos || !TraceLine.TraceLineGo(player.Position)))
+                            && (!checkLos || !TraceLine.TraceLineGo(player.Position))
+                            && predicate(player))
                             return player;
                     }
                 }

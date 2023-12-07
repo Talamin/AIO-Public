@@ -47,11 +47,11 @@ namespace AIO.Combat.Paladin
             switch (Specialisation)
             {
                 case Spec.Paladin_GroupProtection:
-                    Addons.Add(new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
+                    Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
                     break;
                 case Spec.Paladin_SoloProtection:
                 case Spec.Paladin_SoloRetribution:
-                    Addons.Add(new RangedPull(new List<string> { "Avenger's Shield", "Exorcism", "Hand of Reckoning" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
+                    Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
                     break;
             }
         }

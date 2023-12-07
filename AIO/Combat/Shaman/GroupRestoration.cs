@@ -28,7 +28,7 @@ namespace AIO.Combat.Shaman
             
             new RotationStep(new RotationSpell("Cleanse Spirit"), 9f, (s,t) => 
                 Me.ManaPercentage > 25, 
-                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison, DebuffType.Curse }, true, 30)),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType>() { DebuffType.Disease, DebuffType.Poison, DebuffType.Curse }, true, 30)),
             new RotationStep(new RotationSpell("Cleanse Spirit"), 9.1f, (s,t) => t.HaveImportantCurse() || t.HaveImportantDisease() || t.HaveImportantPoison(), s => Me.ManaPercentage > 25, RotationCombatUtil.FindPartyMember),
             
             new RotationStep(new RotationSpell("Riptide"), 11f, (s,t) => t.HealthPercent <= Settings.Current.RestorationRiptideGroup, RotationCombatUtil.FindPartyMember),
@@ -44,7 +44,7 @@ namespace AIO.Combat.Shaman
                 RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Cure Toxins"), 16f, (s,t) =>
                 Settings.Current.CureToxin == "Group",
-                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }, true, 30)),
+                p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType> () { DebuffType.Poison, DebuffType.Disease }, true, 30)),
 
             new RotationStep(new RotationSpell("Earth Shock"), 19f, (s,t) => !t.HaveMyBuff("Earth Shock"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Lightning Bolt"), 20f, (s,t) => !Me.IsInGroup, RotationCombatUtil.BotTarget),

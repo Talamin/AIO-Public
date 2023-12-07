@@ -53,18 +53,18 @@ namespace AIO.Settings
         public bool ReviveAuto { get; set; }
 
         [Setting]
-        [DefaultValue(40)]
+        [DefaultValue(60)]
         [Category("General")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", "General")]
         [DisplayName("OOC Regrowth")]
+        [Percentage(true)]
         [Description("Set the health threshold for OOC Regrowth Healing")]
         public int OOCRegrowth { get; set; }
 
         [Setting]
         [DefaultValue(85)]
         [Category("General")]
-        [VisibleWhenDropdownValue("DruidTriggerDropdown", "General")]
         [DisplayName("OOC Rejuvenation")]
+        [Percentage(true)]
         [Description("Set the health threshold for OOC Rejuvenation Healing")]
         public int OOCRejuvenation { get; set; }
         #endregion
@@ -367,34 +367,39 @@ namespace AIO.Settings
         {
             //BuffIC = true;
             HealOOC = true;
+            Innervate = 25;
+            RebirthAuto = true;
+            ReviveAuto = true;
+            OOCRejuvenation = 85;
+            OOCRegrowth = 60;
+
+            SoloFeralRipHealth = 30;
+            SoloFeralRegrowthIC = true;
+            SoloFeralRejuvenationIC = true;
+            SoloFeralHealingTouchIC = true;
+            SoloFeralICHealThreshold = 35;
             SoloFeralProwl = true;
             SoloFeralForceFaerie = false;
             SoloFeralTigersFury = true;
             SoloFeralFinisherComboPoints = 5;
             SoloFeralFaerieFire = true;
             SoloFeralDash = true;
-            SoloFeralCharge = true;           
+            SoloFeralCharge = true;
             SoloFeralBearCount = 2;
-            Innervate = 25;
-            SoloFeralRipHealth = 30;
-            SoloFeralRegrowthIC = true;
-            OOCRegrowth = 60;
-            SoloFeralRejuvenationIC = true;
-            SoloFeralHealingTouchIC = true;
-            SoloFeralICHealThreshold = 35;
-            OOCRejuvenation = 30;
             SoloFeralDecurse = false;
+
             GroupFeralCharge = true;
             GroupFeralFaerieFire = true;
+
             SoloBalanceUseMoonfire = true;
             SoloBalanceUseAOE = true;
             SoloBalanceUseStarfall = true;
             SoloBalanceAOETargets = 4;
-            RebirthAuto = true;
-            ReviveAuto = true;
+
             SoloBalanceHealingTouch = 10;
             SoloBalanceRegrowth = 60;
             SoloBalanceRejuvenation = 30;
+
             GroupRestorationSwiftmend = 60;
             GroupRestorationRegrowth = 80;
             GroupRestorationRejuvenation = 95;

@@ -46,7 +46,7 @@ namespace AIO.Combat.Druid
             if (Settings.Current.HealOOC) 
                 Addons.Add(new HealOOC());
             if (Specialisation == Spec.Druid_GroupFeralTank) 
-                Addons.Add(new RangedPull(new List<string> { "Faerie Fire (Feral)" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
+                Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ALWAYS));
         }
 
         public override void Initialize()

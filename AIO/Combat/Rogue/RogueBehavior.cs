@@ -30,7 +30,7 @@ namespace AIO.Combat.Rogue
             Addons.Add(new Racials());
             Addons.Add(new ApplyPoison());
             if (Specialisation == Spec.Rogue_SoloCombat && Settings.Current.PullRanged)
-                Addons.Add(new RangedPull(new List<string> { "Throw", "Shoot" }, SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
+                Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
         }
 
         public override void Initialize()

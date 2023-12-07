@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using wManager.Wow.Helpers;
+using wManager.Wow.ObjectManager;
 using static AIO.Constants;
 
 namespace AIO.Combat.Rogue
@@ -15,7 +16,7 @@ namespace AIO.Combat.Rogue
 
         public List<RotationStep> Rotation => new List<RotationStep>
         {
-            new RotationStep(new RotationAction("Apply poisons", ApplyPoisons), 0f, 1000)
+            new RotationStep(new RotationAction("Apply poisons", ApplyPoisons), 0f, 5000)
         };
 
         public void Initialize() { }
@@ -28,11 +29,11 @@ namespace AIO.Combat.Rogue
                 local poisonName = GetItemInfo({poisonId});
                 return poisonName;
             ");
-            Main.Log($"Applying {poisonName} on {slot}");
+            Main.Log($"Applying {poisonName} ({poisonId}) on {slot}");
             MovementManager.StopMove();
             MovementManager.StopMoveTo(false, 1000);
+            ItemsManager.UseItem(poisonName);
             Lua.LuaDoString($@"
-                UseItemByName(""{poisonName}"");
                 PickupInventoryItem(GetInventorySlotInfo(""{slot}""));
                 StaticPopup1Button1:Click();
             ");
@@ -72,16 +73,36 @@ namespace AIO.Combat.Rogue
             int timeRemainingMain = int.Parse(luaResult[2]) / 60000; // remaining minutes
             int timeRemainingoff = int.Parse(luaResult[3]) / 60000; // remaining minutes
 
-            uint usableDeadlyPoison = UsableDeadlyPoison.FirstOrDefault();
-            uint usableInstantPoison = UsableInstantPoison.FirstOrDefault();
+            uint usableDeadlyPoison = 0;
+            uint usableInstantPoison = 0;
 
-            if (hasMainHandEquipped && timeRemainingMain <= 5 && usableInstantPoison > 0)
+            List<WoWItem> allItems = Bag.GetBagItem();
+
+            foreach (KeyValuePair<int, uint> instantPoison in _instantPoisonDictionary)
+            {
+                if (instantPoison.Key <= Me.Level && allItems.Exists(item => item.Entry == instantPoison.Value))
+                {
+                    usableInstantPoison = instantPoison.Value;
+                    break;
+                }
+            }
+
+            foreach (KeyValuePair<int, uint> deadlyPoison in _deadlyPoisonDictionary)
+            {
+                if (deadlyPoison.Key <= Me.Level && allItems.Exists(item => item.Entry == deadlyPoison.Value))
+                {
+                    usableDeadlyPoison = deadlyPoison.Value;
+                    break;
+                }
+            }
+
+            if (hasMainHandEquipped && timeRemainingMain < 5 && usableInstantPoison > 0)
             {
                 Applypoison(usableInstantPoison, true);
                 return true;
             }
 
-            if (hasOffHandEquipped && timeRemainingoff <= 5)
+            if (hasOffHandEquipped && timeRemainingoff < 5)
             {
                 if (usableDeadlyPoison > 0)
                 {
@@ -98,16 +119,6 @@ namespace AIO.Combat.Rogue
 
             return false;
         }
-
-        private IEnumerable<uint> UsableInstantPoison => _instantPoisonDictionary
-            .Where(i => i.Key <= Me.Level && ItemsManager.HasItemById(i.Value))
-            .OrderByDescending(i => i.Key)
-            .Select(i => i.Value);
-
-        private IEnumerable<uint> UsableDeadlyPoison => _deadlyPoisonDictionary
-            .Where(i => i.Key <= Me.Level && ItemsManager.HasItemById(i.Value))
-            .OrderByDescending(i => i.Key)
-            .Select(i => i.Value);
 
         private readonly Dictionary<int, uint> _instantPoisonDictionary = new Dictionary<int, uint>
         {

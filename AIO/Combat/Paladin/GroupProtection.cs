@@ -32,11 +32,11 @@ namespace AIO.Combat.Paladin
             new RotationStep(new RotationSpell("Sacred Shield"), 1.8f, RotationCombatUtil.Always, _ => !Me.HaveBuff("Sacred Shield"), RotationCombatUtil.FindMe, checkRange:false),
             new RotationStep(new RotationSpell("Consecration"), 2f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Count(unit => unit.CGetDistance() <=8) >= Settings.Current.GroupProtConsecration, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Divine Plea"), 2.5f, (s, t) => Me.CManaPercentage() < Settings.Current.GeneralDivinePlea && Settings.Current.DivinePleaIC, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Hand of Reckoning"), 3f, (s,t) => !t.CIsTargetingMe(),_ => Settings.Current.GroupProtectionHoR, FindEnemyAttackingGroup, checkLoS:true),
+            new RotationStep(new RotationSpell("Hand of Reckoning"), 3f, (s,t) => Me.InCombatFlagOnly && !t.CIsTargetingMe() && Settings.Current.GroupProtectionHoR, FindEnemyAttackingGroup, checkLoS:true),
             //maybe needs some better Targeting
             new RotationStep(new RotationSpell("Righteous Defense"), 4f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.Any(u => !u.CIsTargetingMe() && u.CIsTargetingMeOrMyPetOrPartyMember()),RotationCombatUtil.CFindPartyMemberWithoutMe,checkLoS:true),
 
-            new RotationStep(new RotationSpell("Cleanse"), 4.2f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group", p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(new List<DebuffType>() { DebuffType.Magic, DebuffType.Poison, DebuffType.Disease }, true, 30)),
+            new RotationStep(new RotationSpell("Cleanse"), 4.2f, (s,t) => Settings.Current.GroupProtectionCleanse == "Group", p => RotationCombatUtil.GetPartyMemberWithCachedDebuff(p, new List<DebuffType>() { DebuffType.Magic, DebuffType.Poison, DebuffType.Disease }, true, 30)),
             new RotationStep(new RotationSpell("Cleanse"), 4.5f, (s,t) => Settings.Current.GroupProtectionCleanse == "Me" && RotationCombatUtil.IHaveCachedDebuff(new List<DebuffType>() { DebuffType.Magic, DebuffType.Poison, DebuffType.Disease }), RotationCombatUtil.FindMe),
             
             new RotationStep(new RotationSpell("Holy Shield"), 4.6f, (s,t) => Me.InCombat, RotationCombatUtil.FindMe),

@@ -88,6 +88,22 @@ namespace AIO.Settings
         [Description("Dispel party magic debuffs")]
         public bool GroupShadowDispelMagic { get; set; }
 
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
+        [DisplayName("Spread SW: Pain")]
+        [Description("Cast SW: Pain on all enemies in range")]
+        public bool GroupShadowSpreadSWPain { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("PriestTriggerDropdown", nameof(Spec.Priest_GroupShadow))]
+        [DisplayName("Spread Vampiric Touch")]
+        [Description("Cast Vampiric Touch on all enemies in range")]
+        public bool GroupShadowSpreadVT { get; set; }
+
         #endregion
 
         #region SoloShadow
@@ -358,6 +374,8 @@ namespace AIO.Settings
             GroupShadowDispersion = 30;
             GroupShadowCureDisease = true;
             GroupShadowDispelMagic = true;
+            GroupShadowSpreadSWPain = true;
+            GroupShadowSpreadVT = true;
 
             GroupHolyGuardianSpiritTresh = 25;
             GroupHolyBigSingleTargetHeal = 65;

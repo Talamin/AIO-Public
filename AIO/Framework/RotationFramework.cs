@@ -34,6 +34,7 @@ namespace AIO.Framework
         private static string _slowestStepName;
         private static double _slowestStepTime;
         private static bool _shouldPreventDoubleCast;
+        private static bool _OmPulsed;
 
         private static int _loSCreditsPlayers = 5;
         private static int _loSCreditsNPCs = 10;
@@ -105,6 +106,7 @@ namespace AIO.Framework
             {
                 UpdateTimer.RunAdaptive(() => Run(UpdateCache), UpdateCacheMaxDelay);
             }
+            _OmPulsed = true;
         }
 
         public void OnEventsLuaStringWithArgs(string eventId, List<string> args)
@@ -364,8 +366,11 @@ namespace AIO.Framework
 
                 if (_shouldPreventDoubleCast)
                 {
-                    Thread.Sleep(150);
-                    UpdateCache();
+                    if (Me.IsCast) return;
+                    _OmPulsed = false;
+                    Timer limit = new Timer(500);
+                    while (_OmPulsed == false && !limit.IsReady)
+                        Thread.Sleep(50);
                     Cache.Reset();
                     _shouldPreventDoubleCast = false;
                 }

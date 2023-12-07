@@ -13,7 +13,7 @@ namespace AIO.Combat.Priest
 
         public List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationBuff("Inner Fire", minimumStacks: 2), 1f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Shadow Form"), 2f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationBuff("Shadowform"), 2f, (s, t) => !Me.IsMounted, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Vampiric Embrace"), 7f, (s, t) => !Me.IsMounted && !Me.HaveBuff("Vampiric Embrace"), RotationCombatUtil.FindMe),
         };
 

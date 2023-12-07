@@ -1,4 +1,5 @@
 ﻿using AIO.Framework;
+using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,16 +15,21 @@ namespace AIO.Combat.Addons
 {
     internal class RangedPull : IAddon
     {
-        private readonly List<RotationSpell> _pullSpells = new List<RotationSpell>();
-        private Timer _timeout = new Timer();
-        private RotationSpell _chosenPullSPell;
+        private Timer _timeout = new Timer(6 * 1000);
         private PullCondition _pullCondition;
         private Action SetDefaultRange;
         private Action<float> SetRange;
+        private bool _pullSuccesful;
+        private List<RotationSpell> _knownPullSpells = new List<RotationSpell>();
+        private readonly RotationSpell _throwSpell = new RotationSpell("Throw");
+        private readonly RotationSpell _shootSpell = new RotationSpell("Shoot");
 
         public bool RunOutsideCombat => false;
         public bool RunInCombat => true;
-        public List<RotationStep> Rotation => new List<RotationStep>();
+        public List<RotationStep> Rotation => new List<RotationStep>()
+        {
+            new RotationStep(new RotationAction("Pull", Pull), -1f)
+        };
 
         public enum PullCondition
         {
@@ -31,122 +37,152 @@ namespace AIO.Combat.Addons
             ENEMIES_AROUND
         }
 
-        public RangedPull(List<string> pullSPells, Action setDefaultRange, Action<float> setRange, PullCondition pullCondition)
+        private List<RotationSpell> _allPullSpells = new List<RotationSpell>()
         {
-            foreach (string pullSPell in pullSPells)
-            {
-                _pullSpells.Add(new RotationSpell(pullSPell));
-            }
+            new RotationSpell("Avenger's Shield"),
+            new RotationSpell("Exorcism"),
+            new RotationSpell("Hand of Reckoning"),
+            new RotationSpell("Faerie Fire (Feral)")
+        };
+
+        public RangedPull(Action setDefaultRange, Action<float> setRange, PullCondition pullCondition)
+        {
             SetDefaultRange = setDefaultRange;
             SetRange = setRange;
             _pullCondition = pullCondition;
+            _timeout.ForceReady();
         }
 
         public void Initialize()
         {
             FightEvents.OnFightStart += OnFightStart;
-            FightEvents.OnFightLoop += OnFightLoop;
+            FightEvents.OnFightEnd += OnFightEnd;
         }
 
         public void Dispose()
         {
             FightEvents.OnFightStart -= OnFightStart;
-            FightEvents.OnFightLoop -= OnFightLoop;
+            FightEvents.OnFightEnd += OnFightEnd;
         }
 
-        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable) => FighStart();
-        private void OnFightLoop(WoWUnit unit, CancelEventArgs cancelable) => Run();
-
-        private void FighStart()
+        private void OnFightEnd(ulong guid)
         {
-            _timeout = new Timer(7 * 1000);
-            List<RotationSpell> availableSpells = _pullSpells.FindAll(spell => spell.KnownSpell);
-            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Thrown"))
-            {
-                _chosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Throw");
-                return;
-            }
-            if (EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns" || item.GetItemInfo.ItemSubType == "Crossbows"))
-            {
-                _chosenPullSPell = availableSpells.FirstOrDefault(spell => spell.Name == "Shoot");
-                return;
-            }
-            _chosenPullSPell = availableSpells.FirstOrDefault();
+            _pullSuccesful = false;
+            SetDefaultRange();
         }
 
-        private void Run()
+        private void OnFightStart(WoWUnit unit, CancelEventArgs cancelable)
         {
-            var distanceToTarget = Me.Position.DistanceTo(Target.Position);
+            _knownPullSpells = _allPullSpells.Where(spell => spell.KnownSpell).ToList();
+            _pullSuccesful = false;
+            _timeout.Reset();
 
-            // No pull spell known or usable, try fallback
-            if (!Me.InCombatFlagOnly && (_chosenPullSPell == null || !_chosenPullSPell.IsSpellUsable))
+            if (_throwSpell.KnownSpell
+                && EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Thrown"))
+                _knownPullSpells.Add(_throwSpell);
+
+            if (_shootSpell.KnownSpell
+                && EquippedItems.GetEquippedItems().Exists(item => item.GetItemInfo.ItemSubType == "Bows" || item.GetItemInfo.ItemSubType == "Guns" || item.GetItemInfo.ItemSubType == "Crossbows"))
+                _knownPullSpells.Add(_shootSpell);
+        }
+
+        private bool Pull()
+        {
+            if (!Me.HasTarget || _pullSuccesful)
             {
                 SetDefaultRange();
-                return;
+                return false;
             }
 
-            if (_timeout.IsReady || Target.IsCast || Target.HasTarget && Target.Target != Me.Guid)
+            WoWUnit target = new WoWUnit(Target.GetBaseAddress);
+
+            if (_timeout.IsReady
+                || target.IsCast
+                || target.HasTarget && target.Target != Me.Guid && target.IsTargetingMeOrMyPetOrPartyMember
+                || RotationFramework.PartyMembers.Any(p => p.Guid != Me.Guid && RotationFramework.Enemies.Any(e => e.Position.DistanceTo(p.Position) < 13)))
             {
+                _pullSuccesful = true;
                 SetDefaultRange();
-                return;
+                return false;
             }
 
             // Pull succesful, wait for the enemy to come
-            if (Target.Target == Me.Guid)
+            if (target.Target == Me.Guid)
             {
-                return;
+                return true;
             }
 
+            RotationSpell pullSpell = _knownPullSpells.FirstOrDefault(spell => spell.IsSpellUsable);
+            // No pull spell available
+            if (pullSpell == null)
+            {
+                SetDefaultRange();
+                return false;
+            }
+
+            // Check pull condition
             bool pullCOnditionMet = _pullCondition == PullCondition.ALWAYS
-                || _pullCondition == PullCondition.ENEMIES_AROUND && HasNearbyEnemies(Target, 25f);
+                || _pullCondition == PullCondition.ENEMIES_AROUND && HasNearbyEnemies(target, 25f);
             if (!pullCOnditionMet)
             {
                 SetDefaultRange();
-                return;
+                return false;
             }
 
-            float pullRange = _chosenPullSPell.MaxRange - 5;
-            SetRange(pullRange);
+            bool inRealRange = Lua.LuaDoString<bool>($@"
+                local inRange = 0;
+                if UnitExists('target') and UnitIsVisible('target') then
+                   inRange = IsSpellInRange(""{pullSpell.Name}"", 'target');
+                end
+                return inRange == 1;
+            ");
+            bool inLoS = !TraceLine.TraceLineGo(target.Position);
 
-            if (distanceToTarget <= pullRange + 4
-                && distanceToTarget >= 10f)
+            if (target.GetDistance > 40)
+                _timeout.Reset();
+
+            if (target != null
+                && inRealRange
+                && inLoS)
             {
+                SetRange(50);
                 MovementManager.StopMove();
-                RotationCombatUtil.CastSpell(_chosenPullSPell, Target, true);
-                Timer timer = new Timer(2000);
-                while (!Me.InCombatFlagOnly
-                    && !timer.IsReady
-                    && Conditions.InGameAndConnectedAndAlive)
+                RotationCombatUtil.CastSpell(pullSpell, target, true);
+                Thread.Sleep(500);
+                if (!pullSpell.IsSpellUsable)
                 {
-                    Thread.Sleep(100);
+                    Timer timer = new Timer(2000);
+                    while (!target.InCombat
+                        && !target.IsCast
+                        && !timer.IsReady
+                        && Conditions.InGameAndConnectedAndAlive)
+                    {
+                        Thread.Sleep(100);
+                    }
                 }
+                return true;
+
             }
+
+            return false;
         }
 
         private static bool HasNearbyEnemies(WoWUnit target, float distance)
         {
-            var surroundingEnemies = RotationFramework.Enemies.Where(u =>
+            WoWUnit[] surroundingEnemies = RotationFramework.Enemies.Where(u =>
                 !u.IsTapDenied &&
                 !u.IsTaggedByOther &&
                 !u.PlayerControlled &&
                 u.IsAttackable &&
-                u.Guid != target.Guid);
+                u.Guid != target.Guid).ToArray();
 
-            WoWUnit closestUnit = null;
-            float closestUnitDistance = float.PositiveInfinity;
-
-            foreach (var unit in surroundingEnemies)
+            foreach (WoWUnit unit in surroundingEnemies)
             {
-                float distanceFromTarget = unit.Position.DistanceTo(target.Position);
-
-                if (distanceFromTarget < closestUnitDistance)
-                {
-                    closestUnit = unit;
-                    closestUnitDistance = distanceFromTarget;
-                }
+                if (unit.Position.DistanceTo(target.Position) < distance)
+                    return true;
             }
 
-            return closestUnit != null && closestUnitDistance < distance;
+            return false;
         }
     }
 }
