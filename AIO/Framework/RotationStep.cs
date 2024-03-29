@@ -144,7 +144,7 @@ namespace AIO.Framework
             try
             {
                 // abort casting spells very early on to prevent any lagging due to poorly chosen conditions
-                if (RotationCombatUtil.freeMove && _action is RotationSpell spell && spell.CastTime > 0.0 && Me.GetMove)
+                if (/*RotationCombatUtil.freeMove && */_action is RotationSpell spell && spell.CastTime > 0.0 && Me.GetMove)
                 {
                     return false;
                 }

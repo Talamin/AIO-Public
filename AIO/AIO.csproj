@@ -284,6 +284,7 @@
     <Compile Include="Combat\Druid\HealOOC.cs" />
     <Compile Include="Combat\Druid\LowLevel.cs" />
     <Compile Include="Combat\Druid\SoloBalance.cs" />
+    <Compile Include="Combat\Druid\GroupFeral.cs" />
     <Compile Include="Combat\Druid\SoloFeral.cs" />
     <Compile Include="Combat\Hunter\CombatBuffs.cs" />
     <Compile Include="Combat\Hunter\OOCBuffs.cs" />

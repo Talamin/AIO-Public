@@ -48,7 +48,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Mocking Blow"), 4.15f, (s,t) => !t.CIsTargetingMe() && t.CGetDistance() <= 8, FindEnemyAttackingGroup),
             new RotationStep(new RotationSpell("Shield Slam"), 5.1f, RotationCombatUtil.Always, _ => Me.CHaveBuff("Sword and Board"), RotationCombatUtil.BotTargetFast),
             // new RotationStep(new RotationSpell("Piercing Howl"), 6f, RotationCombatUtil.Always, _ => Me.CHealthPercent() < 40 && EnemiesAttackingGroup.ContainsAtLeast(o => o.CGetDistance() <=10 && !o.CHaveBuff("Piercing Howl"), 3), RotationCombatUtil.FindMe, checkRange: false),
-            new RotationStep(new RotationSpell("Berserker Rage"), 7f, (s,t) => !Me.CHaveBuff("Enraged Regeneration") && Me.CRage() < 50, RotationCombatUtil.FindMe, checkRange: false),
+            new RotationStep(new RotationSpell("Berserker Rage"), 7f, (s,t) => !Me.CHaveBuff("Enraged Regeneration") && Me.CRage() < 50 && t.TargetObject.GetDistance < 8, RotationCombatUtil.FindMe, checkRange: false),
             new RotationStep(new RotationSpell("Shockwave"), 8f, RotationCombatUtil.Always, _ => EnemiesAttackingGroup.ContainsAtLeast(o => o.CGetDistance() < 10, 2), RotationCombatUtil.FindMe, checkRange: false),          
             // new RotationStep(new RotationSpell("Thunder Clap"), 10.1f, RotationCombatUtil.Always, _ => Me.CIsInGroup() && EnemiesAttackingGroup.Any(unit => unit.CGetDistance() < 8 && !unit.CHaveMyBuff("Thunder Clap")), RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Revenge"), 10.2f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),

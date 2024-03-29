@@ -16,7 +16,7 @@ namespace AIO.Combat.Warlock
     internal class PetHandler : IAddon
     {
         public bool RunOutsideCombat => true;
-        public bool RunInCombat => true;
+        public bool RunInCombat => false;
 
         private readonly Spell _summonImpSpell = new Spell("Summon Imp");
         private readonly Spell _summonVoidWalkerSpell = new Spell("Summon Voidwalker");

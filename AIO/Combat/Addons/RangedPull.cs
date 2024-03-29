@@ -88,7 +88,7 @@ namespace AIO.Combat.Addons
 
         private bool Pull()
         {
-            if (!Me.HasTarget || _pullSuccesful)
+            if (_pullSuccesful || !Me.HasTarget)
             {
                 SetDefaultRange();
                 return false;
@@ -106,10 +106,10 @@ namespace AIO.Combat.Addons
                 return false;
             }
 
-            // Pull succesful, wait for the enemy to come
+            // Pull succesful, wait for the enemy to come (or timeout)
             if (target.Target == Me.Guid)
             {
-                return true;
+                return target.GetDistance > 8;
             }
 
             RotationSpell pullSpell = _knownPullSpells.FirstOrDefault(spell => spell.IsSpellUsable);
@@ -167,7 +167,7 @@ namespace AIO.Combat.Addons
             return false;
         }
 
-        private static bool HasNearbyEnemies(WoWUnit target, float distance)
+        public static bool HasNearbyEnemies(WoWUnit target, float distance)
         {
             WoWUnit[] surroundingEnemies = RotationFramework.Enemies.Where(u =>
                 !u.IsTapDenied &&

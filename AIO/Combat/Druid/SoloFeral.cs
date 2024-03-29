@@ -49,20 +49,21 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Cat Form"), 19.1f, (s, t) =>!Me.IsInGroup && (Me.HaveBuff("Bear Form") || Me.HaveBuff("Dire Bear Form")) && RotationFramework.Enemies.Count(o => o.IsTargetingMe && o.Position.DistanceTo(t.Position) <=12) <= (Settings.Current.SoloFeralBearCount - 2), RotationCombatUtil.FindMe),
             new RotationStep(new RotationBuff("Cat Form"), 19.2f, (s, t) => Me.IsInGroup, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Prowl"), 20f, (s, t) => t.HealthPercent > 99 && !Me.HaveBuff("Prowl") && !t.IsTargetingMe && Settings.Current.SoloFeralProwl, RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Feral Charge - Cat"), 21f, (s, t) => t.GetDistance >= 15 && t.GetDistance <= 25 && Me.HaveBuff("Prowl") && !t.IsTargetingMe && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Pounce"), 22f, (s, t) => Me.HaveBuff("Prowl") && t.GetDistance <=5 && !t.IsTargetingMe, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Prowl"), 20f, (s, t) => !Me.HaveBuff("Prowl") && Settings.Current.SoloFeralProwl && t.GetDistance < 12, RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Feral Charge - Cat"), 21f, (s, t) => Me.InCombat && t.GetDistance >= 15 && t.GetDistance <= 25 && Me.HaveBuff("Prowl") && !t.IsTargetingMe && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Pounce"), 22f, (s, t) => Me.HaveBuff("Prowl") && t.GetDistance <=5, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 22.1f, (s, t) => Settings.Current.SoloFeralForceFaerie && !t.HaveMyBuff("Faerie Fire (Feral)"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Ravage"), 23f, (s, t) => Me.HaveBuff("Prowl") && Me.IsBehind(t.Position, 1.8f) && t.GetDistance <=6, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Faerie Fire (Feral)"), 23.1f, (s, t) => !Me.HaveBuff("Prowl") && !t.HaveMyBuff("Faerie Fire (Feral)") && Settings.Current.SoloFeralFaerieFire, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Dash"), 24f, (s, t) => Me.HaveBuff("Prowl") && !Me.HaveBuff("Dash") && Settings.Current.SoloFeralDash && Me.HaveBuff("Cat Form"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Tiger's Fury"), 25f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && !TalentsManager.HaveTalent(2,25), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationBuff("Tiger's Fury"), 26f, (s, t) =>Me.ComboPoint <=4 && t.HealthPercent>=40 && Settings.Current.SoloFeralTigersFury && Me.HaveBuff("Cat Form") && !TalentsManager.HaveTalent(2,25), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationBuff("Tiger's Fury"), 26.1f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && TalentsManager.HaveTalent(2,25)&& Me.HaveBuff("Cat Form") && Me.Rage <= 40, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationBuff("Tiger's Fury"), 25f, (s, t) => Settings.Current.SoloFeralTigersFury && t.GetDistance < 6, RotationCombatUtil.BotTarget),
+            //new RotationStep(new RotationBuff("Tiger's Fury"), 25f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && !TalentsManager.HaveTalent(2,25) && t.GetDistance < 6, RotationCombatUtil.BotTarget),
+            //new RotationStep(new RotationBuff("Tiger's Fury"), 26f, (s, t) => Me.ComboPoint <=4 && t.HealthPercent>=40 && Settings.Current.SoloFeralTigersFury && Me.HaveBuff("Cat Form") && !TalentsManager.HaveTalent(2,25) && t.GetDistance < 6, RotationCombatUtil.FindMe),
+            //new RotationStep(new RotationBuff("Tiger's Fury"), 26.1f, (s, t) => Me.HealthPercent < 92 && Me.ManaPercentage > 40 && TalentsManager.HaveTalent(2,25)&& Me.HaveBuff("Cat Form") && Me.Rage <= 40 && t.GetDistance < 6, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Rake"), 27f, (s, t) =>!Me.HaveBuff("Prowl") && Me.ComboPoint <=4 && !t.HaveBuff("Rake") && (t.HealthPercent >= 35 || t.HealthPercent >= 20 && BossList.MyTargetIsBoss) && !t.IsCreatureType("Elemental"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Rip"), 28f, (s,t) => Me.ComboPoint >= Settings.Current.SoloFeralFinisherComboPoints && !t.HaveMyBuff("Rip") && t.HealthPercent >= Settings.Current.SoloFeralRipHealth && !t.IsCreatureType("Elemental"),  RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Ferocious Bite"), 29f, (s, t) => Me.ComboPoint >= Settings.Current.SoloFeralFinisherComboPoints, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Mangle (Cat)"), 30f, (s, t) => !Me.HaveBuff("Prowl") && Me.ComboPoint <=4 && Settings.Current.SoloFeralTigersFury && Me.HaveBuff("Cat Form"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Mangle (Cat)"), 30f, (s, t) => !Me.HaveBuff("Prowl"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Claw"), 31f,(s,t)  => !Me.HaveBuff("Prowl"), RotationCombatUtil.BotTarget)
         };
     }

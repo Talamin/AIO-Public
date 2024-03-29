@@ -3,6 +3,7 @@ using AIO.Framework;
 using AIO.Helpers;
 using AIO.Helpers.Caching;
 using AIO.Settings;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace AIO.Combat.Warlock
                 && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 15) >= Settings.Current.GroupAfflictionAOECount
                 && Settings.Current.GroupAfflictionUseAOE, RotationCombatUtil.FindEnemyAttackingGroupAndMe),
 
-            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 5f, (s,t) => Me.CHaveBuff("Shadow Trance"), FindShadowTranceTarget),
             new RotationStep(new RotationSpell("Health Funnel"), 6f, (s,t) => !Pet.CHaveBuff("Health Funnel") && Pet.CHealthPercent() < Settings.Current.GroupAfflictionHealthfunnelPet && Me.CHealthPercent() > Settings.Current.GroupAfflictionHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
             new RotationStep(new RotationSpell("Haunt"), 7.6f, (s,t) => BossList.MyTargetIsBoss && !t.CHaveMyBuff("Haunt"), RotationCombatUtil.BotTargetFast),
 
@@ -61,6 +62,15 @@ namespace AIO.Combat.Warlock
 
             new RotationStep(new RotationSpell("Shoot"), 25f, (s,t) => Me.CManaPercentage() < 5 && !RotationCombatUtil.IsAutoRepeating("Shoot"), RotationCombatUtil.BotTargetFast, checkLoS: true),
         };
+
+        private WoWUnit FindShadowTranceTarget(Func<WoWUnit, bool> predicate) => RotationFramework.Enemies
+            .OrderByDescending(u => u.HealthPercent)
+            .FirstOrDefault(u => u.IsAttackable
+                                && u.GetDistance < 29
+                                && Me.IsFacing(u.Position, 3)
+                                && u.IsTargetingMeOrMyPetOrPartyMember
+                                && !TraceLine.TraceLineGo(u.Position)
+                                && predicate(u));
 
         private bool SearchForEnemiesToDoT()
         {

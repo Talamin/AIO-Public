@@ -33,6 +33,7 @@ namespace AIO.Combat.Druid
                 { Spec.Druid_SoloBalance, new SoloBalance() },
                 { Spec.Druid_GroupFeralTank, new GroupFeralTank()},
                 { Spec.Druid_GroupRestoration, new GroupRestoration() },
+                { Spec.Druid_GroupFeral, new GroupFeral() },
                 { Spec.Fallback, new SoloFeral() },
             })
         {
@@ -58,6 +59,7 @@ namespace AIO.Combat.Druid
                     _defaultRange = (SpellManager.KnowSpell("Growl") || SpellManager.KnowSpell("Cat Form")) ? 5.0f : 29.0f;
                     break;
                 case Spec.Druid_GroupFeralTank:
+                case Spec.Druid_GroupFeral:
                     _defaultRange = 5.0f;
                     break;
                 default:

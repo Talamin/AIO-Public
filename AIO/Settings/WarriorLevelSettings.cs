@@ -187,6 +187,58 @@ namespace AIO.Settings
         public bool GroupArmsIntimShout { get; set; }
         #endregion
 
+        #region SoloArms
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("Slam")]
+        [Description("Use Slam (recommended if tier bonus)")]
+        public bool SoloArmsSlam { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("AoE Rotation")]
+        [Description("Use AoE Rotation when at least X numbers on enemies at close range")]
+        public int SoloArmsAoe { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("Spread Rend")]
+        [Description("Use Rend on all targets around you")]
+        public bool SoloArmsSpreadRend { get; set; }
+
+        [Setting]
+        [DefaultValue(50)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("Enraged Regeneration")]
+        [Description("Use Enraged Regeneration when under X% Health")]
+        public int SoloArmsEnragedRegen { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("Demoralizing Shout")]
+        [Description("Use Demoralizing Shout")]
+        public bool SoloArmsDemoShout { get; set; }
+
+        [Setting]
+        [DefaultValue(false)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("WarriorTriggerDropdown", nameof(Spec.Warrior_SoloArms))]
+        [DisplayName("Intimidating Shout")]
+        [Description("Use Intimidating Shout to try and interrupt enemies around you")]
+        public bool SoloArmsIntimShout { get; set; }
+
+        #endregion
+
         public WarriorLevelSettings()
         {
             PullRanged = true;
@@ -206,6 +258,7 @@ namespace AIO.Settings
             GroupProtectionTauntGroup = true;
             GroupProtectionShockwaveCount = 2;
             GroupProtectionEnragedRegeneration = 65;
+
             // Group Arms
             GroupArmsSlam = false;
             GroupArmsAoe = 3;
@@ -213,6 +266,14 @@ namespace AIO.Settings
             GroupArmsDemoShout = true;
             GroupArmsIntimShout = false;
             GroupArmsSpreadRend = true;
+
+            // Solo Arms
+            SoloArmsSlam = false;
+            SoloArmsAoe = 3;
+            SoloArmsEnragedRegen = 50;
+            SoloArmsDemoShout = true;
+            SoloArmsIntimShout = false;
+            SoloArmsSpreadRend = true;
         }
     }
 }

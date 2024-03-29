@@ -20,6 +20,7 @@
         DK_PVPUnholy,
         // Druid
         Druid_GroupFeralTank,
+        Druid_GroupFeral,
         Druid_GroupRestoration,
         Druid_SoloBalance,
         Druid_SoloFeral,

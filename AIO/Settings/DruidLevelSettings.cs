@@ -11,7 +11,7 @@ namespace AIO.Settings
     {
 
         #region Selectors
-        [TriggerDropdown("DruidTriggerDropdown", new string[] { nameof(Spec.Druid_SoloFeral), nameof(Spec.Druid_SoloBalance), nameof(Spec.Druid_GroupFeralTank), nameof(Spec.Druid_GroupRestoration) })]
+        [TriggerDropdown("DruidTriggerDropdown", new string[] { nameof(Spec.Druid_SoloFeral), nameof(Spec.Druid_SoloBalance), nameof(Spec.Druid_GroupFeralTank), nameof(Spec.Druid_GroupFeral), nameof(Spec.Druid_GroupRestoration) })]
         public override string ChooseRotation { get; set; }
         #endregion
 
@@ -362,6 +362,41 @@ namespace AIO.Settings
         public string GroupRestoCustomTank { get; set; }
         #endregion
 
+        #region Group_Feral Settings
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_GroupFeral))]
+        [DisplayName("Innervate healer")]
+        [Description("Innervate the healer when he has less than 25% mana")]
+        public bool GroupFeralInnervateHealer { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_GroupFeral))]
+        [DisplayName("Faerie Fire")]
+        [Description("Use Faerie Fire")]
+        public bool GroupFeralUseFaerieFire { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_GroupFeral))]
+        [DisplayName("Demoralizing Roar")]
+        [Description("Use Demoralizing Roar")]
+        public bool GroupFeralUseDemoralizingRoar { get; set; }
+
+        [Setting]
+        [DefaultValue(3)]
+        [Category("Rotation")]
+        [VisibleWhenDropdownValue("DruidTriggerDropdown", nameof(Spec.Druid_GroupFeral))]
+        [DisplayName("Finisher Combo points")]
+        [Description("Use your finisher move on this amount of combo points or more")]
+        public int GroupFeralFinisherComboPoints { get; set; }
+
+        #endregion
+
 
         public DruidLevelSettings()
         {
@@ -411,6 +446,11 @@ namespace AIO.Settings
             GroupRestoCustomTank = "";
             GroupRestorationRemoveCurse = true;
             GroupRestorationRemovePoison = true;
+
+            GroupFeralInnervateHealer = true;
+            GroupFeralUseFaerieFire = true;
+            GroupFeralUseDemoralizingRoar = true;
+            GroupFeralFinisherComboPoints = 3;
         }
     }
 }
