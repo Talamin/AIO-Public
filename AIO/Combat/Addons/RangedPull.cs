@@ -106,7 +106,7 @@ namespace AIO.Combat.Addons
                 return false;
             }
 
-            // Pull succesful, wait for the enemy to come (or timeout)
+            // Pull done, wait for the enemy to come (or timeout)
             if (target.Target == Me.Guid)
             {
                 return target.GetDistance > 8;

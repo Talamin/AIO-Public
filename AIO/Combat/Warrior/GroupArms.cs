@@ -29,7 +29,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationAction("Cache on spells", CacheActiveAbilities), 0f, 100),
             new RotationStep(new RotationAction("Check stance", CheckStance), 0f, 5000),
 
-            new RotationStep(new RotationSpell("Charge"), 1f, (s,t) => t.GetDistance > 7 && t.HasTarget && !t.IsTargetingMe && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7) , RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Charge"), 1f, (s,t) => t.GetDistance > 8 && t.HasTarget && !t.IsTargetingMe && RotationFramework.PartyMembers.Any(m => m.Position.DistanceTo(t.Position) < 7) , RotationCombatUtil.BotTargetFast, forcedTimerMS: 1000),
             new RotationStep(new RotationSpell("Victory Rush"), 2f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Execute"), 3f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Overpower"), 3.5f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
@@ -101,7 +101,7 @@ namespace AIO.Combat.Warrior
                 .Where(enemy => Me.IsFacing(enemy.Position, 3))
                 .ToList();
             _enemiesAroundWithoutMyRend = _cleavableEnemies
-                .Where(enemy => enemy.CGetDistance() < 6 && !enemy.CHaveMyBuff("Rend"))
+                .Where(enemy => enemy.CGetDistance() < 6 && !enemy.CHaveMyBuff("Rend") && !enemy.Name.Contains("Totem"))
                 .ToList();
             return false;
         }

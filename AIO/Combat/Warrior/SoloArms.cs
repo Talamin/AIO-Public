@@ -29,7 +29,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationAction("Cache on spells", CacheActiveAbilities), 0f, 500),
             new RotationStep(new RotationAction("Check stance", CheckStance), 0f, 5000),
 
-            new RotationStep(new RotationSpell("Charge"), 1f, (s,t) => t.GetDistance > 7 && !RangedPull.HasNearbyEnemies(t, 25), RotationCombatUtil.BotTargetFast),
+            new RotationStep(new RotationSpell("Charge"), 1f, (s,t) => t.GetDistance > 8 && !RangedPull.HasNearbyEnemies(t, 25), RotationCombatUtil.BotTargetFast, forcedTimerMS: 1000),
             new RotationStep(new RotationSpell("Victory Rush"), 2f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Overpower"), 2.5f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Execute"), 3f, RotationCombatUtil.Always, RotationCombatUtil.BotTargetFast),
@@ -39,9 +39,9 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Heroic Strike"), 5f, (s,t) => Me.CRage() > 50 && !_cleaveOn &&  !_heroicStrikeOn, RotationCombatUtil.BotTargetFast, ignoreGCD: true),
             
             // AOE
+            new RotationStep(new RotationSpell("Bladestorm"), 5.5f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.SoloArmsAoe, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Sweeping Strikes"), 6f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.SoloArmsAoe, RotationCombatUtil.BotTargetFast, ignoreGCD: true),
             new RotationStep(new RotationSpell("Rend"), 7f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.SoloArmsAoe && !t.CHaveMyBuff("Rend"), RotationCombatUtil.BotTargetFast),
-            new RotationStep(new RotationSpell("Bladestorm"), 8f, (s,t) => _nbEnemiesAroundMe >= Settings.Current.SoloArmsAoe, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Rend"), 8.5f, (s,t) => Settings.Current.SoloArmsSpreadRend, p => _enemiesAroundWithoutMyRend.FirstOrDefault()),
 
             // Utility
@@ -102,7 +102,7 @@ namespace AIO.Combat.Warrior
                 .Where(enemy => Me.IsFacing(enemy.Position, 3))
                 .ToList();
             _enemiesAroundWithoutMyRend = _cleavableEnemies
-                .Where(enemy => enemy.CGetDistance() < 6 && !enemy.CHaveMyBuff("Rend"))
+                .Where(enemy => enemy.CGetDistance() < 6 && !enemy.CHaveMyBuff("Rend") && !enemy.Name.Contains("Totem"))
                 .ToList();
             return false;
         }

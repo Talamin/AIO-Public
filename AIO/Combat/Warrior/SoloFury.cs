@@ -31,7 +31,7 @@ namespace AIO.Combat.Warrior
             new RotationStep(new RotationSpell("Victory Rush"), 10f, RotationCombatUtil.Always, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Rend"), 11f, (s,t) => !t.HaveMyBuff("Rend") && !t.IsCreatureType("Elemental"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Intercept"), 12f, (s,t) => Settings.Current.SoloFuryIntercept && Me.Rage > 10 && t.GetDistance > 7 && t.GetDistance <= 24, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Charge"), 13f, (s,t) => !KnowIntercept && Settings.Current.SoloFuryIntercept && t.GetDistance > 7, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Charge"), 13f, (s,t) => !KnowIntercept && Settings.Current.SoloFuryIntercept && t.GetDistance > 8, RotationCombatUtil.BotTarget, forcedTimerMS: 1000),
             new RotationStep(new RotationSpell("Thunder Clap"), 14f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <=10) >=2, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Whirlwind"), 15f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <=10) >=2, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Cleave"), 16f, (s,t) => RotationFramework.Enemies.Count(o => o.GetDistance <=10) >=2, RotationCombatUtil.BotTarget),

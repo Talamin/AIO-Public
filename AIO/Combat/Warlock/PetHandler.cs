@@ -112,6 +112,7 @@ namespace AIO.Combat.Warlock
         private bool SummonPet(Spell spell)
         {
             if (!spell.KnownSpell || !spell.IsSpellUsable) return false;
+            Lua.LuaDoString("PetDismiss();");
             spell.Launch(true, false);
             PetManager.PreventPetDoubleSummon();
 
