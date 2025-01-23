@@ -23,9 +23,9 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Corruption"), 8f, (s,t) => Me.IsInGroup &&  !t.HaveMyBuff("Seed of Corruption") && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloDemonologyAOECount && Settings.Current.SoloDemonologyUseAOE, RotationCombatUtil.FindEnemy),
             new RotationStep(new RotationSpell("Rain of Fire"), 6f, (s,t) => Me.IsInGroup && RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=10) >= Settings.Current.SoloDemonologyAOECount && Settings.Current.SoloDemonologyUseAOE, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Health Funnel"), 7f, (s,t) => !Pet.HaveBuff("Health Funnel") && Pet.HealthPercent < Settings.Current.SoloDemonologyHealthfunnelPet && Me.HealthPercent > Settings.Current.SoloDemonologyHealthfunnelMe && Pet.IsAlive && Pet.IsMyPet, RotationCombatUtil.FindPet),
-            new RotationStep(new RotationSpell("Immolate"), 8f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Corruption"), 9f, (s,t) => !t.HaveMyBuff("Corruption"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.HaveMyBuff("Curse of Agony"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Agony"), 8f, (s,t) => !t.HaveMyBuff("Curse of Agony"), RotationCombatUtil.BotTarget),
+            //new RotationStep(new RotationSpell("Immolate"), 9f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget, preventDoubleCast: true),
+            new RotationStep(new RotationSpell("Corruption"), 10f, (s,t) => !t.HaveMyBuff("Corruption"), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloDemonologyDrainlife, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 16f ,(s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !Settings.Current.SoloDemonologyShadowboltWand, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => Settings.Current.SoloDemonologyShadowboltWand, RotationCombatUtil.BotTarget)

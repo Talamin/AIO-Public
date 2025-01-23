@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using robotManager.Helpful;
+using System.Threading;
 using wManager.Wow.Helpers;
 using static AIO.Constants;
 
@@ -79,7 +80,7 @@ public static class PetManager
         while (Me.IsCast)
         {
             Thread.Sleep(500);
-            if (Pet.IsAlive)
+            if (IsPetAliveLUA)
             {
                 Lua.LuaDoString("SpellStopCasting();");
                 break;
@@ -87,20 +88,32 @@ public static class PetManager
         }
     }
 
+    public static bool IsPetAliveLUA => Lua.LuaDoString<bool>($@"for i=1,10 do
+        local name, _, _, _, _, _, _ = GetPetActionInfo(i);
+            if name ~= nil then
+                return true;
+            end
+        end
+        return false;
+    ");
+
     public static string GetCurrentWarlockPetLUA => Lua.LuaDoString<string>($@"
             for i=1,10 do
                 local name, _, _, _, _, _, _ = GetPetActionInfo(i);
-                if name == 'Firebolt' then
+                if name == 'Firebolt' or name == 'Fire Shield' or name == 'Blood Pact' then
                     return 'Imp';
                 end
-                if name == 'Torment' then
+                if name == 'Torment' or name == 'Shadow Bulwark' or name == 'Consume Shadows' or name == 'Consuming Shadows' or name == 'Sacrifice' then
                     return 'Voidwalker';
                 end
-                if name == 'Anguish' then
+                if name == 'Anguish' or name == 'Intercept' or name == 'Demonic Pact' then
                     return 'Felguard';
                 end
-                if name == 'Devour Magic' then
+                if name == 'Devour Magic' or name == 'Shadow Bite' or name == 'Fel Intelligence' then
                     return 'Felhunter';
+                end
+                if name == 'Seduction' or name == 'Lash of Pain' or name == 'Soothing kiss' then
+                    return 'Succubus';
                 end
             end
             return 'None';

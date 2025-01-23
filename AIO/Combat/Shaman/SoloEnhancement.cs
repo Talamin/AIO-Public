@@ -13,11 +13,11 @@ namespace AIO.Combat.Shaman
     {
         protected override List<RotationStep> Rotation => new List<RotationStep> {
             new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
+            new RotationStep(new RotationSpell("Healing Wave"), 0.1f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloEnhancementHealthForHeals && t.HealthPercent > Settings.Current.SoloEnhancementEnemyHPSkipHealing, RotationCombatUtil.FindMe, preventDoubleCast: true),
             new RotationStep(new RotationSpell("Auto Attack"), 1f, (s,t) => !Me.IsCast && !RotationCombatUtil.IsAutoAttacking(), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.1f, (s,t) => Settings.Current.SoloEnhancementFeralSpirit =="+2 and Elite" && ((RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=20) >= 2) || t.IsElite), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.2f, (s,t) => Settings.Current.SoloEnhancementFeralSpirit =="+3 and Elite" && ((RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <=20) >= 3) || t.IsElite), RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Feral Spirit"), 1.3f, (s,t) => Settings.Current.SoloEnhancementFeralSpirit =="only Elite" && t.IsElite, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Healing Wave"), 1.5f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloEnhancementHealthForHeals && t.HealthPercent > Settings.Current.SoloEnhancementEnemyHPSkipHealing, RotationCombatUtil.FindMe),
 
             new RotationStep(new RotationSpell("Cure Toxins"), 2f, (s,t) =>
             Settings.Current.CureToxin == "Self"

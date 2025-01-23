@@ -28,7 +28,7 @@ namespace AIO.Combat.Druid
             new RotationStep(new RotationBuff("Bear Form"), 2f, (s, t) => Me.Level > 9 && Me.Level < 20, RotationCombatUtil.FindMe),
             new RotationStep(new RotationSpell("Bash"), 2.1f, (s, t) => t.IsCasting() && Me.Level > 9 && Me.Level < 20, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Demoralizing Roar"), 3f, (s, t) => !t.HaveMyBuff("Demoralizing Roar")&& Me.Level > 9 && Me.Level < 20, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Swipe (Bear)"), 5f, (s, t) => Me.Level > 9 && Me.Level < 20 && t.GetDistance < 8, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Swipe (Bear)"), 10f, (s, t) => RotationFramework.Enemies.Count(o => Me.IsFacing(o.Position, 3) && o.HasTarget && o.IsTargetingMe && o.Position.DistanceTo(Me.Position) <= 8) >= 2, RotationCombatUtil.BotTargetFast),
             new RotationStep(new RotationSpell("Growl"), 6f, (s, t) => !Me.IsInGroup && Me.Level > 9 && Me.Level < 20 && t.GetDistance > 20, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Maul"), 7f, (s, t) => Me.Rage >= 16 && Me.Level > 9 && Me.Level < 20 && t.GetDistance < 8, RotationCombatUtil.BotTarget),
             new RotationStep(new RotationSpell("Moonfire"), 8f, (s, t) => !SpellManager.KnowSpell("Bear Form") && Me.Level > 9 && Me.Level < 20 && t.HealthPercent == 100 && !t.IsTargetingMe, RotationCombatUtil.BotTarget),

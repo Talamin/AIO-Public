@@ -23,7 +23,7 @@ namespace AIO.Combat.Shaman
         private readonly Totems _totemsAddon;
         private Spec Spec => _combatClass.Specialisation;
 
-        public bool RunOutsideCombat => true;
+        public bool RunOutsideCombat => false;
         public bool RunInCombat => true;
 
         internal CombatBuffs(ShamanBehavior combatClass, Totems totemsAddon)
@@ -36,38 +36,43 @@ namespace AIO.Combat.Shaman
             new RotationStep(new RotationAction("Weapons Enchants", EnchantStep), 0f, 5000),
             new RotationStep(new RotationAction("Cache debuffed party members", RotationCombatUtil.CacheLUADebuffedPartyMembersStep), 0f, 1000),
 
-            new RotationStep(new RotationBuff("Water Shield"), 2f, (s,t) => !Me.IsMounted && (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
-            new RotationStep(new RotationBuff("Lightning Shield"), 3f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
+            new RotationStep(new RotationBuff("Water Shield"), 1.01f, (s,t) => !Me.IsMounted && (Spec == Spec.Shaman_GroupRestoration || Spec == Spec.Shaman_SoloElemental || (Spec == Spec.Shaman_SoloEnhancement && Me.ManaPercentage <= 50)), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
+            new RotationStep(new RotationBuff("Lightning Shield"), 1.02f, (s,t) => !Me.IsMounted && (Me.ManaPercentage > 50 || !SpellManager.KnowSpell("Water Shield")) && !Me.HaveBuff("Water Shield"), RotationCombatUtil.FindMe, Exclusive.ShamanShield),
 
-            new RotationStep(new RotationSpell("Totemic Recall"), 10f, (s,t) => !Me.IsMounted && Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),
-            new RotationStep(new RotationSpell("Call of the Elements"), 11f, (s,t) => Fight.InFight && !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && _totemsAddon.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Totemic Recall"), 1.03f, (s,t) => !Me.IsMounted && Totems.ShouldRecall() && !Totems.HasAny("Earth Elemental Totem", "Mana Tide Totem","Stoneclaw Totem"), RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Call of the Elements"), 1.04f, (s,t) => Fight.InFight && !Me.IsMounted && Settings.Current.UseCotE && !MovementManager.InMovement && _totemsAddon.MissingDefaults() && !Totems.HasTemporary(), RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Mana Tide Totem"), 20f, (s,t) => !Me.IsMounted && Me.ManaPercentage <= 30, RotationCombatUtil.FindMe),
+            new RotationStep(new RotationSpell("Mana Tide Totem"), 1.05f, (s,t) => Me.InCombat && !Me.IsMounted && Me.ManaPercentage <= 30, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Earth Elemental Totem"), 30f, (s,t) =>
+            new RotationStep(new RotationSpell("Earth Elemental Totem"), 1.06f, (s,t) =>
+                Me.InCombat &&
                 !Me.IsInGroup &&
                 !Totems.HasAny("Stoneclaw Totem") &&
                 RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 20) >= 3, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Stoneclaw Totem"), 31f, (s,t) =>
+            new RotationStep(new RotationSpell("Stoneclaw Totem"), 1.07f, (s,t) =>
+                Me.InCombat &&
                 !Me.IsInGroup &&
                 !Totems.HasAny("Earth Elemental Totem") &&
                 RotationFramework.Enemies.Count(o => o.IsTargetingMeOrMyPetOrPartyMember && o.Position.DistanceTo(t.Position) <= 20) >= 2, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Magma Totem"), 40f, (s,t) =>
+            new RotationStep(new RotationSpell("Magma Totem"), 1.08f, (s,t) =>
+                Me.InCombat &&
                 Spec == Spec.Shaman_SoloEnhancement &&
                 Target.GetDistance <= 15 &&
                 !Totems.HasAny("Magma Totem") &&
                 Me.ManaPercentage > 40, RotationCombatUtil.FindMe),
 
-             new RotationStep(new RotationSpell("Searing Totem"), 45f, (s,t) =>
+             new RotationStep(new RotationSpell("Searing Totem"), 1.09f, (s,t) =>
+                Me.InCombat &&
                 Target.GetDistance <= 15 &&
                 !Totems.HasAny("Searing Totem") &&
                 !Totems.HasAny("Magma Totem") &&
                 Settings.Current.RedeploySearingTotem &&
                 Me.ManaPercentage > 30, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Cleansing Totem"), 50f, (s,t) =>
+            new RotationStep(new RotationSpell("Cleansing Totem"), 1.10f, (s,t) =>
+                Me.InCombat &&
                 Settings.Current.UseCleansingTotem
                 && RotationCombatUtil.GetPartyMemberWithCachedDebuff((p) => true, new List<DebuffType>() { DebuffType.Poison, DebuffType.Disease }, false, 30) != null
                 && !Totems.HasAny("Cleansing Totem"), RotationCombatUtil.FindMe),
@@ -77,11 +82,13 @@ namespace AIO.Combat.Shaman
                 RotationFramework.PartyMembers.Count(o =>
                 o.HasDebuffType("Fear","Charm","Sleep")) > 0, RotationCombatUtil.FindMe),
             */
-            new RotationStep(new RotationSpell("Grounding Totem"), 52f, (s,t) =>
+            new RotationStep(new RotationSpell("Grounding Totem"), 1.11f, (s,t) =>
+                Me.InCombat &&
                 Settings.Current.UseGroundingTotem &&
                 RotationFramework.Enemies.Count(o => o.GetDistance < 30 && o.IsCast) > 0, RotationCombatUtil.FindMe),
 
-            new RotationStep(new RotationSpell("Earthbind Totem"), 53f, (s,t) =>
+            new RotationStep(new RotationSpell("Earthbind Totem"), 1.12f, (s,t) =>
+                Me.InCombat &&
                 Settings.Current.UseEarthbindTotem &&
                 RotationFramework.Enemies.Count(o => o.GetDistance < 10 && o.CreatureTypeTarget=="Humanoid") > 0, RotationCombatUtil.FindMe)
         };

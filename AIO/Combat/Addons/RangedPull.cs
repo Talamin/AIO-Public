@@ -42,6 +42,7 @@ namespace AIO.Combat.Addons
             new RotationSpell("Avenger's Shield"),
             new RotationSpell("Exorcism"),
             new RotationSpell("Hand of Reckoning"),
+            new RotationSpell("Lightning Bolt"),
             new RotationSpell("Faerie Fire (Feral)")
         };
 

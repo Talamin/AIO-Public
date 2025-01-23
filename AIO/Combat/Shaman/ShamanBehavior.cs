@@ -7,6 +7,7 @@ using robotManager.Helpful;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Documents;
 using wManager;
 using wManager.Events;
 using wManager.Wow.Bot.States;
@@ -23,6 +24,8 @@ namespace AIO.Combat.Shaman
         public override float Range => CombatRange;
         private readonly Spell _ghostWolfSpell = new Spell("Ghost Wolf");
         private readonly Spell _totemRecallSpell = new Spell("Totemic Recall");
+        private void SetDefaultRange() => CombatRange = 5.0f;
+        private void SetRange(float range) => CombatRange = range;
 
         internal ShamanBehavior() : base(
             Settings.Current,
@@ -43,6 +46,8 @@ namespace AIO.Combat.Shaman
             Addons.Add(new AutoPartyResurrect("Ancestral Spirit"));
             Addons.Add(totemsAddon);
             Addons.Add(new CombatBuffs(this, totemsAddon));
+            if (Specialisation == Spec.Shaman_SoloEnhancement)
+                Addons.Add(new RangedPull(SetDefaultRange, SetRange, RangedPull.PullCondition.ENEMIES_AROUND));
         }
 
         public override void Initialize()
@@ -54,7 +59,7 @@ namespace AIO.Combat.Shaman
                     CombatRange = 5.0f;
                     break;
                 case Spec.Shaman_SoloElemental:
-                    CombatRange = 24.0f;
+                    CombatRange = 27.0f;
                     break;
                 case Spec.LowLevel:
                     CombatRange = 25.0f;

@@ -28,19 +28,19 @@ namespace AIO.Combat.Warlock
             new RotationStep(new RotationSpell("Haunt"), 7.5f, (s,t) => !t.HaveMyBuff("Haunt"), RotationCombatUtil.BotTarget),
             //Curses
             new RotationStep(new RotationSpell("Curse of Agony"), 10f, (s,t) => !t.HaveMyBuff("Curse of Agony") && Settings.Current.SoloAfflictionAfflCurse == "Agony", RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of Doom"), 10.1f, (s,t) => !t.HaveMyBuff("Curse of Doom") && Settings.Current.SoloAfflictionAfflCurse == "Doom", RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of the Elements"), 10.2f, (s,t) => !t.HaveMyBuff("Curse of the Elements") && Settings.Current.SoloAfflictionAfflCurse == "Elements", RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of Tongues"), 10.3f, (s,t) => !t.HaveMyBuff("Curse of Tongues") && Settings.Current.SoloAfflictionAfflCurse == "Tongues", RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of Weakness"), 10.4f, (s,t) => !t.HaveMyBuff("Curse of Weakness") && Settings.Current.SoloAfflictionAfflCurse == "Weakness", RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Curse of Exhaustion"), 10.4f, (s,t) => !t.HaveMyBuff("Curse of Exhaustion") && Settings.Current.SoloAfflictionAfflCurse == "Exhaustion", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Doom"), 11f, (s,t) => !t.HaveMyBuff("Curse of Doom") && Settings.Current.SoloAfflictionAfflCurse == "Doom", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of the Elements"), 12f, (s,t) => !t.HaveMyBuff("Curse of the Elements") && Settings.Current.SoloAfflictionAfflCurse == "Elements", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Tongues"), 13f, (s,t) => !t.HaveMyBuff("Curse of Tongues") && Settings.Current.SoloAfflictionAfflCurse == "Tongues", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Weakness"), 14f, (s,t) => !t.HaveMyBuff("Curse of Weakness") && Settings.Current.SoloAfflictionAfflCurse == "Weakness", RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Curse of Exhaustion"), 15f, (s,t) => !t.HaveMyBuff("Curse of Exhaustion") && Settings.Current.SoloAfflictionAfflCurse == "Exhaustion", RotationCombatUtil.BotTarget),
             //
-            new RotationStep(new RotationSpell("Corruption"), 11f, (s,t) => !t.HaveMyBuff("Corruption"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Drain Life"), 12f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloAfflictionDrainlife, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Unstable Affliction"), 13f, (s,t) => !t.HaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Immolate"), 14f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Drain Soul"), 2.5f, (s,t) => t.HealthPercent <= 25, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Shadow Bolt"), 16f ,(s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget),
-            new RotationStep(new RotationSpell("Shadow Bolt"), 17f ,(s,t) => Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget)
+            new RotationStep(new RotationSpell("Immolate"), 16f, (s,t) => !t.HaveMyBuff("Immolate") && !SpellManager.KnowSpell("Unstable Affliction"), RotationCombatUtil.BotTarget, preventDoubleCast: true),
+            new RotationStep(new RotationSpell("Corruption"), 17f, (s,t) => !t.HaveMyBuff("Corruption"), RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Drain Life"), 18f, (s,t) => !Me.IsInGroup && Me.HealthPercent < Settings.Current.SoloDemonologyDrainlife, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Unstable Affliction"), 19f, (s,t) => !t.HaveMyBuff("Unstable Affliction"), RotationCombatUtil.BotTarget),
+            //new RotationStep(new RotationSpell("Drain Soul"), 20f, (s,t) => t.HealthPercent <= 25, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 21f ,(s,t) => t.HealthPercent > Settings.Current.UseWandTresh && !Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget),
+            new RotationStep(new RotationSpell("Shadow Bolt"), 22f ,(s,t) => Settings.Current.SoloAfflictionShadowboltWand, RotationCombatUtil.BotTarget)
         };
     }
 }

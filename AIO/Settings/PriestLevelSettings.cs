@@ -32,8 +32,8 @@ namespace AIO.Settings
         [Setting]
         [DefaultValue(false)]
         [Category("General")]
-        [DisplayName("Use standart Buffing (Solo)?")]
-        [Description("Use Standart AutoBuffing in General?")]
+        [DisplayName("Use standard Buffing (Solo)?")]
+        [Description("Use Standard AutoBuffing in General?")]
         public bool UseAutoBuff { get; set; }
 
         [Setting]
@@ -42,6 +42,13 @@ namespace AIO.Settings
         [DisplayName("Use intelligent Buffing (Group)?")]
         [Description("Use Intelligent Buffing in General?")]
         public bool UseAutoBuffInt { get; set; }
+
+        [Setting]
+        [DefaultValue(true)]
+        [Category("General")]
+        [DisplayName("Inner Fire")]
+        [Description("Use Inner Fire")]
+        public bool InnerFire { get; set; }
         #endregion
 
         #region GroupShadow
@@ -355,6 +362,7 @@ namespace AIO.Settings
             UseWandTresh = 20;
             UseAutoBuffInt = true;
             UseAutoBuff = false;
+            InnerFire = true;
 
             SoloShadowShadowForm = true;
             SoloShadowShadowfiend = 30;
